@@ -1,0 +1,38 @@
+{
+  "name": "wechat-obsidian-publisher",
+  "version": "0.1.0",
+  "description": "Obsidian 内的微信公众号排版、模块编排与草稿发布工作台。",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "vitest run",
+    "check": "npm run test && npm run build"
+  },
+  "keywords": [
+    "obsidian",
+    "wechat",
+    "markdown",
+    "publisher",
+    "wechat-official-account"
+  ],
+  "author": "summerchaserwwz",
+  "license": "MIT",
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.22",
+    "marked": "^16.1.2",
+    "mermaid": "^11.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/katex": "^0.16.7",
+    "builtin-modules": "^4.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "latest",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0",
+    "happy-dom": "^20.11.0"
+  }
+}
