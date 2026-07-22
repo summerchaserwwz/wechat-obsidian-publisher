@@ -197217,6 +197217,8 @@ __export(main_exports2, {
   default: () => WechatObsidianPublisherPlugin
 });
 module.exports = __toCommonJS(main_exports2);
+var import_promises2 = require("node:fs/promises");
+var import_node_path2 = require("node:path");
 var import_obsidian5 = require("obsidian");
 
 // src/defaults.ts
@@ -200312,6 +200314,10 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
   }
   async saveSettings() {
     await this.saveData(this.settings);
+    if (this.manifest.dir && this.app.vault.adapter instanceof import_obsidian5.FileSystemAdapter) {
+      const dataPath = (0, import_node_path2.join)(this.app.vault.adapter.getBasePath(), this.manifest.dir, "data.json");
+      await (0, import_promises2.chmod)(dataPath, 384).catch(() => void 0);
+    }
     this.refreshViews();
   }
   async activateView() {

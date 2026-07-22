@@ -1,4 +1,6 @@
-import { Notice, Plugin, TFile, normalizePath } from "obsidian";
+import { chmod } from "node:fs/promises";
+import { join } from "node:path";
+import { FileSystemAdapter, Notice, Plugin, TFile, normalizePath } from "obsidian";
 import { DEFAULT_SETTINGS, VIEW_TYPE_PUBLISHER } from "./defaults";
 import { RenderEngine } from "./core/renderer";
 import { BUILT_IN_TEMPLATES } from "./core/templates";
@@ -66,6 +68,10 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
+    if (this.manifest.dir && this.app.vault.adapter instanceof FileSystemAdapter) {
+      const dataPath = join(this.app.vault.adapter.getBasePath(), this.manifest.dir, "data.json");
+      await chmod(dataPath, 0o600).catch(() => undefined);
+    }
     this.refreshViews();
   }
 
