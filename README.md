@@ -2,6 +2,17 @@
 
 在 Obsidian 内完成微信公众号文章预览、前后模块编排、模板定制和草稿发布。
 
+![预览工作台](docs/screenshots/preview-workbench.jpeg)
+
+<details>
+<summary>查看模板与前后模块面板</summary>
+
+![模板面板](docs/screenshots/template-panel.jpeg)
+
+![前后模块面板](docs/screenshots/module-panel.jpeg)
+
+</details>
+
 ## 现在能做什么
 
 - 在右侧工作台实时预览当前 Markdown 笔记，支持手机和桌面宽度。
