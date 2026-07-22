@@ -1,8 +1,16 @@
 import { ItemView, Notice, WorkspaceLeaf, setIcon } from "obsidian";
 import type WechatObsidianPublisherPlugin from "../main";
-import type { ContentModule, PublisherTab, PublisherTemplate, RenderedArticle } from "../types";
+import type { ContentModule, ModulePlacement, PublisherTab, PublisherTemplate, RenderedArticle } from "../types";
 import { VIEW_TYPE_PUBLISHER } from "../defaults";
-import { BUILT_IN_TEMPLATES, cloneTemplate, findTemplate } from "../core/templates";
+import { MD2_THEME_GROUPS } from "../core/md2-theme-catalog";
+import {
+  BUILT_IN_TEMPLATES,
+  cloneTemplate,
+  findTemplate,
+  makeUniqueTemplate,
+  parseTemplateBundle,
+  serializeTemplateBundle
+} from "../core/templates";
 import { ModuleEditorModal, TemplateEditorModal } from "./modals";
 
 function iconButton(parent: HTMLElement, icon: string, label: string, action: () => void | Promise<void>): HTMLButtonElement {
@@ -20,6 +28,8 @@ function textButton(parent: HTMLElement, text: string, action: () => void | Prom
 
 export class PublisherView extends ItemView {
   private generation = 0;
+  private templateQuery = "";
+  private templateGroup = "全部";
 
   constructor(leaf: WorkspaceLeaf, private readonly host: WechatObsidianPublisherPlugin) {
     super(leaf);
@@ -111,7 +121,7 @@ export class PublisherView extends ItemView {
     if (!article) return;
     if (this.host.settings.activeTab === "preview") this.renderPreview(panel, path, article);
     if (this.host.settings.activeTab === "modules") this.renderModules(panel);
-    if (this.host.settings.activeTab === "templates") this.renderTemplates(panel);
+    if (this.host.settings.activeTab === "templates") this.renderTemplates(panel, path, article);
     if (this.host.settings.activeTab === "publish") this.renderPublishCheck(panel, path, article);
   }
 
@@ -136,8 +146,13 @@ export class PublisherView extends ItemView {
     const icon = wrap.createSpan();
     setIcon(icon, "palette");
     const select = wrap.createEl("select", { attr: { "aria-label": "排版模板" } });
-    for (const template of [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates]) {
-      select.createEl("option", { text: template.name, value: template.id });
+    for (const groupName of [...MD2_THEME_GROUPS, "用户模板"]) {
+      const templates = groupName === "用户模板"
+        ? this.host.settings.customTemplates
+        : BUILT_IN_TEMPLATES.filter((template) => template.group === groupName);
+      if (!templates.length) continue;
+      const group = select.createEl("optgroup", { attr: { label: `${groupName} · ${templates.length}` } });
+      for (const template of templates) group.createEl("option", { text: template.name, value: template.id });
     }
     select.value = this.host.settings.activeTemplateId;
     select.addEventListener("change", async () => {
@@ -175,12 +190,20 @@ export class PublisherView extends ItemView {
   private renderModules(panel: HTMLElement): void {
     const header = panel.createDiv({ cls: "wop-panel-header" });
     const copy = header.createDiv();
-    copy.createEl("h3", { text: "文章前后模块" });
-    copy.createEl("p", { text: "模块与正文一起经过模板编译，预览即最终排版。" });
+    copy.createEl("h3", { text: "内容模块" });
+    copy.createEl("p", { text: "完整支持 MD2 的 9 类模块。可以新增、编辑、启用和排序。" });
     textButton(header, "新增模块", () => this.openModuleEditor(null), true);
-    for (const placement of ["before", "after"] as const) {
+    const placements: Array<[ModulePlacement, string, string]> = [
+      ["before", "正文前", "导语与开头模块"],
+      ["before-first-table", "首个表格前", "表格口径与阅读提示"],
+      ["after-first-table", "首个表格后", "表格结论与补充说明"],
+      ["after", "正文后", "结尾、推荐、作者、关注、版权和自定义模块"]
+    ];
+    for (const [placement, title, description] of placements) {
       const section = panel.createDiv({ cls: "wop-module-section" });
-      section.createEl("h4", { text: placement === "before" ? "正文前" : "正文后" });
+      const sectionTitle = section.createDiv({ cls: "wop-module-section-title" });
+      sectionTitle.createEl("h4", { text: title });
+      sectionTitle.createEl("span", { text: description });
       const modules = this.host.settings.modules.filter((module) => module.placement === placement);
       if (!modules.length) section.createEl("p", { text: "暂无模块", cls: "wop-empty" });
       modules.forEach((module, index) => this.renderModuleRow(section, module, index, modules.length));
@@ -235,46 +258,97 @@ export class PublisherView extends ItemView {
     }).open();
   }
 
-  private renderTemplates(panel: HTMLElement): void {
-    const header = panel.createDiv({ cls: "wop-panel-header" });
+  private renderTemplates(panel: HTMLElement, path: string, article: RenderedArticle): void {
+    panel.addClass("wop-template-workbench");
+    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
+    const preview = panel.createDiv({ cls: "wop-template-live-preview" });
+    const meta = preview.createDiv({ cls: "wop-preview-meta" });
+    meta.createEl("span", { text: template.name });
+    meta.createEl("span", { text: `${article.imageSources.length} 张图片` });
+    meta.createEl("span", { text: path });
+    const stage = preview.createDiv({ cls: "wop-preview-stage", attr: { "data-device": this.host.settings.previewDevice } });
+    stage.style.setProperty("--wop-template-canvas", template.canvas);
+    const paper = stage.createDiv({ cls: "wop-paper" });
+    paper.innerHTML = article.html;
+
+    const drawer = panel.createDiv({ cls: "wop-template-drawer" });
+    const header = drawer.createDiv({ cls: "wop-template-drawer-header" });
     const copy = header.createDiv();
-    copy.createEl("h3", { text: "排版模板" });
-    copy.createEl("p", { text: "内置模板保持稳定。复制后可编辑令牌，也可导入或导出 JSON。" });
-    const actions = header.createDiv({ cls: "wop-header-actions" });
-    textButton(actions, "导出当前", async () => {
+    copy.createEl("strong", { text: "模板" });
+    copy.createEl("span", { text: `${BUILT_IN_TEMPLATES.length} 内置` });
+    const actions = header.createDiv({ cls: "wop-template-drawer-actions" });
+    iconButton(actions, "download", "导出当前模板", () => {
       const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-      await navigator.clipboard.writeText(JSON.stringify(active, null, 2));
-      new Notice("模板 JSON 已复制。");
+      this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
+      new Notice("模板 JSON 已导出。");
     });
-    textButton(actions, "导入 JSON", () => {
-      const seed = cloneTemplate(findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates), "导入模板");
-      new TemplateEditorModal(this.app, seed, (template) => void this.saveCustomTemplate(template)).open();
-    }, true);
-    const grid = panel.createDiv({ cls: "wop-template-grid" });
-    for (const template of [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates]) {
-      this.renderTemplateCard(grid, template);
-    }
+    iconButton(actions, "archive", "导出全部用户模板", () => {
+      if (!this.host.settings.customTemplates.length) {
+        new Notice("还没有用户模板可导出。");
+        return;
+      }
+      this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
+      new Notice(`已导出 ${this.host.settings.customTemplates.length} 个用户模板。`);
+    });
+    const importInput = actions.createEl("input", {
+      type: "file",
+      cls: "wop-hidden-input",
+      attr: { accept: ".json,application/json", "aria-label": "选择模板 JSON 文件" }
+    });
+    importInput.addEventListener("change", () => void this.importTemplateFiles(importInput.files));
+    iconButton(actions, "upload", "导入模板 JSON", () => importInput.click());
+
+    const filters = drawer.createDiv({ cls: "wop-template-filters" });
+    const searchWrap = filters.createDiv({ cls: "wop-template-search" });
+    setIcon(searchWrap.createSpan(), "search");
+    const search = searchWrap.createEl("input", { type: "search", attr: { placeholder: "搜索主题、来源或标签", "aria-label": "搜索模板" } });
+    search.value = this.templateQuery;
+    const groupSelect = filters.createEl("select", { attr: { "aria-label": "筛选模板分组" } });
+    for (const group of ["全部", ...MD2_THEME_GROUPS, "用户模板"]) groupSelect.createEl("option", { text: group, value: group });
+    groupSelect.value = this.templateGroup;
+    const results = drawer.createDiv({ cls: "wop-template-results" });
+    const updateResults = () => {
+      this.templateQuery = search.value.trim();
+      this.templateGroup = groupSelect.value;
+      this.renderTemplateResults(results);
+    };
+    search.addEventListener("input", updateResults);
+    groupSelect.addEventListener("change", updateResults);
+    this.renderTemplateResults(results);
   }
 
-  private renderTemplateCard(parent: HTMLElement, template: PublisherTemplate): void {
+  private renderTemplateResults(parent: HTMLElement): void {
+    parent.empty();
+    const query = this.templateQuery.toLocaleLowerCase("zh-CN");
+    const templates = [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates].filter((template) => {
+      const groupMatches = this.templateGroup === "全部" || template.group === this.templateGroup;
+      const haystack = [template.name, template.description, template.group, template.sourceLabel, ...template.tags].join(" ").toLocaleLowerCase("zh-CN");
+      return groupMatches && (!query || haystack.includes(query));
+    });
+    const summary = parent.createDiv({ cls: "wop-template-summary" });
+    summary.createEl("span", { text: `${templates.length} 个 · ${this.templateGroup === "全部" ? "全目录" : this.templateGroup}` });
+    if (!templates.length) {
+      parent.createEl("p", { text: "没有匹配的模板。", cls: "wop-empty wop-template-empty" });
+      return;
+    }
+    const list = parent.createDiv({ cls: "wop-template-strip-list" });
+    for (const template of templates) this.renderTemplateStrip(list, template);
+  }
+
+  private renderTemplateStrip(parent: HTMLElement, template: PublisherTemplate): void {
     const active = template.id === this.host.settings.activeTemplateId;
-    const card = parent.createDiv({ cls: `wop-template-card${active ? " is-active" : ""}` });
-    card.style.setProperty("--wop-accent", template.accent);
-    card.style.setProperty("--wop-canvas", template.canvas);
-    const preview = card.createDiv({ cls: "wop-template-swatch" });
-    preview.createDiv({ cls: "wop-swatch-heading" });
-    preview.createDiv({ cls: "wop-swatch-line is-long" });
-    preview.createDiv({ cls: "wop-swatch-line" });
-    const info = card.createDiv({ cls: "wop-template-info" });
+    const row = parent.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
+    row.style.setProperty("--wop-accent", template.accent);
+    row.createDiv({ cls: "wop-template-color" });
+    const info = row.createDiv({ cls: "wop-template-strip-copy" });
     info.createEl("strong", { text: template.name });
-    info.createEl("span", { text: template.description });
-    const source = template.source === "custom" ? "用户模板" : template.source === "md2-inspired" ? "MD2 风格" : template.source === "wenyan-inspired" ? "Wenyan 风格" : "内置";
-    info.createEl("small", { text: source });
-    card.addEventListener("click", async () => {
+    info.createEl("span", { text: template.source === "custom" ? "用户模板" : template.group });
+    if (template.upstream) row.title = `来源：${template.upstream}`;
+    row.addEventListener("click", async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
     });
-    const actions = card.createDiv({ cls: "wop-template-actions" });
+    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "复制为用户模板", () => {
       const cloned = cloneTemplate(template);
       new TemplateEditorModal(this.app, cloned, (saved) => void this.saveCustomTemplate(saved)).open();
@@ -282,7 +356,7 @@ export class PublisherView extends ItemView {
     duplicate.addEventListener("click", (event) => event.stopPropagation());
     if (template.source === "custom") {
       const edit = iconButton(actions, "pencil", "编辑模板", () => {
-        new TemplateEditorModal(this.app, template, (saved) => void this.saveCustomTemplate(saved)).open();
+        new TemplateEditorModal(this.app, template, (saved) => void this.saveCustomTemplate(saved, template.id)).open();
       });
       edit.addEventListener("click", (event) => event.stopPropagation());
       const remove = iconButton(actions, "trash-2", "删除模板", async () => {
@@ -294,12 +368,43 @@ export class PublisherView extends ItemView {
     }
   }
 
-  private async saveCustomTemplate(template: PublisherTemplate): Promise<void> {
-    const index = this.host.settings.customTemplates.findIndex((item) => item.id === template.id);
-    if (index >= 0) this.host.settings.customTemplates[index] = template;
-    else this.host.settings.customTemplates.push(template);
-    this.host.settings.activeTemplateId = template.id;
+  private async saveCustomTemplate(template: PublisherTemplate, replaceId?: string): Promise<void> {
+    const existingIds = new Set([
+      ...BUILT_IN_TEMPLATES.map((item) => item.id),
+      ...this.host.settings.customTemplates.filter((item) => item.id !== replaceId).map((item) => item.id)
+    ]);
+    const saved = existingIds.has(template.id) ? makeUniqueTemplate(template, existingIds) : template;
+    const index = replaceId ? this.host.settings.customTemplates.findIndex((item) => item.id === replaceId) : -1;
+    if (index >= 0) this.host.settings.customTemplates[index] = saved;
+    else this.host.settings.customTemplates.push(saved);
+    this.host.settings.activeTemplateId = saved.id;
     await this.host.saveSettings();
+  }
+
+  private async importTemplateFiles(files: FileList | null): Promise<void> {
+    const file = files?.[0];
+    if (!file) return;
+    try {
+      const imported = parseTemplateBundle(await file.text());
+      const existingIds = new Set([...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates].map((template) => template.id));
+      const templates = imported.map((template) => makeUniqueTemplate(template, existingIds));
+      this.host.settings.customTemplates.push(...templates);
+      this.host.settings.activeTemplateId = templates[0].id;
+      this.templateGroup = "用户模板";
+      await this.host.saveSettings();
+      new Notice(`已导入 ${templates.length} 个用户模板。`);
+    } catch (error) {
+      new Notice(error instanceof Error ? error.message : "模板导入失败。");
+    }
+  }
+
+  private downloadJson(filename: string, content: string): void {
+    const url = URL.createObjectURL(new Blob([content], { type: "application/json;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   private renderPublishCheck(panel: HTMLElement, path: string, article: RenderedArticle): void {

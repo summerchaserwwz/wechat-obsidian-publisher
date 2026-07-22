@@ -1,6 +1,16 @@
 export type PublisherTab = "preview" | "modules" | "templates" | "publish";
 export type PreviewDevice = "phone" | "desktop";
-export type ModulePlacement = "before" | "after";
+export type ModulePlacement = "before" | "before-first-table" | "after-first-table" | "after";
+export type ModuleKind =
+  | "intro"
+  | "table-before"
+  | "table-after"
+  | "ending"
+  | "recommendations"
+  | "author"
+  | "follow"
+  | "copyright"
+  | "custom";
 
 export interface ArticleMeta {
   title: string;
@@ -13,20 +23,45 @@ export interface ArticleMeta {
 export interface ContentModule {
   id: string;
   name: string;
+  kind?: ModuleKind;
   placement: ModulePlacement;
   enabled: boolean;
   markdown: string;
 }
 
-export type TemplateSource = "built-in" | "wenyan-inspired" | "md2-inspired" | "custom";
+export type TemplateSource = "md2-catalog" | "custom";
+
+export interface TemplateTokens {
+  variant: string;
+  style?: string;
+  series?: string;
+  color?: string;
+  shape?: string;
+  accent: string;
+  accentSoft: string;
+  tint: string;
+  heading: string;
+  body: string;
+  link: string;
+  strong: string;
+  surface?: string;
+  gradient?: string;
+  glow?: string;
+}
 
 export interface PublisherTemplate {
   id: string;
   name: string;
   description: string;
   source: TemplateSource;
+  group: string;
+  sourceLabel: string;
+  license: string;
+  upstream?: string;
+  tags: string[];
   accent: string;
   canvas: string;
+  tokens: TemplateTokens;
   styles: Record<string, Record<string, string>>;
 }
 
@@ -35,6 +70,13 @@ export interface WechatAccount {
   name: string;
   appId: string;
   encryptedSecret: string;
+}
+
+export interface WechatConnectionDiagnostic {
+  status: "ok" | "ip-blocked" | "error";
+  message: string;
+  rejectedIp: string;
+  checkedAt: number;
 }
 
 export interface PublishReceipt {
@@ -53,7 +95,7 @@ export interface RenderedArticle {
 }
 
 export interface PluginSettings {
-  version: 1;
+  version: 2;
   activeTemplateId: string;
   previewDevice: PreviewDevice;
   activeTab: PublisherTab;
@@ -61,6 +103,7 @@ export interface PluginSettings {
   defaultAuthor: string;
   defaultCoverPath: string;
   accounts: WechatAccount[];
+  connectionDiagnostics: Record<string, WechatConnectionDiagnostic>;
   modules: ContentModule[];
   customTemplates: PublisherTemplate[];
   lastDraftByFile: Record<string, string>;

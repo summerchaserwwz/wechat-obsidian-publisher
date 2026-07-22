@@ -119,8 +119,8 @@ var require_core = __commonJS({
        * Adds texts to the output stream
        *
        * @param {string} text */
-      addText(text4) {
-        this.buffer += escapeHTML(text4);
+      addText(text5) {
+        this.buffer += escapeHTML(text5);
       }
       /**
        * Adds a node open to the output stream (if needed)
@@ -242,11 +242,11 @@ var require_core = __commonJS({
       /**
        * @param {string} text
        */
-      addText(text4) {
-        if (text4 === "") {
+      addText(text5) {
+        if (text5 === "") {
           return;
         }
-        this.add(text4);
+        this.add(text5);
       }
       /** @param {string} scope */
       startScope(scope) {
@@ -1075,11 +1075,11 @@ var require_core = __commonJS({
               continue;
             }
             const klass = language.classNameAliases[scope[i3]] || scope[i3];
-            const text4 = match3[i3];
+            const text5 = match3[i3];
             if (klass) {
-              emitKeyword(text4, klass);
+              emitKeyword(text5, klass);
             } else {
-              modeBuffer = text4;
+              modeBuffer = text5;
               processKeywords();
               modeBuffer = "";
             }
@@ -1389,8 +1389,8 @@ var require_core = __commonJS({
           }
         }
         node2 = element3;
-        const text4 = node2.textContent;
-        const result = language ? highlight2(text4, { language, ignoreIllegals: true }) : highlightAuto(text4);
+        const text5 = node2.textContent;
+        const result = language ? highlight2(text5, { language, ignoreIllegals: true }) : highlightAuto(text5);
         element3.innerHTML = result.value;
         element3.dataset.highlighted = "yes";
         updateClassName(element3, language, result.language);
@@ -1406,7 +1406,7 @@ var require_core = __commonJS({
             relevance: result.secondBest.relevance
           };
         }
-        fire("after:highlightElement", { el: element3, result, text: text4 });
+        fire("after:highlightElement", { el: element3, result, text: text5 });
       }
       function configure(userOptions) {
         options2 = inherit2(options2, userOptions);
@@ -14895,7 +14895,7 @@ var init_katex = __esm({
       "'": "&#x27;"
     };
     ESCAPE_REGEX = /[&><"']/g;
-    escape2 = (text4) => String(text4).replace(ESCAPE_REGEX, (match3) => ESCAPE_LOOKUP[match3]);
+    escape2 = (text5) => String(text5).replace(ESCAPE_REGEX, (match3) => ESCAPE_LOOKUP[match3]);
     getBaseElem = (group2) => {
       if (group2.type === "ordgroup") {
         if (group2.body.length === 1) {
@@ -15719,7 +15719,7 @@ var init_katex = __esm({
       "\xEC": "\u0131\u0300"
     };
     SymbolNode = class {
-      constructor(text4, height2, depth, italic2, skew, width3, classes3, style3) {
+      constructor(text5, height2, depth, italic2, skew, width3, classes3, style3) {
         this.text = void 0;
         this.height = void 0;
         this.depth = void 0;
@@ -15729,7 +15729,7 @@ var init_katex = __esm({
         this.maxFontSize = void 0;
         this.classes = void 0;
         this.style = void 0;
-        this.text = text4;
+        this.text = text5;
         this.height = height2 || 0;
         this.depth = depth || 0;
         this.italic = italic2 || 0;
@@ -19032,7 +19032,7 @@ var init_katex = __esm({
     };
     makeOrd = function makeOrd2(group2, options2, type3) {
       var mode = group2.mode;
-      var text4 = group2.text;
+      var text5 = group2.text;
       var classes3 = ["mord"];
       var {
         font,
@@ -19044,18 +19044,18 @@ var init_katex = __esm({
       var fontOrFamily = useFont ? font : fontFamily;
       var wideFontName = "";
       var wideFontClass = "";
-      if (text4.charCodeAt(0) === 55349) {
-        var wideCharData = wideCharacterFont(text4);
+      if (text5.charCodeAt(0) === 55349) {
+        var wideCharData = wideCharacterFont(text5);
         wideFontName = wideCharData.font;
         wideFontClass = wideCharData[mode + "Class"];
       }
       if (wideFontName) {
-        return makeSymbol(text4, wideFontName, mode, options2, classes3.concat(wideFontClass));
+        return makeSymbol(text5, wideFontName, mode, options2, classes3.concat(wideFontClass));
       } else if (fontOrFamily) {
         var fontName;
         var fontClasses;
         if (fontOrFamily === "boldsymbol") {
-          var fontData = boldSymbol(text4, mode, type3);
+          var fontData = boldSymbol(text5, mode, type3);
           fontName = fontData.fontName;
           fontClasses = [fontData.fontClass];
         } else if (useFont) {
@@ -19065,29 +19065,29 @@ var init_katex = __esm({
           fontName = retrieveTextFontName(fontFamily, fontWeight, fontShape);
           fontClasses = [fontFamily, fontWeight, fontShape];
         }
-        if (lookupSymbol(text4, fontName, mode).metrics) {
-          return makeSymbol(text4, fontName, mode, options2, classes3.concat(fontClasses));
-        } else if (ligatures.hasOwnProperty(text4) && fontName.slice(0, 10) === "Typewriter") {
+        if (lookupSymbol(text5, fontName, mode).metrics) {
+          return makeSymbol(text5, fontName, mode, options2, classes3.concat(fontClasses));
+        } else if (ligatures.hasOwnProperty(text5) && fontName.slice(0, 10) === "Typewriter") {
           var parts = [];
-          for (var i3 = 0; i3 < text4.length; i3++) {
-            parts.push(makeSymbol(text4[i3], fontName, mode, options2, classes3.concat(fontClasses)));
+          for (var i3 = 0; i3 < text5.length; i3++) {
+            parts.push(makeSymbol(text5[i3], fontName, mode, options2, classes3.concat(fontClasses)));
           }
           return makeFragment(parts);
         }
       }
       if (type3 === "mathord") {
-        return makeSymbol(text4, "Math-Italic", mode, options2, classes3.concat(["mathnormal"]));
+        return makeSymbol(text5, "Math-Italic", mode, options2, classes3.concat(["mathnormal"]));
       } else if (type3 === "textord") {
-        var _font = symbols[mode][text4] && symbols[mode][text4].font;
+        var _font = symbols[mode][text5] && symbols[mode][text5].font;
         if (_font === "ams") {
           var _fontName = retrieveTextFontName("amsrm", fontWeight, fontShape);
-          return makeSymbol(text4, _fontName, mode, options2, classes3.concat("amsrm", fontWeight, fontShape));
+          return makeSymbol(text5, _fontName, mode, options2, classes3.concat("amsrm", fontWeight, fontShape));
         } else if (_font === "main" || !_font) {
           var _fontName2 = retrieveTextFontName("textrm", fontWeight, fontShape);
-          return makeSymbol(text4, _fontName2, mode, options2, classes3.concat(fontWeight, fontShape));
+          return makeSymbol(text5, _fontName2, mode, options2, classes3.concat(fontWeight, fontShape));
         } else {
           var _fontName3 = retrieveTextFontName(_font, fontWeight, fontShape);
-          return makeSymbol(text4, _fontName3, mode, options2, classes3.concat(_fontName3, fontWeight, fontShape));
+          return makeSymbol(text5, _fontName3, mode, options2, classes3.concat(_fontName3, fontWeight, fontShape));
         }
       } else {
         throw new Error("unexpected type: " + type3 + " in makeOrd");
@@ -19272,18 +19272,18 @@ var init_katex = __esm({
       }
       var vlist = makeSpan(["vlist"], realChildren);
       vlist.style.height = makeEm(maxPos2);
-      var rows;
+      var rows2;
       if (minPos < 0) {
         var emptySpan = makeSpan([], []);
         var depthStrut = makeSpan(["vlist"], [emptySpan]);
         depthStrut.style.height = makeEm(-minPos);
         var topStrut = makeSpan(["vlist-s"], [new SymbolNode("\u200B")]);
-        rows = [makeSpan(["vlist-r"], [vlist, topStrut]), makeSpan(["vlist-r"], [depthStrut])];
+        rows2 = [makeSpan(["vlist-r"], [vlist, topStrut]), makeSpan(["vlist-r"], [depthStrut])];
       } else {
-        rows = [makeSpan(["vlist-r"], [vlist])];
+        rows2 = [makeSpan(["vlist-r"], [vlist])];
       }
-      var vtable = makeSpan(["vlist-t"], rows);
-      if (rows.length === 2) {
+      var vtable = makeSpan(["vlist-t"], rows2);
+      if (rows2.length === 2) {
         vtable.classes.push("vlist-t2");
       }
       vtable.height = maxPos2;
@@ -19699,11 +19699,11 @@ var init_katex = __esm({
         }
         for (var i3 = 0; i3 < this.children.length; i3++) {
           if (this.children[i3] instanceof TextNode && this.children[i3 + 1] instanceof TextNode) {
-            var text4 = this.children[i3].toText() + this.children[++i3].toText();
+            var text5 = this.children[i3].toText() + this.children[++i3].toText();
             while (this.children[i3 + 1] instanceof TextNode) {
-              text4 += this.children[++i3].toText();
+              text5 += this.children[++i3].toText();
             }
-            node2.appendChild(new TextNode(text4).toNode());
+            node2.appendChild(new TextNode(text5).toNode());
           } else {
             node2.appendChild(this.children[i3].toNode());
           }
@@ -19740,9 +19740,9 @@ var init_katex = __esm({
       }
     };
     TextNode = class {
-      constructor(text4) {
+      constructor(text5) {
         this.text = void 0;
-        this.text = text4;
+        this.text = text5;
       }
       /**
        * Converts the text node into a DOM text node.
@@ -19828,11 +19828,11 @@ var init_katex = __esm({
     };
     noVariantSymbols = /* @__PURE__ */ new Set(["\\imath", "\\jmath"]);
     rowLikeTypes = /* @__PURE__ */ new Set(["mrow", "mtable"]);
-    makeText = function makeText2(text4, mode, options2) {
-      if (symbols[mode][text4] && symbols[mode][text4].replace && text4.charCodeAt(0) !== 55349 && !(ligatures.hasOwnProperty(text4) && options2 && (options2.fontFamily && options2.fontFamily.slice(4, 6) === "tt" || options2.font && options2.font.slice(4, 6) === "tt"))) {
-        text4 = symbols[mode][text4].replace;
+    makeText = function makeText2(text5, mode, options2) {
+      if (symbols[mode][text5] && symbols[mode][text5].replace && text5.charCodeAt(0) !== 55349 && !(ligatures.hasOwnProperty(text5) && options2 && (options2.fontFamily && options2.fontFamily.slice(4, 6) === "tt" || options2.font && options2.font.slice(4, 6) === "tt"))) {
+        text5 = symbols[mode][text5].replace;
       }
-      return new TextNode(text4);
+      return new TextNode(text5);
     };
     makeRow = function makeRow2(body) {
       if (body.length === 1) {
@@ -19884,18 +19884,18 @@ var init_katex = __esm({
       if (mathVariant) {
         return typeof mathVariant === "function" ? mathVariant(group2) : mathVariant;
       }
-      var text4 = group2.text;
-      if (noVariantSymbols.has(text4)) {
+      var text5 = group2.text;
+      if (noVariantSymbols.has(text5)) {
         return null;
       }
-      if (symbols[mode][text4]) {
-        var replacement = symbols[mode][text4].replace;
+      if (symbols[mode][text5]) {
+        var replacement = symbols[mode][text5].replace;
         if (replacement) {
-          text4 = replacement;
+          text5 = replacement;
         }
       }
       var fontName = fontMap[font].fontName;
-      if (getCharacterMetrics(text4, fontName, mode)) {
+      if (getCharacterMetrics(text5, fontName, mode)) {
         return fontMap[font].variant;
       }
       return null;
@@ -21121,21 +21121,21 @@ var init_katex = __esm({
           number7 += node2.text;
         }
         var code = parseInt(number7);
-        var text4;
+        var text5;
         if (isNaN(code)) {
           throw new ParseError("\\@char has non-numeric argument " + number7);
         } else if (code < 0 || code >= 1114111) {
           throw new ParseError("\\@char with invalid code point " + number7);
         } else if (code <= 65535) {
-          text4 = String.fromCharCode(code);
+          text5 = String.fromCharCode(code);
         } else {
           code -= 65536;
-          text4 = String.fromCharCode((code >> 10) + 55296, (code & 1023) + 56320);
+          text5 = String.fromCharCode((code >> 10) + 55296, (code & 1023) + 56320);
         }
         return {
           type: "textord",
           mode: parser34.mode,
-          text: text4
+          text: text5
         };
       }
     });
@@ -21459,8 +21459,8 @@ var init_katex = __esm({
       span.depth += shift2;
     };
     makeSmallDelim = function makeSmallDelim2(delim, style3, center4, options2, mode, classes3) {
-      var text4 = makeSymbol(delim, "Main-Regular", mode, options2);
-      var span = styleWrap(text4, style3, options2, classes3);
+      var text5 = makeSymbol(delim, "Main-Regular", mode, options2);
+      var span = styleWrap(text5, style3, options2, classes3);
       if (center4) {
         centerSpan(span, options2, style3);
       }
@@ -22520,20 +22520,20 @@ var init_katex = __esm({
     };
     Token = class _Token {
       // used in \noexpand
-      constructor(text4, loc) {
+      constructor(text5, loc) {
         this.text = void 0;
         this.loc = void 0;
         this.noexpand = void 0;
         this.treatAsRelax = void 0;
-        this.text = text4;
+        this.text = text5;
         this.loc = loc;
       }
       /**
        * Given a pair of tokens (this and endToken), compute a `Token` encompassing
        * the whole input range enclosed by these two.
        */
-      range(endToken, text4) {
-        return new _Token(text4, SourceLocation.range(this, endToken));
+      range(endToken, text5) {
+        return new _Token(text5, SourceLocation.range(this, endToken));
       }
     };
     validateAmsEnvironmentContext = (context) => {
@@ -25657,17 +25657,17 @@ var init_katex = __esm({
         return makeOrd(group2, options2, "textord");
       },
       mathmlBuilder(group2, options2) {
-        var text4 = makeText(group2.text, group2.mode, options2);
+        var text5 = makeText(group2.text, group2.mode, options2);
         var variant = getVariant(group2, options2) || "normal";
         var node2;
         if (group2.mode === "text") {
-          node2 = new MathNode("mtext", [text4]);
+          node2 = new MathNode("mtext", [text5]);
         } else if (/[0-9]/.test(group2.text)) {
-          node2 = new MathNode("mn", [text4]);
+          node2 = new MathNode("mn", [text5]);
         } else if (group2.text === "\\prime") {
-          node2 = new MathNode("mo", [text4]);
+          node2 = new MathNode("mo", [text5]);
         } else {
-          node2 = new MathNode("mi", [text4]);
+          node2 = new MathNode("mi", [text5]);
         }
         if (variant !== defaultVariant[node2.type]) {
           node2.setAttribute("mathvariant", variant);
@@ -25903,11 +25903,11 @@ var init_katex = __esm({
         throw new ParseError("\\verb ended by end of line instead of matching delimiter");
       },
       htmlBuilder(group2, options2) {
-        var text4 = makeVerb(group2);
+        var text5 = makeVerb(group2);
         var body = [];
         var newOptions = options2.havingStyle(options2.style.text());
-        for (var i3 = 0; i3 < text4.length; i3++) {
-          var c3 = text4[i3];
+        for (var i3 = 0; i3 < text5.length; i3++) {
+          var c3 = text5[i3];
           if (c3 === "~") {
             c3 = "\\textasciitilde";
           }
@@ -25916,8 +25916,8 @@ var init_katex = __esm({
         return makeSpan(["mord", "text"].concat(newOptions.sizingClasses(options2)), tryCombineChars(body), newOptions);
       },
       mathmlBuilder(group2, options2) {
-        var text4 = new TextNode(makeVerb(group2));
-        var node2 = new MathNode("mtext", [text4]);
+        var text5 = new TextNode(makeVerb(group2));
+        var node2 = new MathNode("mtext", [text5]);
         node2.setAttribute("mathvariant", "monospace");
         return node2;
       }
@@ -25972,8 +25972,8 @@ var init_katex = __esm({
         if (match3 === null || match3.index !== pos) {
           throw new ParseError("Unexpected character: '" + input[pos] + "'", new Token(input[pos], new SourceLocation(this, pos, pos + 1)));
         }
-        var text4 = match3[6] || match3[3] || (match3[2] ? "\\ " : " ");
-        if (this.catcodes[text4] === 14) {
+        var text5 = match3[6] || match3[3] || (match3[2] ? "\\ " : " ");
+        if (this.catcodes[text5] === 14) {
           var nlIndex = input.indexOf("\n", this.tokenRegex.lastIndex);
           if (nlIndex === -1) {
             this.tokenRegex.lastIndex = input.length;
@@ -25983,7 +25983,7 @@ var init_katex = __esm({
           }
           return this.lex();
         }
-        return new Token(text4, new SourceLocation(this, pos, this.tokenRegex.lastIndex));
+        return new Token(text5, new SourceLocation(this, pos, this.tokenRegex.lastIndex));
       }
     };
     Namespace = class {
@@ -27662,12 +27662,12 @@ var init_katex = __esm({
        * Checks a result to make sure it has the right type, and throws an
        * appropriate error otherwise.
        */
-      expect(text4, consume) {
+      expect(text5, consume) {
         if (consume === void 0) {
           consume = true;
         }
-        if (this.fetch().text !== text4) {
-          throw new ParseError("Expected '" + text4 + "', got '" + this.fetch().text + "'", this.fetch());
+        if (this.fetch().text !== text5) {
+          throw new ParseError("Expected '" + text5 + "', got '" + this.fetch().text + "'", this.fetch());
         }
         if (consume) {
           this.consume();
@@ -27848,13 +27848,13 @@ var init_katex = __esm({
        * Converts the textual input of an unsupported command into a text node
        * contained within a color node whose color is determined by errorColor
        */
-      formatUnsupportedCmd(text4) {
+      formatUnsupportedCmd(text5) {
         var textordArray = [];
-        for (var i3 = 0; i3 < text4.length; i3++) {
+        for (var i3 = 0; i3 < text5.length; i3++) {
           textordArray.push({
             type: "textord",
             mode: "text",
-            text: text4[i3]
+            text: text5[i3]
           });
         }
         var textNode = {
@@ -28266,11 +28266,11 @@ var init_katex = __esm({
        */
       parseGroup(name, breakOnTokenText) {
         var firstToken = this.fetch();
-        var text4 = firstToken.text;
+        var text5 = firstToken.text;
         var result;
-        if (text4 === "{" || text4 === "\\begingroup") {
+        if (text5 === "{" || text5 === "\\begingroup") {
           this.consume();
-          var groupEnd = text4 === "{" ? "}" : "\\endgroup";
+          var groupEnd = text5 === "{" ? "}" : "\\endgroup";
           this.gullet.beginGroup();
           var expression = this.parseExpression(false, groupEnd);
           var lastToken = this.fetch();
@@ -28285,15 +28285,15 @@ var init_katex = __esm({
             // which doesn't affect spacing in math mode, i.e., is transparent.
             // https://tex.stackexchange.com/questions/1930/when-should-one-
             // use-begingroup-instead-of-bgroup
-            semisimple: text4 === "\\begingroup" || void 0
+            semisimple: text5 === "\\begingroup" || void 0
           };
         } else {
           result = this.parseFunction(breakOnTokenText, name) || this.parseSymbol();
-          if (result == null && text4[0] === "\\" && !implicitCommands.hasOwnProperty(text4)) {
+          if (result == null && text5[0] === "\\" && !implicitCommands.hasOwnProperty(text5)) {
             if (this.settings.throwOnError) {
-              throw new ParseError("Undefined control sequence: " + text4, firstToken);
+              throw new ParseError("Undefined control sequence: " + text5, firstToken);
             }
-            result = this.formatUnsupportedCmd(text4);
+            result = this.formatUnsupportedCmd(text5);
             this.consume();
           }
         }
@@ -28356,10 +28356,10 @@ var init_katex = __esm({
        */
       parseSymbol() {
         var nucleus = this.fetch();
-        var text4 = nucleus.text;
-        if (/^\\verb[^a-zA-Z]/.test(text4)) {
+        var text5 = nucleus.text;
+        if (/^\\verb[^a-zA-Z]/.test(text5)) {
           this.consume();
-          var arg = text4.slice(5);
+          var arg = text5.slice(5);
           var star2 = arg.charAt(0) === "*";
           if (star2) {
             arg = arg.slice(1);
@@ -28375,27 +28375,27 @@ var init_katex = __esm({
             star: star2
           };
         }
-        if (unicodeSymbols.hasOwnProperty(text4[0]) && !symbols[this.mode][text4[0]]) {
+        if (unicodeSymbols.hasOwnProperty(text5[0]) && !symbols[this.mode][text5[0]]) {
           if (this.settings.strict && this.mode === "math") {
-            this.settings.reportNonstrict("unicodeTextInMathMode", 'Accented Unicode text character "' + text4[0] + '" used in math mode', nucleus);
+            this.settings.reportNonstrict("unicodeTextInMathMode", 'Accented Unicode text character "' + text5[0] + '" used in math mode', nucleus);
           }
-          text4 = unicodeSymbols[text4[0]] + text4.slice(1);
+          text5 = unicodeSymbols[text5[0]] + text5.slice(1);
         }
-        var match3 = combiningDiacriticalMarksEndRegex.exec(text4);
+        var match3 = combiningDiacriticalMarksEndRegex.exec(text5);
         if (match3) {
-          text4 = text4.substring(0, match3.index);
-          if (text4 === "i") {
-            text4 = "\u0131";
-          } else if (text4 === "j") {
-            text4 = "\u0237";
+          text5 = text5.substring(0, match3.index);
+          if (text5 === "i") {
+            text5 = "\u0131";
+          } else if (text5 === "j") {
+            text5 = "\u0237";
           }
         }
         var symbol;
-        if (symbols[this.mode][text4]) {
-          if (this.settings.strict && this.mode === "math" && extraLatin.includes(text4)) {
-            this.settings.reportNonstrict("unicodeTextInMathMode", 'Latin-1/Unicode text character "' + text4[0] + '" used in math mode', nucleus);
+        if (symbols[this.mode][text5]) {
+          if (this.settings.strict && this.mode === "math" && extraLatin.includes(text5)) {
+            this.settings.reportNonstrict("unicodeTextInMathMode", 'Latin-1/Unicode text character "' + text5[0] + '" used in math mode', nucleus);
           }
-          var group2 = symbols[this.mode][text4].group;
+          var group2 = symbols[this.mode][text5].group;
           var loc = SourceLocation.range(nucleus);
           var s2;
           if (isAtom(group2)) {
@@ -28404,30 +28404,30 @@ var init_katex = __esm({
               mode: this.mode,
               family: group2,
               loc,
-              text: text4
+              text: text5
             };
           } else {
             s2 = {
               type: group2,
               mode: this.mode,
               loc,
-              text: text4
+              text: text5
             };
           }
           symbol = s2;
-        } else if (text4.charCodeAt(0) >= 128) {
+        } else if (text5.charCodeAt(0) >= 128) {
           if (this.settings.strict) {
-            if (!supportedCodepoint(text4.charCodeAt(0))) {
-              this.settings.reportNonstrict("unknownSymbol", 'Unrecognized Unicode character "' + text4[0] + '"' + (" (" + text4.charCodeAt(0) + ")"), nucleus);
+            if (!supportedCodepoint(text5.charCodeAt(0))) {
+              this.settings.reportNonstrict("unknownSymbol", 'Unrecognized Unicode character "' + text5[0] + '"' + (" (" + text5.charCodeAt(0) + ")"), nucleus);
             } else if (this.mode === "math") {
-              this.settings.reportNonstrict("unicodeTextInMathMode", 'Unicode text character "' + text4[0] + '" used in math mode', nucleus);
+              this.settings.reportNonstrict("unicodeTextInMathMode", 'Unicode text character "' + text5[0] + '" used in math mode', nucleus);
             }
           }
           symbol = {
             type: "textord",
             mode: "text",
             loc: SourceLocation.range(nucleus),
-            text: text4
+            text: text5
           };
         } else {
           return null;
@@ -37546,16 +37546,16 @@ var init_chunk_WYO6CB5R = __esm({
       }
     };
     detectors = {};
-    detectType = /* @__PURE__ */ __name(function(text4, config22) {
-      text4 = text4.replace(frontMatterRegex, "").replace(directiveRegex, "").replace(anyCommentRegex, "\n");
+    detectType = /* @__PURE__ */ __name(function(text5, config22) {
+      text5 = text5.replace(frontMatterRegex, "").replace(directiveRegex, "").replace(anyCommentRegex, "\n");
       for (const [key, { detector: detector39 }] of Object.entries(detectors)) {
-        const diagram38 = detector39(text4, config22);
+        const diagram38 = detector39(text5, config22);
         if (diagram38) {
           return key;
         }
       }
       throw new UnknownDiagramError(
-        `No diagram type detected matching given configuration for text: ${text4}`
+        `No diagram type detected matching given configuration for text: ${text5}`
       );
     }, "detectType");
     registerLazyLoadedDiagrams = /* @__PURE__ */ __name((...diagrams2) => {
@@ -37596,32 +37596,32 @@ var init_chunk_WYO6CB5R = __esm({
       const sanitizedText = purify.sanitize(txt);
       return sanitizedText;
     }, "removeScript");
-    sanitizeMore = /* @__PURE__ */ __name((text4, config22) => {
+    sanitizeMore = /* @__PURE__ */ __name((text5, config22) => {
       if (getEffectiveHtmlLabels(config22)) {
         const level = config22.securityLevel;
         if (level === "antiscript" || level === "strict" || level === "sandbox") {
-          text4 = removeScript(text4);
+          text5 = removeScript(text5);
         } else if (level !== "loose") {
-          text4 = breakToPlaceholder(text4);
-          text4 = text4.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          text4 = text4.replace(/=/g, "&equals;");
-          text4 = placeholderToBreak(text4);
+          text5 = breakToPlaceholder(text5);
+          text5 = text5.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          text5 = text5.replace(/=/g, "&equals;");
+          text5 = placeholderToBreak(text5);
         }
       }
-      return text4;
+      return text5;
     }, "sanitizeMore");
-    sanitizeText = /* @__PURE__ */ __name((text4, config22) => {
-      if (!text4) {
-        return text4;
+    sanitizeText = /* @__PURE__ */ __name((text5, config22) => {
+      if (!text5) {
+        return text5;
       }
       if (config22.dompurifyConfig) {
-        text4 = purify.sanitize(sanitizeMore(text4, config22), config22.dompurifyConfig).toString();
+        text5 = purify.sanitize(sanitizeMore(text5, config22), config22.dompurifyConfig).toString();
       } else {
-        text4 = purify.sanitize(sanitizeMore(text4, config22), {
+        text5 = purify.sanitize(sanitizeMore(text5, config22), {
           FORBID_TAGS: ["style"]
         }).toString();
       }
-      return text4;
+      return text5;
     }, "sanitizeText");
     sanitizeTextOrArray = /* @__PURE__ */ __name((a2, config22) => {
       if (typeof a2 === "string") {
@@ -37629,11 +37629,11 @@ var init_chunk_WYO6CB5R = __esm({
       }
       return a2.flat().map((x6) => sanitizeText(x6, config22));
     }, "sanitizeTextOrArray");
-    hasBreaks = /* @__PURE__ */ __name((text4) => {
-      return lineBreakRegex.test(text4);
+    hasBreaks = /* @__PURE__ */ __name((text5) => {
+      return lineBreakRegex.test(text5);
     }, "hasBreaks");
-    splitBreaks = /* @__PURE__ */ __name((text4) => {
-      return text4.split(lineBreakRegex);
+    splitBreaks = /* @__PURE__ */ __name((text5) => {
+      return text5.split(lineBreakRegex);
     }, "splitBreaks");
     placeholderToBreak = /* @__PURE__ */ __name((s2) => {
       return s2.replace(/#br#/g, "<br/>");
@@ -37713,10 +37713,10 @@ var init_chunk_WYO6CB5R = __esm({
     }, "processSet");
     isMathMLSupported = /* @__PURE__ */ __name(() => window.MathMLElement !== void 0, "isMathMLSupported");
     katexRegex = /\$\$(.*?)\$\$/g;
-    hasKatex = /* @__PURE__ */ __name((text4) => (text4.match(katexRegex)?.length ?? 0) > 0, "hasKatex");
-    calculateMathMLDimensions = /* @__PURE__ */ __name(async (text4, config22) => {
+    hasKatex = /* @__PURE__ */ __name((text5) => (text5.match(katexRegex)?.length ?? 0) > 0, "hasKatex");
+    calculateMathMLDimensions = /* @__PURE__ */ __name(async (text5, config22) => {
       const divElem = document.createElement("div");
-      divElem.innerHTML = await renderKatexSanitized(text4, config22);
+      divElem.innerHTML = await renderKatexSanitized(text5, config22);
       divElem.id = "katex-temp";
       divElem.style.visibility = "hidden";
       divElem.style.position = "absolute";
@@ -37727,17 +37727,17 @@ var init_chunk_WYO6CB5R = __esm({
       divElem.remove();
       return dim;
     }, "calculateMathMLDimensions");
-    renderKatexUnsanitized = /* @__PURE__ */ __name(async (text4, config22) => {
-      if (!hasKatex(text4)) {
-        return text4;
+    renderKatexUnsanitized = /* @__PURE__ */ __name(async (text5, config22) => {
+      if (!hasKatex(text5)) {
+        return text5;
       }
       if (!(isMathMLSupported() || config22.legacyMathML || config22.forceLegacyMathML)) {
-        return text4.replace(katexRegex, "MathML is unsupported in this environment.");
+        return text5.replace(katexRegex, "MathML is unsupported in this environment.");
       }
       if (true) {
         const { default: katex2 } = await Promise.resolve().then(() => (init_katex(), katex_exports));
         const outputMode = config22.forceLegacyMathML || !isMathMLSupported() && config22.legacyMathML ? "htmlAndMathml" : "mathml";
-        return text4.split(lineBreakRegex).map(
+        return text5.split(lineBreakRegex).map(
           (line2) => hasKatex(line2) ? `<div style="display: flex; align-items: center; justify-content: center; white-space: nowrap;">${line2}</div>` : `<div>${line2}</div>`
         ).join("").replace(
           katexRegex,
@@ -37748,13 +37748,13 @@ var init_chunk_WYO6CB5R = __esm({
           }).replace(/\n/g, " ").replace(/<annotation.*<\/annotation>/g, "")
         );
       }
-      return text4.replace(
+      return text5.replace(
         katexRegex,
         "Katex is not supported in @mermaid-js/tiny. Please use the full mermaid library."
       );
     }, "renderKatexUnsanitized");
-    renderKatexSanitized = /* @__PURE__ */ __name(async (text4, config22) => {
-      return sanitizeText(await renderKatexUnsanitized(text4, config22), config22);
+    renderKatexSanitized = /* @__PURE__ */ __name(async (text5, config22) => {
+      return sanitizeText(await renderKatexUnsanitized(text5, config22), config22);
     }, "renderKatexSanitized");
     common_default2 = {
       getRows,
@@ -37978,7 +37978,7 @@ var init_chunk_WYO6CB5R = __esm({
     getConfig2 = getConfig;
     setConfig2 = setConfig;
     defaultConfig2 = defaultConfig;
-    sanitizeText3 = /* @__PURE__ */ __name((text4) => sanitizeText(text4, getConfig2()), "sanitizeText");
+    sanitizeText3 = /* @__PURE__ */ __name((text5) => sanitizeText(text5, getConfig2()), "sanitizeText");
     setupGraphViewbox2 = setupGraphViewbox;
     getCommonDb = /* @__PURE__ */ __name(() => {
       return commonDb_exports;
@@ -38320,16 +38320,16 @@ function entering() {
 function axis(orient, scale3) {
   var tickArguments = [], tickValues = null, tickFormat2 = null, tickSizeInner = 6, tickSizeOuter = 6, tickPadding = 3, offset = typeof window !== "undefined" && window.devicePixelRatio > 1 ? 0 : 0.5, k3 = orient === top || orient === left ? -1 : 1, x6 = orient === left || orient === right ? "x" : "y", transform8 = orient === top || orient === bottom ? translateX : translateY;
   function axis2(context) {
-    var values3 = tickValues == null ? scale3.ticks ? scale3.ticks.apply(scale3, tickArguments) : scale3.domain() : tickValues, format3 = tickFormat2 == null ? scale3.tickFormat ? scale3.tickFormat.apply(scale3, tickArguments) : identity_default : tickFormat2, spacing2 = Math.max(tickSizeInner, 0) + tickPadding, range3 = scale3.range(), range0 = +range3[0] + offset, range1 = +range3[range3.length - 1] + offset, position5 = (scale3.bandwidth ? center : number2)(scale3.copy(), offset), selection2 = context.selection ? context.selection() : context, path4 = selection2.selectAll(".domain").data([null]), tick = selection2.selectAll(".tick").data(values3, scale3).order(), tickExit = tick.exit(), tickEnter = tick.enter().append("g").attr("class", "tick"), line2 = tick.select("line"), text4 = tick.select("text");
+    var values3 = tickValues == null ? scale3.ticks ? scale3.ticks.apply(scale3, tickArguments) : scale3.domain() : tickValues, format3 = tickFormat2 == null ? scale3.tickFormat ? scale3.tickFormat.apply(scale3, tickArguments) : identity_default : tickFormat2, spacing2 = Math.max(tickSizeInner, 0) + tickPadding, range3 = scale3.range(), range0 = +range3[0] + offset, range1 = +range3[range3.length - 1] + offset, position5 = (scale3.bandwidth ? center : number2)(scale3.copy(), offset), selection2 = context.selection ? context.selection() : context, path4 = selection2.selectAll(".domain").data([null]), tick = selection2.selectAll(".tick").data(values3, scale3).order(), tickExit = tick.exit(), tickEnter = tick.enter().append("g").attr("class", "tick"), line2 = tick.select("line"), text5 = tick.select("text");
     path4 = path4.merge(path4.enter().insert("path", ".tick").attr("class", "domain").attr("stroke", "currentColor"));
     tick = tick.merge(tickEnter);
     line2 = line2.merge(tickEnter.append("line").attr("stroke", "currentColor").attr(x6 + "2", k3 * tickSizeInner));
-    text4 = text4.merge(tickEnter.append("text").attr("fill", "currentColor").attr(x6, k3 * spacing2).attr("dy", orient === top ? "0em" : orient === bottom ? "0.71em" : "0.32em"));
+    text5 = text5.merge(tickEnter.append("text").attr("fill", "currentColor").attr(x6, k3 * spacing2).attr("dy", orient === top ? "0em" : orient === bottom ? "0.71em" : "0.32em"));
     if (context !== selection2) {
       path4 = path4.transition(context);
       tick = tick.transition(context);
       line2 = line2.transition(context);
-      text4 = text4.transition(context);
+      text5 = text5.transition(context);
       tickExit = tickExit.transition(context).attr("opacity", epsilon).attr("transform", function(d3) {
         return isFinite(d3 = position5(d3)) ? transform8(d3 + offset) : this.getAttribute("transform");
       });
@@ -38344,7 +38344,7 @@ function axis(orient, scale3) {
       return transform8(position5(d3) + offset);
     });
     line2.attr(x6 + "2", k3 * tickSizeInner);
-    text4.attr(x6, k3 * spacing2).text(format3);
+    text5.attr(x6, k3 * spacing2).text(format3);
     selection2.filter(entering).attr("fill", "none").attr("font-size", 10).attr("font-family", "sans-serif").attr("text-anchor", orient === right ? "start" : orient === left ? "end" : "middle");
     selection2.each(function() {
       this.__axis = position5;
@@ -42377,7 +42377,7 @@ var init_slice = __esm({
 
 // node_modules/d3-hierarchy/src/treemap/squarify.js
 function squarifyRatio(ratio, parent4, x0, y0, x1, y1) {
-  var rows = [], nodes5 = parent4.children, row, nodeValue, i0 = 0, i1 = 0, n2 = nodes5.length, dx, dy, value2 = parent4.value, sumValue, minValue, maxValue, newRatio, minRatio, alpha, beta;
+  var rows2 = [], nodes5 = parent4.children, row, nodeValue, i0 = 0, i1 = 0, n2 = nodes5.length, dx, dy, value2 = parent4.value, sumValue, minValue, maxValue, newRatio, minRatio, alpha, beta;
   while (i0 < n2) {
     dx = x1 - x0, dy = y1 - y0;
     do
@@ -42399,12 +42399,12 @@ function squarifyRatio(ratio, parent4, x0, y0, x1, y1) {
       }
       minRatio = newRatio;
     }
-    rows.push(row = { value: sumValue, dice: dx < dy, children: nodes5.slice(i0, i1) });
+    rows2.push(row = { value: sumValue, dice: dx < dy, children: nodes5.slice(i0, i1) });
     if (row.dice) dice_default(row, x0, y0, x1, value2 ? y0 += dy * sumValue / value2 : y1);
     else slice_default(row, x0, y0, value2 ? x0 += dx * sumValue / value2 : x1, y1);
     value2 -= sumValue, i0 = i1;
   }
-  return rows;
+  return rows2;
 }
 var phi, squarify_default;
 var init_squarify = __esm({
@@ -49173,11 +49173,11 @@ function makeRandomHex(length2) {
   }
   return result;
 }
-function calculateTextHeight(text4, config3) {
-  return calculateTextDimensions(text4, config3).height;
+function calculateTextHeight(text5, config3) {
+  return calculateTextDimensions(text5, config3).height;
 }
-function calculateTextWidth(text4, config3) {
-  return calculateTextDimensions(text4, config3).width;
+function calculateTextWidth(text5, config3) {
+  return calculateTextDimensions(text5, config3).width;
 }
 function isDetailedError(error3) {
   return "str" in error3;
@@ -49230,8 +49230,8 @@ var init_chunk_ICXQ74PX = __esm({
       curveStepBefore: stepBefore
     };
     directiveWithoutOpen = /\s*(?:(\w+)(?=:):|(\w+))\s*(?:(\w+)|((?:(?!}%{2}).|\r?\n)*))?\s*(?:}%{2})?/gi;
-    detectInit = /* @__PURE__ */ __name(function(text4, config3) {
-      const inits = detectDirective(text4, /(?:init\b)|(?:initialize\b)/);
+    detectInit = /* @__PURE__ */ __name(function(text5, config3) {
+      const inits = detectDirective(text5, /(?:init\b)|(?:initialize\b)/);
       let results = {};
       if (Array.isArray(inits)) {
         const args = inits.map((init3) => init3.args);
@@ -49243,7 +49243,7 @@ var init_chunk_ICXQ74PX = __esm({
       if (!results) {
         return;
       }
-      let type3 = detectType(text4, config3);
+      let type3 = detectType(text5, config3);
       const prop = "config";
       if (results[prop] !== void 0) {
         if (type3 === "flowchart-v2") {
@@ -49254,20 +49254,20 @@ var init_chunk_ICXQ74PX = __esm({
       }
       return results;
     }, "detectInit");
-    detectDirective = /* @__PURE__ */ __name(function(text4, type3 = null) {
+    detectDirective = /* @__PURE__ */ __name(function(text5, type3 = null) {
       try {
         const commentWithoutDirectives = new RegExp(
           `[%]{2}(?![{]${directiveWithoutOpen.source})(?=[}][%]{2}).*
 `,
           "ig"
         );
-        text4 = text4.trim().replace(commentWithoutDirectives, "").replace(/'/gm, '"');
+        text5 = text5.trim().replace(commentWithoutDirectives, "").replace(/'/gm, '"');
         log.debug(
-          `Detecting diagram directive${type3 !== null ? " type:" + type3 : ""} based on the text:${text4}`
+          `Detecting diagram directive${type3 !== null ? " type:" + type3 : ""} based on the text:${text5}`
         );
         let match3;
         const result = [];
-        while ((match3 = directiveRegex.exec(text4)) !== null) {
+        while ((match3 = directiveRegex.exec(text5)) !== null) {
           if (match3.index === directiveRegex.lastIndex) {
             directiveRegex.lastIndex++;
           }
@@ -49278,18 +49278,18 @@ var init_chunk_ICXQ74PX = __esm({
           }
         }
         if (result.length === 0) {
-          return { type: text4, args: null };
+          return { type: text5, args: null };
         }
         return result.length === 1 ? result[0] : result;
       } catch (error3) {
         log.error(
-          `ERROR: ${error3.message} - Unable to parse directive type: '${type3}' based on the text: '${text4}'`
+          `ERROR: ${error3.message} - Unable to parse directive type: '${type3}' based on the text: '${text5}'`
         );
         return { type: void 0, args: null };
       }
     }, "detectDirective");
-    removeDirectives = /* @__PURE__ */ __name(function(text4) {
-      return text4.replace(directiveRegex, "");
+    removeDirectives = /* @__PURE__ */ __name(function(text5) {
+      return text5.replace(directiveRegex, "");
     }, "removeDirectives");
     isSubstringInArray = /* @__PURE__ */ __name(function(str2, arr) {
       for (const [i3, element3] of arr.entries()) {
@@ -49481,14 +49481,14 @@ var init_chunk_ICXQ74PX = __esm({
     __name(calculateTextHeight, "calculateTextHeight");
     __name(calculateTextWidth, "calculateTextWidth");
     calculateTextDimensions = memoize(
-      (text4, config3) => {
+      (text5, config3) => {
         const { fontSize = 12, fontFamily = "Arial", fontWeight = 400 } = config3;
-        if (!text4) {
+        if (!text5) {
           return { width: 0, height: 0 };
         }
         const [, _fontSizePx] = parseFontSize(fontSize);
         const fontFamilies = ["sans-serif", fontFamily];
-        const lines = text4.split(common_default2.lineBreakRegex);
+        const lines = text5.split(common_default2.lineBreakRegex);
         const dims = [];
         const body = select_default2("body");
         if (!body.remove) {
@@ -49517,7 +49517,7 @@ var init_chunk_ICXQ74PX = __esm({
         const index = isNaN(dims[1].height) || isNaN(dims[1].width) || isNaN(dims[1].lineHeight) || dims[0].height > dims[1].height && dims[0].width > dims[1].width && dims[0].lineHeight > dims[1].lineHeight ? 0 : 1;
         return dims[index];
       },
-      (text4, config3) => `${text4}${config3.fontSize}${config3.fontWeight}${config3.fontFamily}`
+      (text5, config3) => `${text5}${config3.fontSize}${config3.fontWeight}${config3.fontFamily}`
     );
     InitIDGenerator = class {
       constructor(deterministic = false, seed) {
@@ -49585,8 +49585,8 @@ var init_chunk_ICXQ74PX = __esm({
       parseFontSize,
       InitIDGenerator
     };
-    encodeEntities = /* @__PURE__ */ __name(function(text4) {
-      let txt = text4;
+    encodeEntities = /* @__PURE__ */ __name(function(text5) {
+      let txt = text5;
       txt = txt.replace(/style.*:\S*#.*;/g, function(s2) {
         return s2.substring(0, s2.length - 1);
       });
@@ -49604,8 +49604,8 @@ var init_chunk_ICXQ74PX = __esm({
       });
       return txt;
     }, "encodeEntities");
-    decodeEntities = /* @__PURE__ */ __name(function(text4) {
-      return text4.replace(/ﬂ°°/g, "&#").replace(/ﬂ°/g, "&").replace(/¶ß/g, ";");
+    decodeEntities = /* @__PURE__ */ __name(function(text5) {
+      return text5.replace(/ﬂ°°/g, "&#").replace(/ﬂ°/g, "&").replace(/¶ß/g, ";");
     }, "decodeEntities");
     getEdgeId = /* @__PURE__ */ __name((from2, to, {
       counter = 0,
@@ -50255,8 +50255,8 @@ function markdownToLines(markdown, config3 = {}) {
   });
   return lines;
 }
-function nonMarkdownToHTML(text4) {
-  if (!text4) {
+function nonMarkdownToHTML(text5) {
+  if (!text5) {
     return "";
   }
   return `<p>${/**
@@ -50264,7 +50264,7 @@ function nonMarkdownToHTML(text4) {
   *
   * Unlike in markdown text, `\n` sequences are treated as line breaks here.
   */
-  text4.replace(/\\n|\n/g, "<br />")}</p>`;
+  text5.replace(/\\n|\n/g, "<br />")}</p>`;
 }
 function markdownToHTML(markdown, { markdownAutoWrap } = {}) {
   const nodes5 = k.lexer(markdown);
@@ -50293,11 +50293,11 @@ function markdownToHTML(markdown, { markdownAutoWrap } = {}) {
   __name(output2, "output");
   return nodes5.map(output2).join("");
 }
-function splitTextToChars(text4) {
+function splitTextToChars(text5) {
   if (Intl.Segmenter) {
-    return [...new Intl.Segmenter().segment(text4)].map((s2) => s2.segment);
+    return [...new Intl.Segmenter().segment(text5)].map((s2) => s2.segment);
   }
-  return [...text4];
+  return [...text5];
 }
 function splitWordToFitWidth(checkFit, word) {
   const characters2 = splitTextToChars(word.content);
@@ -50415,10 +50415,10 @@ function computeWidthOfText(parentNode, lineHeight, line2) {
   testElement.remove();
   return textLength;
 }
-function computeDimensionOfText(parentNode, lineHeight, text4) {
+function computeDimensionOfText(parentNode, lineHeight, text5) {
   const testElement = parentNode.append("text");
   const testSpan = createTspan(testElement, 1, lineHeight);
-  updateTextContentAndStyles(testSpan, [{ content: text4, type: "normal" }]);
+  updateTextContentAndStyles(testSpan, [{ content: text5, type: "normal" }]);
   const textDimension = testSpan.node()?.getBoundingClientRect();
   if (textDimension) {
     testElement.remove();
@@ -50452,9 +50452,9 @@ function createFormattedText(width3, g2, structuredText, addBackground = false, 
     return textElement.node();
   }
 }
-function decodeHTMLEntities(text4) {
+function decodeHTMLEntities(text5) {
   const regex2 = /&(amp|lt|gt);/g;
-  return text4.replace(regex2, (match3, entity) => {
+  return text5.replace(regex2, (match3, entity) => {
     switch (entity) {
       case "amp":
         return "&";
@@ -50478,9 +50478,9 @@ function updateTextContentAndStyles(tspan, wrappedLine) {
     }
   });
 }
-async function replaceIconSubstring(text4, config3 = {}) {
+async function replaceIconSubstring(text5, config3 = {}) {
   const pendingReplacements = [];
-  text4.replace(/(fa[bklrs]?):fa-([\w-]+)/g, (fullMatch, prefix, iconName) => {
+  text5.replace(/(fa[bklrs]?):fa-([\w-]+)/g, (fullMatch, prefix, iconName) => {
     pendingReplacements.push(
       (async () => {
         const registeredIconName = `${prefix}:${iconName}`;
@@ -50494,7 +50494,7 @@ async function replaceIconSubstring(text4, config3 = {}) {
     return fullMatch;
   });
   const replacements = await Promise.all(pendingReplacements);
-  return text4.replace(/(fa[bklrs]?):fa-([\w-]+)/g, () => replacements.shift() ?? "");
+  return text5.replace(/(fa[bklrs]?):fa-([\w-]+)/g, () => replacements.shift() ?? "");
 }
 var maxSafeSizeForWidth, createText;
 var init_chunk_Q4XR5HBZ = __esm({
@@ -50527,7 +50527,7 @@ var init_chunk_Q4XR5HBZ = __esm({
     __name(decodeHTMLEntities, "decodeHTMLEntities");
     __name(updateTextContentAndStyles, "updateTextContentAndStyles");
     __name(replaceIconSubstring, "replaceIconSubstring");
-    createText = /* @__PURE__ */ __name(async (el, text4 = "", {
+    createText = /* @__PURE__ */ __name(async (el, text5 = "", {
       style: style3 = "",
       isTitle = false,
       classes: classes3 = "",
@@ -50542,7 +50542,7 @@ var init_chunk_Q4XR5HBZ = __esm({
     } = {}, config3) => {
       log.debug(
         "XYZ createText",
-        text4,
+        text5,
         style3,
         isTitle,
         classes3,
@@ -50552,24 +50552,24 @@ var init_chunk_Q4XR5HBZ = __esm({
         addSvgBackground
       );
       if (useHtmlLabels) {
-        const htmlText = markdown ? markdownToHTML(text4, config3) : nonMarkdownToHTML(text4);
+        const htmlText = markdown ? markdownToHTML(text5, config3) : nonMarkdownToHTML(text5);
         const decodedReplacedText = await replaceIconSubstring(decodeEntities(htmlText), config3);
-        const inputForKatex = text4.replace(/\\\\/g, "\\");
+        const inputForKatex = text5.replace(/\\\\/g, "\\");
         const node2 = {
           isNode: isNode2,
-          label: hasKatex(text4) ? inputForKatex : decodedReplacedText,
+          label: hasKatex(text5) ? inputForKatex : decodedReplacedText,
           labelStyle: style3.replace("fill:", "color:")
         };
         const vertexNode = await addHtmlSpan(el, node2, width3, classes3, addSvgBackground, config3);
         return vertexNode;
       } else {
-        const sanitizeBR = decodeEntities(text4.replace(/<br\s*\/?>/g, "<br/>"));
+        const sanitizeBR = decodeEntities(text5.replace(/<br\s*\/?>/g, "<br/>"));
         const structuredText = markdown ? markdownToLines(sanitizeBR.replace("<br>", "<br/>"), config3) : nonMarkdownToLines(sanitizeBR);
         const svgLabel = createFormattedText(
           width3,
           el,
           structuredText,
-          text4 ? addSvgBackground : false,
+          text5 ? addSvgBackground : false,
           !isNode2
         );
         if (isNode2) {
@@ -54969,7 +54969,7 @@ async function erBox(parent4, node2) {
   nameBBox.height += TEXT_PADDING;
   let yOffset = 0;
   const yOffsets = [];
-  const rows = [];
+  const rows2 = [];
   let maxTypeWidth = 0;
   let maxNameWidth = 0;
   let maxKeysWidth = 0;
@@ -55018,7 +55018,7 @@ async function erBox(parent4, node2) {
     );
     maxCommentWidth = Math.max(maxCommentWidth, commentBBox.width + PADDING);
     const rowHeight = Math.max(typeBBox.height, nameBBox2.height, keysBBox.height, commentBBox.height) + TEXT_PADDING;
-    rows.push({ yOffset, rowHeight });
+    rows2.push({ yOffset, rowHeight });
     yOffset += rowHeight;
   }
   let totalWidthSections = 4;
@@ -55052,8 +55052,8 @@ async function erBox(parent4, node2) {
     options2.fillStyle = "solid";
   }
   let totalShapeBBoxHeight = 0;
-  if (rows.length > 0) {
-    totalShapeBBoxHeight = rows.reduce((sum2, row) => sum2 + (row?.rowHeight ?? 0), 0);
+  if (rows2.length > 0) {
+    totalShapeBBoxHeight = rows2.reduce((sum2, row) => sum2 + (row?.rowHeight ?? 0), 0);
   }
   const w4 = Math.max(shapeBBox.width + PADDING * 2, node2?.width || 0, maxWidth2);
   const h2 = Math.max((totalShapeBBoxHeight ?? 0) + nameBBox.height, node2?.height || 0);
@@ -55092,7 +55092,7 @@ async function erBox(parent4, node2) {
   const roughRect = rc.rectangle(x6, y6, w4, h2, options2);
   const rect22 = shapeSvg.insert(() => roughRect, ":first-child").attr("class", "outer-path").attr("style", cssStyles.join(""));
   yOffsets.push(0);
-  for (const [i3, row] of rows.entries()) {
+  for (const [i3, row] of rows2.entries()) {
     const contentRowIndex = i3 + 1;
     const isEven = contentRowIndex % 2 === 0 && row.yOffset !== 0;
     const roughRect2 = rc.rectangle(x6, nameBBox.height + y6 + row?.yOffset, w4, row?.rowHeight, {
@@ -95545,15 +95545,15 @@ var init_cytoscape_esm = __esm({
       } else {
         var cells = nodes5.size();
         var splits = Math.sqrt(cells * bb.h / bb.w);
-        var rows = Math.round(splits);
+        var rows2 = Math.round(splits);
         var cols = Math.round(bb.w / bb.h * splits);
         var small = function small2(val) {
           if (val == null) {
-            return Math.min(rows, cols);
+            return Math.min(rows2, cols);
           } else {
-            var min10 = Math.min(rows, cols);
-            if (min10 == rows) {
-              rows = val;
+            var min10 = Math.min(rows2, cols);
+            if (min10 == rows2) {
+              rows2 = val;
             } else {
               cols = val;
             }
@@ -95561,11 +95561,11 @@ var init_cytoscape_esm = __esm({
         };
         var large = function large2(val) {
           if (val == null) {
-            return Math.max(rows, cols);
+            return Math.max(rows2, cols);
           } else {
-            var max10 = Math.max(rows, cols);
-            if (max10 == rows) {
-              rows = val;
+            var max10 = Math.max(rows2, cols);
+            if (max10 == rows2) {
+              rows2 = val;
             } else {
               cols = val;
             }
@@ -95574,15 +95574,15 @@ var init_cytoscape_esm = __esm({
         var oRows = options2.rows;
         var oCols = options2.cols != null ? options2.cols : options2.columns;
         if (oRows != null && oCols != null) {
-          rows = oRows;
+          rows2 = oRows;
           cols = oCols;
         } else if (oRows != null && oCols == null) {
-          rows = oRows;
-          cols = Math.ceil(cells / rows);
+          rows2 = oRows;
+          cols = Math.ceil(cells / rows2);
         } else if (oRows == null && oCols != null) {
           cols = oCols;
-          rows = Math.ceil(cells / cols);
-        } else if (cols * rows > cells) {
+          rows2 = Math.ceil(cells / cols);
+        } else if (cols * rows2 > cells) {
           var sm = small();
           var lg = large();
           if ((sm - 1) * lg >= cells) {
@@ -95591,7 +95591,7 @@ var init_cytoscape_esm = __esm({
             large(lg - 1);
           }
         } else {
-          while (cols * rows < cells) {
+          while (cols * rows2 < cells) {
             var _sm = small();
             var _lg = large();
             if ((_lg + 1) * _sm >= cells) {
@@ -95602,7 +95602,7 @@ var init_cytoscape_esm = __esm({
           }
         }
         var cellWidth = bb.w / cols;
-        var cellHeight = bb.h / rows;
+        var cellHeight = bb.h / rows2;
         if (options2.condense) {
           cellWidth = 0;
           cellHeight = 0;
@@ -96269,9 +96269,9 @@ var init_cytoscape_esm = __esm({
         }
         ele2.boundingBox();
         var bb = _p.labelBounds[prefix || "main"];
-        var text4 = ele2.pstyle(prefixDash + "label").value;
+        var text5 = ele2.pstyle(prefixDash + "label").value;
         var eventsEnabled = ele2.pstyle("text-events").strValue === "yes";
-        if (!eventsEnabled || !text4) {
+        if (!eventsEnabled || !text5) {
           return;
         }
         var lx = preprop(_p.rscratch, "labelX", prefix);
@@ -98052,13 +98052,13 @@ var init_cytoscape_esm = __esm({
     };
     BRp$9.applyPrefixedLabelDimensions = function(ele, prefix) {
       var _p = ele._private;
-      var text4 = this.getLabelText(ele, prefix);
-      var cacheKey = hashString2(text4, ele._private.labelDimsKey);
+      var text5 = this.getLabelText(ele, prefix);
+      var cacheKey = hashString2(text5, ele._private.labelDimsKey);
       if (getPrefixedProperty(_p.rscratch, "prefixedLabelDimsKey", prefix) === cacheKey) {
         return;
       }
       setPrefixedProperty(_p.rscratch, "prefixedLabelDimsKey", prefix, cacheKey);
-      var labelDims = this.calculateLabelDimensions(ele, text4);
+      var labelDims = this.calculateLabelDimensions(ele, text5);
       var lineHeight = ele.pstyle("line-height").pfValue;
       var size4 = ele.pstyle("font-size").pfValue;
       var textWrap = ele.pstyle("text-wrap").strValue;
@@ -98077,7 +98077,7 @@ var init_cytoscape_esm = __esm({
     BRp$9.getLabelText = function(ele, prefix) {
       var _p = ele._private;
       var pfd = prefix ? prefix + "-" : "";
-      var text4 = ele.pstyle(pfd + "label").strValue;
+      var text5 = ele.pstyle(pfd + "label").strValue;
       var textTransform = ele.pstyle("text-transform").value;
       var rscratch = function rscratch2(propName, value2) {
         if (value2) {
@@ -98087,14 +98087,14 @@ var init_cytoscape_esm = __esm({
           return getPrefixedProperty(_p.rscratch, propName, prefix);
         }
       };
-      if (!text4) {
+      if (!text5) {
         return "";
       }
       if (textTransform == "none") ;
       else if (textTransform == "uppercase") {
-        text4 = text4.toUpperCase();
+        text5 = text5.toUpperCase();
       } else if (textTransform == "lowercase") {
-        text4 = text4.toLowerCase();
+        text5 = text5.toLowerCase();
       }
       var wrapStyle = ele.pstyle("text-wrap").value;
       if (wrapStyle === "wrap") {
@@ -98103,7 +98103,7 @@ var init_cytoscape_esm = __esm({
           return rscratch("labelWrapCachedText");
         }
         var zwsp = "\u200B";
-        var lines = text4.split("\n");
+        var lines = text5.split("\n");
         var maxW = ele.pstyle("text-max-width").pfValue;
         var overflow = ele.pstyle("text-overflow-wrap").value;
         var overflowAny = overflow === "anywhere";
@@ -98153,23 +98153,23 @@ var init_cytoscape_esm = __esm({
           }
         }
         rscratch("labelWrapCachedLines", wrappedLines);
-        text4 = rscratch("labelWrapCachedText", wrappedLines.join("\n"));
+        text5 = rscratch("labelWrapCachedText", wrappedLines.join("\n"));
         rscratch("labelWrapKey", labelKey);
       } else if (wrapStyle === "ellipsis") {
         var _maxW = ele.pstyle("text-max-width").pfValue;
         var ellipsized = "";
         var ellipsis = "\u2026";
         var incLastCh = false;
-        if (this.calculateLabelDimensions(ele, text4).width < _maxW) {
-          return text4;
+        if (this.calculateLabelDimensions(ele, text5).width < _maxW) {
+          return text5;
         }
-        for (var i3 = 0; i3 < text4.length; i3++) {
-          var widthWithNextCh = this.calculateLabelDimensions(ele, ellipsized + text4[i3] + ellipsis).width;
+        for (var i3 = 0; i3 < text5.length; i3++) {
+          var widthWithNextCh = this.calculateLabelDimensions(ele, ellipsized + text5[i3] + ellipsis).width;
           if (widthWithNextCh > _maxW) {
             break;
           }
-          ellipsized += text4[i3];
-          if (i3 === text4.length - 1) {
+          ellipsized += text5[i3];
+          if (i3 === text5.length - 1) {
             incLastCh = true;
           }
         }
@@ -98178,7 +98178,7 @@ var init_cytoscape_esm = __esm({
         }
         return ellipsized;
       }
-      return text4;
+      return text5;
     };
     BRp$9.getLabelJustification = function(ele) {
       var justification = ele.pstyle("text-justification").strValue;
@@ -98193,7 +98193,7 @@ var init_cytoscape_esm = __esm({
         return justification;
       }
     };
-    BRp$9.calculateLabelDimensions = function(ele, text4) {
+    BRp$9.calculateLabelDimensions = function(ele, text5) {
       var r2 = this;
       var containerWindow = r2.cy.window();
       var document2 = containerWindow.document;
@@ -98219,7 +98219,7 @@ var init_cytoscape_esm = __esm({
       c2d.font = "".concat(fStyle, " ").concat(weight8, " ").concat(size4, "px ").concat(family);
       var width3 = 0;
       var height2 = 0;
-      var lines = text4.split("\n");
+      var lines = text5.split("\n");
       var lineCount = lines.length;
       var labelActualDescent = 0;
       var labelActualAscent = 0;
@@ -102724,8 +102724,8 @@ var init_cytoscape_esm = __esm({
       var textX = getPrefixedProperty(rscratch, "labelX", prefix);
       var textY = getPrefixedProperty(rscratch, "labelY", prefix);
       var orgTextX, orgTextY;
-      var text4 = this.getLabelText(ele, prefix);
-      if (text4 != null && text4 !== "" && !isNaN(textX) && !isNaN(textY)) {
+      var text5 = this.getLabelText(ele, prefix);
+      if (text5 != null && text5 !== "" && !isNaN(textX) && !isNaN(textY)) {
         this.setupTextStyle(context, ele, useEleOpacity);
         var pdash = prefix ? prefix + "-" : "";
         var textW = getPrefixedProperty(rscratch, "labelWidth", prefix);
@@ -102897,9 +102897,9 @@ var init_cytoscape_esm = __esm({
           }
         } else {
           if (lineWidth > 0) {
-            context.strokeText(text4, textX, textY);
+            context.strokeText(text5, textX, textY);
           }
-          context.fillText(text4, textX, textY);
+          context.fillText(text5, textX, textY);
         }
         if (theta !== 0) {
           context.rotate(-theta);
@@ -103999,16 +103999,16 @@ var init_cytoscape_esm = __esm({
         if (r2.showFps && timeToRender) {
           timeToRender = Math.round(timeToRender);
           var fps = Math.round(1e3 / timeToRender);
-          var text4 = "1 frame = " + timeToRender + " ms = " + fps + " fps";
+          var text5 = "1 frame = " + timeToRender + " ms = " + fps + " fps";
           context.setTransform(1, 0, 0, 1, 0, 0);
           context.fillStyle = "rgba(255, 0, 0, 0.75)";
           context.strokeStyle = "rgba(255, 0, 0, 0.75)";
           context.font = "30px Arial";
           if (!fpsHeight) {
-            var dims = context.measureText(text4);
+            var dims = context.measureText(text5);
             fpsHeight = dims.actualBoundingBoxAscent;
           }
-          context.fillText(text4, 0, fpsHeight);
+          context.fillText(text5, 0, fpsHeight);
           var maxFps = 60;
           context.strokeRect(0, fpsHeight + 10, 250, 20);
           context.fillRect(0, fpsHeight + 10, 250 * Math.min(fps / maxFps, 1), 20);
@@ -113416,8 +113416,8 @@ var init_c4Diagram_LMCZKHZV = __esm({
     }, "getC4ShapeFont");
     _drawTextCandidateFunc = /* @__PURE__ */ (function() {
       function byText(content, g2, x6, y6, width3, height2, textAttrs) {
-        const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("text-anchor", "middle").text(content);
-        _setTextAttrs(text4, textAttrs);
+        const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("text-anchor", "middle").text(content);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byText, "byText");
       function byTspan(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
@@ -113425,19 +113425,19 @@ var init_c4Diagram_LMCZKHZV = __esm({
         const lines = content.split(common_default2.lineBreakRegex);
         for (let i3 = 0; i3 < lines.length; i3++) {
           const dy = i3 * fontSize - fontSize * (lines.length - 1) / 2;
-          const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).style("text-anchor", "middle").attr("dominant-baseline", "middle").style("font-size", fontSize).style("font-weight", fontWeight).style("font-family", fontFamily);
-          text4.append("tspan").attr("dy", dy).text(lines[i3]).attr("alignment-baseline", "mathematical");
-          _setTextAttrs(text4, textAttrs);
+          const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).style("text-anchor", "middle").attr("dominant-baseline", "middle").style("font-size", fontSize).style("font-weight", fontWeight).style("font-family", fontFamily);
+          text5.append("tspan").attr("dy", dy).text(lines[i3]).attr("alignment-baseline", "mathematical");
+          _setTextAttrs(text5, textAttrs);
         }
       }
       __name(byTspan, "byTspan");
       function byFo(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
         const s2 = g2.append("switch");
         const f2 = s2.append("foreignObject").attr("x", x6).attr("y", y6).attr("width", width3).attr("height", height2);
-        const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-        text4.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
+        const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+        text5.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
         byTspan(content, s2, x6, y6, width3, height2, textAttrs, conf22);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byFo, "byFo");
       function _setTextAttrs(toText, fromTextAttrsDict) {
@@ -114910,10 +114910,10 @@ You have to call mermaid.initialize.`
         return defaultConfig2.flowchart;
       }
     };
-    getClasses = /* @__PURE__ */ __name(function(text4, diagramObj) {
+    getClasses = /* @__PURE__ */ __name(function(text5, diagramObj) {
       return diagramObj.db.getClasses();
     }, "getClasses");
-    draw2 = /* @__PURE__ */ __name(async function(text4, id39, _version, diag, positions2) {
+    draw2 = /* @__PURE__ */ __name(async function(text5, id39, _version, diag, positions2) {
       log.info("REF0:");
       log.info("Drawing state diagram (v2)", id39);
       const { securityLevel, flowchart: conf5, layout: layout7 } = getConfig2();
@@ -117634,7 +117634,7 @@ var init_erDiagram_Q63AITRT = __esm({
     __export2(erRenderer_unified_exports, {
       draw: () => draw3
     });
-    draw3 = /* @__PURE__ */ __name(async function(text4, id39, _version, diag) {
+    draw3 = /* @__PURE__ */ __name(async function(text5, id39, _version, diag) {
       log.info("REF0:");
       log.info("Drawing er diagram (unified)", id39);
       const { securityLevel, er: conf5, layout: layout7 } = getConfig2();
@@ -125389,12 +125389,12 @@ function mergeSort(data6, compare) {
   }
   return data6;
 }
-function computeLineOffsets(text4, isAtLineStart, textOffset = 0) {
+function computeLineOffsets(text5, isAtLineStart, textOffset = 0) {
   const result = isAtLineStart ? [textOffset] : [];
-  for (let i3 = 0; i3 < text4.length; i3++) {
-    const ch = text4.charCodeAt(i3);
+  for (let i3 = 0; i3 < text5.length; i3++) {
+    const ch = text5.charCodeAt(i3);
     if (isEOL(ch)) {
-      if (ch === 13 && i3 + 1 < text4.length && text4.charCodeAt(i3 + 1) === 10) {
+      if (ch === 13 && i3 + 1 < text5.length && text5.charCodeAt(i3 + 1) === 10) {
         i3++;
       }
       result.push(textOffset + i3 + 1);
@@ -125807,8 +125807,8 @@ function renderLinkDefault(content, display) {
     return content;
   }
 }
-function fillNewlines(text4) {
-  if (text4.endsWith("\n")) {
+function fillNewlines(text5) {
+  if (text5.endsWith("\n")) {
     return "\n";
   } else {
     return "\n\n";
@@ -126895,8 +126895,8 @@ var init_chunk_KEIR6QF5 = __esm({
           OptionalVersionedTextDocumentIdentifier2.is = is2;
         })(OptionalVersionedTextDocumentIdentifier || (OptionalVersionedTextDocumentIdentifier = {}));
         (function(TextDocumentItem2) {
-          function create4(uri, languageId, version3, text4) {
-            return { uri, languageId, version: version3, text: text4 };
+          function create4(uri, languageId, version3, text5) {
+            return { uri, languageId, version: version3, text: text5 };
           }
           __name2(create4, "create");
           TextDocumentItem2.create = create4;
@@ -127297,8 +127297,8 @@ var init_chunk_KEIR6QF5 = __esm({
           SemanticTokens2.is = is2;
         })(SemanticTokens || (SemanticTokens = {}));
         (function(InlineValueText2) {
-          function create4(range3, text4) {
-            return { range: range3, text: text4 };
+          function create4(range3, text5) {
+            return { range: range3, text: text5 };
           }
           __name2(create4, "create");
           InlineValueText2.create = create4;
@@ -127413,8 +127413,8 @@ var init_chunk_KEIR6QF5 = __esm({
           InlineCompletionTriggerKind2.Automatic = 1;
         })(InlineCompletionTriggerKind || (InlineCompletionTriggerKind = {}));
         (function(SelectedCompletionInfo2) {
-          function create4(range3, text4) {
-            return { range: range3, text: text4 };
+          function create4(range3, text5) {
+            return { range: range3, text: text5 };
           }
           __name2(create4, "create");
           SelectedCompletionInfo2.create = create4;
@@ -127448,7 +127448,7 @@ var init_chunk_KEIR6QF5 = __esm({
           __name2(is2, "is");
           TextDocument3.is = is2;
           function applyEdits(document2, edits) {
-            let text4 = document2.getText();
+            let text5 = document2.getText();
             let sortedEdits = mergeSort2(edits, (a2, b3) => {
               let diff2 = a2.range.start.line - b3.range.start.line;
               if (diff2 === 0) {
@@ -127456,19 +127456,19 @@ var init_chunk_KEIR6QF5 = __esm({
               }
               return diff2;
             });
-            let lastModifiedOffset = text4.length;
+            let lastModifiedOffset = text5.length;
             for (let i3 = sortedEdits.length - 1; i3 >= 0; i3--) {
               let e3 = sortedEdits[i3];
               let startOffset = document2.offsetAt(e3.range.start);
               let endOffset = document2.offsetAt(e3.range.end);
               if (endOffset <= lastModifiedOffset) {
-                text4 = text4.substring(0, startOffset) + e3.newText + text4.substring(endOffset, text4.length);
+                text5 = text5.substring(0, startOffset) + e3.newText + text5.substring(endOffset, text5.length);
               } else {
                 throw new Error("Overlapping edit");
               }
               lastModifiedOffset = startOffset;
             }
-            return text4;
+            return text5;
           }
           __name2(applyEdits, "applyEdits");
           TextDocument3.applyEdits = applyEdits;
@@ -127538,21 +127538,21 @@ var init_chunk_KEIR6QF5 = __esm({
           getLineOffsets() {
             if (this._lineOffsets === void 0) {
               let lineOffsets = [];
-              let text4 = this._content;
+              let text5 = this._content;
               let isLineStart = true;
-              for (let i3 = 0; i3 < text4.length; i3++) {
+              for (let i3 = 0; i3 < text5.length; i3++) {
                 if (isLineStart) {
                   lineOffsets.push(i3);
                   isLineStart = false;
                 }
-                let ch = text4.charAt(i3);
+                let ch = text5.charAt(i3);
                 isLineStart = ch === "\r" || ch === "\n";
-                if (ch === "\r" && i3 + 1 < text4.length && text4.charAt(i3 + 1) === "\n") {
+                if (ch === "\r" && i3 + 1 < text5.length && text5.charAt(i3 + 1) === "\n") {
                   i3++;
                 }
               }
-              if (isLineStart && text4.length > 0) {
-                lineOffsets.push(text4.length);
+              if (isLineStart && text5.length > 0) {
+                lineOffsets.push(text5.length);
               }
               this._lineOffsets = lineOffsets;
             }
@@ -136589,15 +136589,15 @@ ${JSON.stringify(message, null, 4)}`);
     __name2(isShortPattern, "isShortPattern");
     LineTerminatorOptimizedTester = {
       // implements /\n|\r\n?/g.test
-      test: /* @__PURE__ */ __name2(function(text4) {
-        const len = text4.length;
+      test: /* @__PURE__ */ __name2(function(text5) {
+        const len = text5.length;
         for (let i3 = this.lastIndex; i3 < len; i3++) {
-          const c3 = text4.charCodeAt(i3);
+          const c3 = text5.charCodeAt(i3);
           if (c3 === 10) {
             this.lastIndex = i3 + 1;
             return true;
           } else if (c3 === 13) {
-            if (text4.charCodeAt(i3 + 1) === 10) {
+            if (text5.charCodeAt(i3 + 1) === 10) {
               this.lastIndex = i3 + 2;
             } else {
               this.lastIndex = i3 + 1;
@@ -136846,7 +136846,7 @@ ${JSON.stringify(message, null, 4)}`);
           });
         });
       }
-      tokenize(text4, initialMode = this.defaultMode) {
+      tokenize(text5, initialMode = this.defaultMode) {
         if (!isEmpty_default2(this.lexerDefinitionErrors)) {
           const allErrMessages = map_default2(this.lexerDefinitionErrors, (error3) => {
             return error3.message;
@@ -136854,19 +136854,19 @@ ${JSON.stringify(message, null, 4)}`);
           const allErrMessagesString = allErrMessages.join("-----------------------\n");
           throw new Error("Unable to Tokenize because Errors detected in definition of Lexer:\n" + allErrMessagesString);
         }
-        return this.tokenizeInternal(text4, initialMode);
+        return this.tokenizeInternal(text5, initialMode);
       }
       // There is quite a bit of duplication between this and "tokenizeInternalLazy"
       // This is intentional due to performance considerations.
       // this method also used quite a bit of `!` none null assertions because it is too optimized
       // for `tsc` to always understand it is "safe"
-      tokenizeInternal(text4, initialMode) {
+      tokenizeInternal(text5, initialMode) {
         let i3, j3, k3, matchAltImage, longerAlt, matchedImage, payload, altPayload, imageLength, group2, tokType, newToken, errLength, msg, match3;
-        const orgText = text4;
+        const orgText = text5;
         const orgLength = orgText.length;
         let offset = 0;
         let matchedTokensIndex = 0;
-        const guessedNumberOfTokens = this.hasCustom ? 0 : Math.floor(text4.length / 10);
+        const guessedNumberOfTokens = this.hasCustom ? 0 : Math.floor(text5.length / 10);
         const matchedTokens = new Array(guessedNumberOfTokens);
         const errors = [];
         let line2 = this.trackStartLines ? 1 : void 0;
@@ -136960,12 +136960,12 @@ ${JSON.stringify(message, null, 4)}`);
               }
             } else {
               currPattern.lastIndex = offset;
-              imageLength = this.matchLength(currPattern, text4, offset);
+              imageLength = this.matchLength(currPattern, text5, offset);
             }
             if (imageLength !== -1) {
               longerAlt = currConfig.longerAlt;
               if (longerAlt !== void 0) {
-                matchedImage = text4.substring(offset, offset + imageLength);
+                matchedImage = text5.substring(offset, offset + imageLength);
                 const longerAltLength = longerAlt.length;
                 for (k3 = 0; k3 < longerAltLength; k3++) {
                   const longerAltConfig = patternIdxToConfig[longerAlt[k3]];
@@ -136983,7 +136983,7 @@ ${JSON.stringify(message, null, 4)}`);
                     }
                   } else {
                     longerAltPattern.lastIndex = offset;
-                    matchAltImage = this.match(longerAltPattern, text4, offset);
+                    matchAltImage = this.match(longerAltPattern, text5, offset);
                   }
                   if (matchAltImage && matchAltImage.length > matchedImage.length) {
                     matchedImage = matchAltImage;
@@ -137000,7 +137000,7 @@ ${JSON.stringify(message, null, 4)}`);
           if (imageLength !== -1) {
             group2 = currConfig.group;
             if (group2 !== void 0) {
-              matchedImage = matchedImage !== null ? matchedImage : text4.substring(offset, offset + imageLength);
+              matchedImage = matchedImage !== null ? matchedImage : text5.substring(offset, offset + imageLength);
               tokType = currConfig.tokenTypeIdx;
               newToken = this.createTokenInstance(matchedImage, offset, tokType, currConfig.tokenType, line2, column2, imageLength);
               this.handlePayload(newToken, payload);
@@ -137016,7 +137016,7 @@ ${JSON.stringify(message, null, 4)}`);
               let lastLTEndOffset;
               lineTerminatorPattern.lastIndex = 0;
               do {
-                matchedImage = matchedImage !== null ? matchedImage : text4.substring(offset, offset + imageLength);
+                matchedImage = matchedImage !== null ? matchedImage : text5.substring(offset, offset + imageLength);
                 foundTerminator = lineTerminatorPattern.test(matchedImage);
                 if (foundTerminator === true) {
                   lastLTEndOffset = lineTerminatorPattern.lastIndex - 1;
@@ -137054,7 +137054,7 @@ ${JSON.stringify(message, null, 4)}`);
                   foundResyncPoint = currPattern.exec(orgText, offset, matchedTokens, groups) !== null;
                 } else {
                   currPattern.lastIndex = offset;
-                  foundResyncPoint = currPattern.exec(text4) !== null;
+                  foundResyncPoint = currPattern.exec(text5) !== null;
                 }
                 if (foundResyncPoint === true) {
                   break;
@@ -137158,15 +137158,15 @@ ${JSON.stringify(message, null, 4)}`);
           token2.payload = payload;
         }
       }
-      match(pattern, text4, offset) {
-        const found = pattern.test(text4);
+      match(pattern, text5, offset) {
+        const found = pattern.test(text5);
         if (found === true) {
-          return text4.substring(offset, pattern.lastIndex);
+          return text5.substring(offset, pattern.lastIndex);
         }
         return null;
       }
-      matchLength(pattern, text4, offset) {
-        const found = pattern.test(text4);
+      matchLength(pattern, text5, offset) {
+        const found = pattern.test(text5);
         if (found === true) {
           return pattern.lastIndex - offset;
         }
@@ -140877,11 +140877,11 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
             const convertedValue = isKeyword(feature) ? token2.image : this.converter.convert(token2.image, leafNode);
             this.assign(assignment.operator, assignment.feature, convertedValue, leafNode, crossRef);
           } else if (isDataTypeNode(current)) {
-            let text4 = token2.image;
+            let text5 = token2.image;
             if (!isKeyword(feature)) {
-              text4 = this.converter.convert(text4, leafNode).toString();
+              text5 = this.converter.convert(text5, leafNode).toString();
             }
-            current.value += text4;
+            current.value += text5;
           }
         }
       }
@@ -141317,7 +141317,7 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
         return tokens2;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      flushLexingReport(text4) {
+      flushLexingReport(text5) {
         return { diagnostics: this.popDiagnostics() };
       }
       popDiagnostics() {
@@ -141352,9 +141352,9 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
       }
       regexPatternFunction(regex2) {
         const stickyRegex = new RegExp(regex2, regex2.flags + "y");
-        return (text4, offset) => {
+        return (text5, offset) => {
           stickyRegex.lastIndex = offset;
-          const execResult = stickyRegex.exec(text4);
+          const execResult = stickyRegex.exec(text5);
           return execResult;
         };
       }
@@ -141667,7 +141667,7 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
       __name2(update2, "update");
       TextDocument3.update = update2;
       function applyEdits(document2, edits) {
-        const text4 = document2.getText();
+        const text5 = document2.getText();
         const sortedEdits = mergeSort(edits.map(getWellformedEdit), (a2, b3) => {
           const diff2 = a2.range.start.line - b3.range.start.line;
           if (diff2 === 0) {
@@ -141682,14 +141682,14 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
           if (startOffset < lastModifiedOffset) {
             throw new Error("Overlapping edit");
           } else if (startOffset > lastModifiedOffset) {
-            spans.push(text4.substring(lastModifiedOffset, startOffset));
+            spans.push(text5.substring(lastModifiedOffset, startOffset));
           }
           if (e3.newText.length) {
             spans.push(e3.newText);
           }
           lastModifiedOffset = document2.offsetAt(e3.range.end);
         }
-        spans.push(text4.substr(lastModifiedOffset));
+        spans.push(text5.substr(lastModifiedOffset));
         return spans.join("");
       }
       __name2(applyEdits, "applyEdits");
@@ -142248,11 +142248,11 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
           return this.create(uri, textDocument, token2);
         }
       }
-      fromString(text4, uri, token2) {
+      fromString(text5, uri, token2) {
         if (cancellation_exports.CancellationToken.is(token2)) {
-          return this.createAsync(uri, text4, token2);
+          return this.createAsync(uri, text5, token2);
         } else {
-          return this.create(uri, text4, token2);
+          return this.create(uri, text5, token2);
         }
       }
       fromModel(model, uri) {
@@ -142290,7 +142290,7 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
        * during workspace initialization and on addition/recognition of new files, while changes in
        * existing documents are processed via {@link update}.
        */
-      createLangiumDocument(parseResult, uri, textDocument, text4) {
+      createLangiumDocument(parseResult, uri, textDocument, text5) {
         let document2;
         if (textDocument) {
           document2 = {
@@ -142301,7 +142301,7 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
             textDocument
           };
         } else {
-          const textDocumentGetter = this.createTextDocumentGetter(uri, text4);
+          const textDocumentGetter = this.createTextDocumentGetter(uri, text5);
           document2 = {
             parseResult,
             uri,
@@ -142318,37 +142318,37 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
       async update(document2, cancellationToken) {
         const oldText = document2.parseResult.value.$cstNode?.root.fullText;
         const textDocument = this.textDocuments?.get(document2.uri.toString());
-        const text4 = textDocument ? textDocument.getText() : await this.fileSystemProvider.readFile(document2.uri);
+        const text5 = textDocument ? textDocument.getText() : await this.fileSystemProvider.readFile(document2.uri);
         if (textDocument) {
           Object.defineProperty(document2, "textDocument", {
             value: textDocument
           });
         } else {
-          const textDocumentGetter = this.createTextDocumentGetter(document2.uri, text4);
+          const textDocumentGetter = this.createTextDocumentGetter(document2.uri, text5);
           Object.defineProperty(document2, "textDocument", {
             get: textDocumentGetter
           });
         }
-        if (oldText !== text4) {
-          document2.parseResult = await this.parseAsync(document2.uri, text4, cancellationToken);
+        if (oldText !== text5) {
+          document2.parseResult = await this.parseAsync(document2.uri, text5, cancellationToken);
           document2.parseResult.value.$document = document2;
         }
         document2.state = DocumentState.Parsed;
         return document2;
       }
-      parse(uri, text4, options2) {
+      parse(uri, text5, options2) {
         const services = this.serviceRegistry.getServices(uri);
-        return services.parser.LangiumParser.parse(text4, options2);
+        return services.parser.LangiumParser.parse(text5, options2);
       }
-      parseAsync(uri, text4, cancellationToken) {
+      parseAsync(uri, text5, cancellationToken) {
         const services = this.serviceRegistry.getServices(uri);
-        return services.parser.AsyncParser.parse(text4, cancellationToken);
+        return services.parser.AsyncParser.parse(text5, cancellationToken);
       }
-      createTextDocumentGetter(uri, text4) {
+      createTextDocumentGetter(uri, text5) {
         const serviceRegistry = this.serviceRegistry;
         let textDoc = void 0;
         return () => {
-          return textDoc ?? (textDoc = TextDocument2.create(uri.toString(), serviceRegistry.getServices(uri).LanguageMetaData.languageId, 0, text4 ?? ""));
+          return textDoc ?? (textDoc = TextDocument2.create(uri.toString(), serviceRegistry.getServices(uri).LanguageMetaData.languageId, 0, text5 ?? ""));
         };
       }
     };
@@ -142389,14 +142389,14 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
         this.addDocument(document2);
         return document2;
       }
-      createDocument(uri, text4, cancellationToken) {
+      createDocument(uri, text5, cancellationToken) {
         if (cancellationToken) {
-          return this.langiumDocumentFactory.fromString(text4, uri, cancellationToken).then((document2) => {
+          return this.langiumDocumentFactory.fromString(text5, uri, cancellationToken).then((document2) => {
             this.addDocument(document2);
             return document2;
           });
         } else {
-          const document2 = this.langiumDocumentFactory.fromString(text4, uri);
+          const document2 = this.langiumDocumentFactory.fromString(text5, uri);
           this.addDocument(document2);
           return document2;
         }
@@ -144936,13 +144936,13 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
       get definition() {
         return this.tokenTypes;
       }
-      tokenize(text4, _options = DEFAULT_TOKENIZE_OPTIONS) {
-        const chevrotainResult = this.chevrotainLexer.tokenize(text4);
+      tokenize(text5, _options = DEFAULT_TOKENIZE_OPTIONS) {
+        const chevrotainResult = this.chevrotainLexer.tokenize(text5);
         return {
           tokens: chevrotainResult.tokens,
           errors: chevrotainResult.errors,
           hidden: chevrotainResult.groups.hidden ?? [],
-          report: this.tokenBuilder.flushLexingReport?.(text4)
+          report: this.tokenBuilder.flushLexingReport?.(text5)
         };
       }
       toTokenTypeDictionary(buildTokens) {
@@ -145001,8 +145001,8 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
           if (value2.length === 0) {
             value2 = element3.toString();
           } else {
-            const text4 = element3.toString();
-            value2 += fillNewlines(value2) + text4;
+            const text5 = element3.toString();
+            value2 += fillNewlines(value2) + text5;
           }
         }
         return value2.trim();
@@ -145013,8 +145013,8 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
           if (value2.length === 0) {
             value2 = element3.toMarkdown(options2);
           } else {
-            const text4 = element3.toMarkdown(options2);
-            value2 += fillNewlines(value2) + text4;
+            const text5 = element3.toMarkdown(options2);
+            value2 += fillNewlines(value2) + text5;
           }
         }
         return value2.trim();
@@ -145031,18 +145031,18 @@ Make sure that all grammar rule definitions are done before 'performSelfAnalysis
         this.range = range3;
       }
       toString() {
-        let text4 = `@${this.name}`;
+        let text5 = `@${this.name}`;
         const content = this.content.toString();
         if (this.content.inlines.length === 1) {
-          text4 = `${text4} ${content}`;
+          text5 = `${text5} ${content}`;
         } else if (this.content.inlines.length > 1) {
-          text4 = `${text4}
+          text5 = `${text5}
 ${content}`;
         }
         if (this.inline) {
-          return `{${text4}}`;
+          return `{${text5}}`;
         } else {
-          return text4;
+          return text5;
         }
       }
       toMarkdown(options2) {
@@ -145064,17 +145064,17 @@ ${content}`;
         } else if (options2?.tag === "bold-italic") {
           marker = "***";
         }
-        let text4 = `${marker}@${this.name}${marker}`;
+        let text5 = `${marker}@${this.name}${marker}`;
         if (this.content.inlines.length === 1) {
-          text4 = `${text4} \u2014 ${content}`;
+          text5 = `${text5} \u2014 ${content}`;
         } else if (this.content.inlines.length > 1) {
-          text4 = `${text4}
+          text5 = `${text5}
 ${content}`;
         }
         if (this.inline) {
-          return `{${text4}}`;
+          return `{${text5}}`;
         } else {
-          return text4;
+          return text5;
         }
       }
     };
@@ -145089,36 +145089,36 @@ ${content}`;
         this.range = range3;
       }
       toString() {
-        let text4 = "";
+        let text5 = "";
         for (let i3 = 0; i3 < this.inlines.length; i3++) {
           const inline = this.inlines[i3];
           const next3 = this.inlines[i3 + 1];
-          text4 += inline.toString();
+          text5 += inline.toString();
           if (next3 && next3.range.start.line > inline.range.start.line) {
-            text4 += "\n";
+            text5 += "\n";
           }
         }
-        return text4;
+        return text5;
       }
       toMarkdown(options2) {
-        let text4 = "";
+        let text5 = "";
         for (let i3 = 0; i3 < this.inlines.length; i3++) {
           const inline = this.inlines[i3];
           const next3 = this.inlines[i3 + 1];
-          text4 += inline.toMarkdown(options2);
+          text5 += inline.toMarkdown(options2);
           if (next3 && next3.range.start.line > inline.range.start.line) {
-            text4 += "\n";
+            text5 += "\n";
           }
         }
-        return text4;
+        return text5;
       }
     };
     JSDocLineImpl = class {
       static {
         __name2(this, "JSDocLineImpl");
       }
-      constructor(text4, range3) {
-        this.text = text4;
+      constructor(text5, range3) {
+        this.text = text5;
         this.range = range3;
       }
       toString() {
@@ -145209,8 +145209,8 @@ ${content}`;
       constructor(services) {
         this.syncParser = services.parser.LangiumParser;
       }
-      parse(text4, _cancelToken) {
-        return Promise.resolve(this.syncParser.parse(text4));
+      parse(text5, _cancelToken) {
+        return Promise.resolve(this.syncParser.parse(text5));
       }
     };
     AbstractThreadedAsyncParser = class {
@@ -145239,7 +145239,7 @@ ${content}`;
           this.workerPool.push(worker);
         }
       }
-      async parse(text4, cancelToken) {
+      async parse(text5, cancelToken) {
         const worker = await this.acquireParserWorker(cancelToken);
         const deferred = new Deferred();
         let timeout2;
@@ -145248,7 +145248,7 @@ ${content}`;
             this.terminateWorker(worker);
           }, this.terminationDelay);
         });
-        worker.parse(text4).then((result) => {
+        worker.parse(text5).then((result) => {
           const hydrated = this.hydrator.hydrate(result);
           deferred.resolve(hydrated);
         }).catch((err) => {
@@ -145325,13 +145325,13 @@ ${content}`;
         this._ready = true;
         this.onReadyEmitter.fire();
       }
-      parse(text4) {
+      parse(text5) {
         if (this._parsing) {
           throw new Error("Parser worker is busy");
         }
         this._parsing = true;
         this.deferred = new Deferred();
-        this.sendMessage(text4);
+        this.sendMessage(text5);
         return this.deferred.promise;
       }
     };
@@ -145736,11 +145736,11 @@ ${content}`;
           return [dedent2, indent, ws, ...otherTokens];
         }
       }
-      flushLexingReport(text4) {
-        const result = super.flushLexingReport(text4);
+      flushLexingReport(text5) {
+        const result = super.flushLexingReport(text5);
         return {
           ...result,
-          remainingDedents: this.flushRemainingDedents(text4)
+          remainingDedents: this.flushRemainingDedents(text5)
         };
       }
       /**
@@ -145750,8 +145750,8 @@ ${content}`;
        * @param offset The current position at which to check
        * @returns Whether the current position is the start of a new line
        */
-      isStartOfLine(text4, offset) {
-        return offset === 0 || "\r\n".includes(text4[offset - 1]);
+      isStartOfLine(text5, offset) {
+        return offset === 0 || "\r\n".includes(text5[offset - 1]);
       }
       /**
        * A helper function used in matching both indents and dedents.
@@ -145763,9 +145763,9 @@ ${content}`;
        * @returns The current and previous indentation levels and the matched whitespace
        */
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      matchWhitespace(text4, offset, tokens2, groups) {
+      matchWhitespace(text5, offset, tokens2, groups) {
         this.whitespaceRegExp.lastIndex = offset;
-        const match3 = this.whitespaceRegExp.exec(text4);
+        const match3 = this.whitespaceRegExp.exec(text5);
         return {
           currIndentLevel: match3?.[0].length ?? 0,
           prevIndentLevel: this.indentationStack.at(-1),
@@ -145781,8 +145781,8 @@ ${content}`;
        * @param offset Current position in the input string
        * @returns The indentation token instance
        */
-      createIndentationTokenInstance(tokenType, text4, image, offset) {
-        const lineNumber = this.getLineNumber(text4, offset);
+      createIndentationTokenInstance(tokenType, text5, image, offset) {
+        const lineNumber = this.getLineNumber(text5, offset);
         return createTokenInstance(tokenType, image, offset, offset + image.length, lineNumber, lineNumber, 1, image.length);
       }
       /**
@@ -145792,8 +145792,8 @@ ${content}`;
        * @param offset Current position in the input string
        * @returns The line number at the given offset
        */
-      getLineNumber(text4, offset) {
-        return text4.substring(0, offset).split(/\r\n|\r|\n/).length;
+      getLineNumber(text5, offset) {
+        return text5.substring(0, offset).split(/\r\n|\r|\n/).length;
       }
       /**
        * A custom pattern for matching indents
@@ -145803,11 +145803,11 @@ ${content}`;
        * @param tokens Previously scanned tokens
        * @param groups Token Groups
        */
-      indentMatcher(text4, offset, tokens2, groups) {
-        if (!this.isStartOfLine(text4, offset)) {
+      indentMatcher(text5, offset, tokens2, groups) {
+        if (!this.isStartOfLine(text5, offset)) {
           return null;
         }
-        const { currIndentLevel, prevIndentLevel, match: match3 } = this.matchWhitespace(text4, offset, tokens2, groups);
+        const { currIndentLevel, prevIndentLevel, match: match3 } = this.matchWhitespace(text5, offset, tokens2, groups);
         if (currIndentLevel <= prevIndentLevel) {
           return null;
         }
@@ -145822,11 +145822,11 @@ ${content}`;
        * @param tokens Previously scanned tokens
        * @param groups Token Groups
        */
-      dedentMatcher(text4, offset, tokens2, groups) {
-        if (!this.isStartOfLine(text4, offset)) {
+      dedentMatcher(text5, offset, tokens2, groups) {
+        if (!this.isStartOfLine(text5, offset)) {
           return null;
         }
-        const { currIndentLevel, prevIndentLevel, match: match3 } = this.matchWhitespace(text4, offset, tokens2, groups);
+        const { currIndentLevel, prevIndentLevel, match: match3 } = this.matchWhitespace(text5, offset, tokens2, groups);
         if (currIndentLevel >= prevIndentLevel) {
           return null;
         }
@@ -145837,17 +145837,17 @@ ${content}`;
             message: `Invalid dedent level ${currIndentLevel} at offset: ${offset}. Current indentation stack: ${this.indentationStack}`,
             offset,
             length: match3?.[0]?.length ?? 0,
-            line: this.getLineNumber(text4, offset),
+            line: this.getLineNumber(text5, offset),
             column: 1
           });
           return null;
         }
         const numberOfDedents = this.indentationStack.length - matchIndentIndex - 1;
-        const newlinesBeforeDedent = text4.substring(0, offset).match(/[\r\n]+$/)?.[0].length ?? 1;
+        const newlinesBeforeDedent = text5.substring(0, offset).match(/[\r\n]+$/)?.[0].length ?? 1;
         for (let i3 = 0; i3 < numberOfDedents; i3++) {
           const token2 = this.createIndentationTokenInstance(
             this.dedentTokenType,
-            text4,
+            text5,
             "",
             // Dedents are 0-width tokens
             offset - (newlinesBeforeDedent - 1)
@@ -145879,10 +145879,10 @@ ${content}`;
        * @param text Full text that was tokenized
        * @returns Remaining dedent tokens to match all previous indents at the end of the file
        */
-      flushRemainingDedents(text4) {
+      flushRemainingDedents(text5) {
         const remainingDedents = [];
         while (this.indentationStack.length > 1) {
-          remainingDedents.push(this.createIndentationTokenInstance(this.dedentTokenType, text4, "", text4.length));
+          remainingDedents.push(this.createIndentationTokenInstance(this.dedentTokenType, text5, "", text5.length));
           this.indentationStack.pop();
         }
         this.indentationStack = [0];
@@ -145901,8 +145901,8 @@ ${content}`;
           throw new Error("IndentationAwareLexer requires an accompanying IndentationAwareTokenBuilder");
         }
       }
-      tokenize(text4, options2 = DEFAULT_TOKENIZE_OPTIONS) {
-        const result = super.tokenize(text4);
+      tokenize(text5, options2 = DEFAULT_TOKENIZE_OPTIONS) {
+        const result = super.tokenize(text5);
         const report = result.report;
         if (options2?.mode === "full") {
           result.tokens.push(...report.remainingDedents);
@@ -150027,7 +150027,7 @@ var init_cynefin_VYW2F7L2 = __esm({
 });
 
 // node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs
-async function parse4(diagramType, text4) {
+async function parse4(diagramType, text5) {
   const initializer = initializers[diagramType];
   if (!initializer) {
     throw new Error(`Unknown diagram type: ${diagramType}`);
@@ -150036,7 +150036,7 @@ async function parse4(diagramType, text4) {
     await initializer();
   }
   const parser34 = parsers[diagramType];
-  const result = parser34.parse(text4);
+  const result = parser34.parse(text5);
   if (result.lexerErrors.length > 0 || result.parserErrors.length > 0) {
     throw new MermaidParseError(result);
   }
@@ -150864,8 +150864,8 @@ var init_gitGraphDiagram_IHSO6WYX = __esm({
     }, "clear");
     drawText2 = /* @__PURE__ */ __name((txt) => {
       const svgLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      const rows = typeof txt === "string" ? txt.split(/\\n|\n|<br\s*\/?>/gi) : txt;
-      rows.forEach((row) => {
+      const rows2 = typeof txt === "string" ? txt.split(/\\n|\n|<br\s*\/?>/gi) : txt;
+      rows2.forEach((row) => {
         const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
         tspan.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
         tspan.setAttribute("dy", "1em");
@@ -151033,19 +151033,19 @@ var init_gitGraphDiagram_IHSO6WYX = __esm({
       if (commit2.type !== commitType.CHERRY_PICK && (commit2.customId && commit2.type === commitType.MERGE || commit2.type !== commitType.MERGE) && gitGraphConfig.showCommitLabel) {
         const wrapper = gLabels.append("g");
         const labelBkg = wrapper.insert("rect").attr("class", "commit-label-bkg");
-        const text4 = wrapper.append("text").attr("x", pos).attr("y", commitPosition.y + 25).attr("class", "commit-label").text(commit2.id);
-        const bbox = text4.node()?.getBBox();
+        const text5 = wrapper.append("text").attr("x", pos).attr("y", commitPosition.y + 25).attr("class", "commit-label").text(commit2.id);
+        const bbox = text5.node()?.getBBox();
         if (bbox) {
           labelBkg.attr("x", commitPosition.posWithOffset - bbox.width / 2 - PY).attr("y", commitPosition.y + 13.5).attr("width", bbox.width + 2 * PY).attr("height", bbox.height + 2 * PY);
           if (dir === "TB" || dir === "BT") {
             labelBkg.attr("x", commitPosition.x - (bbox.width + 4 * PX + 5)).attr("y", commitPosition.y - 12);
-            text4.attr("x", commitPosition.x - (bbox.width + 4 * PX)).attr("y", commitPosition.y + bbox.height - 12);
+            text5.attr("x", commitPosition.x - (bbox.width + 4 * PX)).attr("y", commitPosition.y + bbox.height - 12);
           } else {
-            text4.attr("x", commitPosition.posWithOffset - bbox.width / 2);
+            text5.attr("x", commitPosition.posWithOffset - bbox.width / 2);
           }
           if (gitGraphConfig.rotateCommitLabel) {
             if (dir === "TB" || dir === "BT") {
-              text4.attr(
+              text5.attr(
                 "transform",
                 "rotate(-45, " + commitPosition.x + ", " + commitPosition.y + ")"
               );
@@ -153872,7 +153872,7 @@ var init_ganttDiagram_NO4QXBWP = __esm({
       return maxIntersections;
     }, "getMaxIntersections");
     MAX_TICK_COUNT = 1e4;
-    draw5 = /* @__PURE__ */ __name(function(text4, id39, version3, diagObj) {
+    draw5 = /* @__PURE__ */ __name(function(text5, id39, version3, diagObj) {
       const conf5 = getConfig2().gantt;
       diagObj.db.setDiagramId(id39);
       const securityLevel = getConfig2().securityLevel;
@@ -154340,11 +154340,11 @@ var init_ganttDiagram_NO4QXBWP = __esm({
         let prevGap = 0;
         const numOccurrences = Object.keys(categoryHeights).map((d3) => [d3, categoryHeights[d3]]);
         svg2.append("g").selectAll("text").data(numOccurrences).enter().append(function(d3) {
-          const rows = d3[0].split(common_default2.lineBreakRegex);
-          const dy = -(rows.length - 1) / 2;
+          const rows2 = d3[0].split(common_default2.lineBreakRegex);
+          const dy = -(rows2.length - 1) / 2;
           const svgLabel = doc.createElementNS("http://www.w3.org/2000/svg", "text");
           svgLabel.setAttribute("dy", dy + "em");
-          for (const [j3, row] of rows.entries()) {
+          for (const [j3, row] of rows2.entries()) {
             const tspan = doc.createElementNS("http://www.w3.org/2000/svg", "tspan");
             tspan.setAttribute("alignment-baseline", "central");
             tspan.setAttribute("x", "10");
@@ -154728,8 +154728,8 @@ var init_infoDiagram_FWYZ7A6U = __esm({
     db2 = {
       getVersion
     };
-    draw6 = /* @__PURE__ */ __name((text4, id39, version3) => {
-      log.debug("rendering info diagram\n" + text4);
+    draw6 = /* @__PURE__ */ __name((text5, id39, version3) => {
+      log.debug("rendering info diagram\n" + text5);
       const svg2 = selectSvgElement(id39);
       configureSvgSize(svg2, 100, 400, true);
       const group2 = svg2.append("g");
@@ -154862,8 +154862,8 @@ var init_pieDiagram_ENE6RG2P = __esm({
       const pie2 = pie_default().value((d3) => d3.value).sort(null);
       return pie2(pieData);
     }, "createPieArcs");
-    draw7 = /* @__PURE__ */ __name((text4, id39, _version, diagObj) => {
-      log.debug("rendering pie chart\n" + text4);
+    draw7 = /* @__PURE__ */ __name((text5, id39, _version, diagObj) => {
+      log.debug("rendering pie chart\n" + text5);
       const db22 = diagObj.db;
       const globalConfig = getConfig2();
       const pieConfig = cleanAndMerge(db22.getConfig(), globalConfig.pie);
@@ -155032,8 +155032,8 @@ function validateNumber(value2) {
 function validateSizeInPixels(value2) {
   return !/^\d+px$/.test(value2);
 }
-function textSanitizer(text4) {
-  return sanitizeText(text4.trim(), getConfig2());
+function textSanitizer(text5) {
+  return sanitizeText(text5.trim(), getConfig2());
 }
 function setQuadrant1Text(textObj) {
   quadrantBuilder.setData({ quadrant1Text: textSanitizer(textObj.text) });
@@ -156487,9 +156487,9 @@ function getChartDefaultData() {
     plots: []
   };
 }
-function textSanitizer2(text4) {
+function textSanitizer2(text5) {
   const config3 = getConfig();
-  return sanitizeText(text4.trim(), config3);
+  return sanitizeText(text5.trim(), config3);
 }
 function setTmpSVGG(SVGG) {
   tmpSVGGroup = SVGG;
@@ -159405,9 +159405,9 @@ var init_requirementDiagram_TGXJPOKE = __esm({
           this.latestRequirement.requirementId = id39;
         }
       }
-      setNewReqText(text4) {
+      setNewReqText(text5) {
         if (this.latestRequirement !== void 0) {
-          this.latestRequirement.text = text4;
+          this.latestRequirement.text = text5;
         }
       }
       setNewReqRisk(risk) {
@@ -159677,7 +159677,7 @@ var init_requirementDiagram_TGXJPOKE = __esm({
     __export2(requirementRenderer_exports, {
       draw: () => draw10
     });
-    draw10 = /* @__PURE__ */ __name(async function(text4, id39, _version, diag) {
+    draw10 = /* @__PURE__ */ __name(async function(text5, id39, _version, diag) {
       log.info("REF0:");
       log.info("Drawing requirement diagram (unified)", id39);
       const { securityLevel, state: conf5, layout: layout7, look } = getConfig2();
@@ -161362,13 +161362,13 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
       setWrap(wrapSetting) {
         this.state.records.wrapEnabled = wrapSetting;
       }
-      extractWrap(text4) {
-        if (text4 === void 0) {
+      extractWrap(text5) {
+        if (text5 === void 0) {
           return {};
         }
-        text4 = text4.trim();
-        const wrap3 = /^:?wrap:/.exec(text4) !== null ? true : /^:?nowrap:/.exec(text4) !== null ? false : void 0;
-        const cleanedText = (wrap3 === void 0 ? text4 : text4.replace(/^:?(?:no)?wrap:/, "")).trim();
+        text5 = text5.trim();
+        const wrap3 = /^:?wrap:/.exec(text5) !== null ? true : /^:?nowrap:/.exec(text5) !== null ? false : void 0;
+        const cleanedText = (wrap3 === void 0 ? text5 : text5.replace(/^:?(?:no)?wrap:/, "")).trim();
         return { cleanedText, wrap: wrap3 };
       }
       autoWrap() {
@@ -161437,10 +161437,10 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
           placement
         });
       }
-      addLinks(actorId, text4) {
+      addLinks(actorId, text5) {
         const actor = this.getActor(actorId);
         try {
-          let sanitizedText = sanitizeText(text4.text, getConfig2());
+          let sanitizedText = sanitizeText(text5.text, getConfig2());
           sanitizedText = sanitizedText.replace(/&equals;/g, "=");
           sanitizedText = sanitizedText.replace(/&amp;/g, "&");
           const links3 = JSON.parse(sanitizedText);
@@ -161449,11 +161449,11 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
           log.error("error while parsing actor link text", e3);
         }
       }
-      addALink(actorId, text4) {
+      addALink(actorId, text5) {
         const actor = this.getActor(actorId);
         try {
           const links3 = {};
-          let sanitizedText = sanitizeText(text4.text, getConfig2());
+          let sanitizedText = sanitizeText(text5.text, getConfig2());
           const sep2 = sanitizedText.indexOf("@");
           sanitizedText = sanitizedText.replace(/&equals;/g, "=");
           sanitizedText = sanitizedText.replace(/&amp;/g, "&");
@@ -161474,10 +161474,10 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
           }
         }
       }
-      addProperties(actorId, text4) {
+      addProperties(actorId, text5) {
         const actor = this.getActor(actorId);
         try {
-          const sanitizedText = sanitizeText(text4.text, getConfig2());
+          const sanitizedText = sanitizeText(text5.text, getConfig2());
           const properties = JSON.parse(sanitizedText);
           this.insertProperties(actor, properties);
         } catch (e3) {
@@ -161496,9 +161496,9 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
       boxEnd() {
         this.state.records.currentBox = void 0;
       }
-      addDetails(actorId, text4) {
+      addDetails(actorId, text5) {
         const actor = this.getActor(actorId);
-        const elem = document.getElementById(text4.text);
+        const elem = document.getElementById(text5.text);
         try {
           const text22 = elem.innerHTML;
           const details = JSON.parse(text22);
@@ -162000,16 +162000,16 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
         } else if (dy !== 0) {
           textElem.attr("dy", dy);
         }
-        const text4 = line2 || ZERO_WIDTH_SPACE;
+        const text5 = line2 || ZERO_WIDTH_SPACE;
         if (textData.tspan) {
           const span = textElem.append("tspan");
           span.attr("x", textData.x);
           if (textData.fill !== void 0) {
             span.attr("fill", textData.fill);
           }
-          span.text(text4);
+          span.text(text5);
         } else {
-          textElem.text(text4);
+          textElem.text(text5);
         }
         if (textData.valign !== void 0 && textData.textMargin !== void 0 && textData.textMargin > 0) {
           textHeight += (textElem._groups || textElem)[0][0].getBBox().height;
@@ -162900,8 +162900,8 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
     }, "getNoteRect");
     _drawTextCandidateFunc2 = /* @__PURE__ */ (function() {
       function byText(content, g2, x6, y6, width3, height2, textAttrs) {
-        const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("text-anchor", "middle").text(content);
-        _setTextAttrs(text4, textAttrs);
+        const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("text-anchor", "middle").text(content);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byText, "byText");
       function byTspan(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
@@ -162910,30 +162910,30 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
         const lines = content.split(common_default2.lineBreakRegex);
         for (let i3 = 0; i3 < lines.length; i3++) {
           const dy = i3 * _actorFontSize - _actorFontSize * (lines.length - 1) / 2;
-          const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).style("text-anchor", "middle").style("font-size", _actorFontSizePx).style("font-weight", actorFontWeight).style("font-family", actorFontFamily);
-          text4.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
-          text4.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
-          _setTextAttrs(text4, textAttrs);
+          const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).style("text-anchor", "middle").style("font-size", _actorFontSizePx).style("font-weight", actorFontWeight).style("font-family", actorFontFamily);
+          text5.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
+          text5.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
+          _setTextAttrs(text5, textAttrs);
         }
       }
       __name(byTspan, "byTspan");
       function byFo(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
         const s2 = g2.append("switch");
         const f2 = s2.append("foreignObject").attr("x", x6).attr("y", y6).attr("width", width3).attr("height", height2);
-        const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-        text4.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
+        const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+        text5.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
         byTspan(content, s2, x6, y6, width3, height2, textAttrs, conf22);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byFo, "byFo");
       async function byKatex(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
         const dim = await calculateMathMLDimensions(content, getConfig());
         const s2 = g2.append("switch");
         const f2 = s2.append("foreignObject").attr("x", x6 + width3 / 2 - dim.width / 2).attr("y", y6 + height2 / 2 - dim.height / 2).attr("width", dim.width).attr("height", dim.height);
-        const text4 = f2.append("xhtml:div").style("height", "100%").style("width", "100%");
-        text4.append("div").style("text-align", "center").style("vertical-align", "middle").html(await renderKatexSanitized(content, getConfig()));
+        const text5 = f2.append("xhtml:div").style("height", "100%").style("width", "100%");
+        text5.append("div").style("text-align", "center").style("vertical-align", "middle").html(await renderKatexSanitized(content, getConfig()));
         byTspan(content, s2, x6, y6, width3, height2, textAttrs, conf22);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byKatex, "byKatex");
       function _setTextAttrs(toText, fromTextAttrsDict) {
@@ -162953,8 +162953,8 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
     })();
     _drawMenuItemTextCandidateFunc = /* @__PURE__ */ (function() {
       function byText(content, g2, x6, y6, width3, height2, textAttrs) {
-        const text4 = g2.append("text").attr("x", x6).attr("y", y6).style("text-anchor", "start").text(content);
-        _setTextAttrs(text4, textAttrs);
+        const text5 = g2.append("text").attr("x", x6).attr("y", y6).style("text-anchor", "start").text(content);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byText, "byText");
       function byTspan(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
@@ -162962,20 +162962,20 @@ var init_sequenceDiagram_DBY2YBRQ = __esm({
         const lines = content.split(common_default2.lineBreakRegex);
         for (let i3 = 0; i3 < lines.length; i3++) {
           const dy = i3 * actorFontSize - actorFontSize * (lines.length - 1) / 2;
-          const text4 = g2.append("text").attr("x", x6).attr("y", y6).style("text-anchor", "start").style("font-size", actorFontSize).style("font-weight", actorFontWeight).style("font-family", actorFontFamily);
-          text4.append("tspan").attr("x", x6).attr("dy", dy).text(lines[i3]);
-          text4.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
-          _setTextAttrs(text4, textAttrs);
+          const text5 = g2.append("text").attr("x", x6).attr("y", y6).style("text-anchor", "start").style("font-size", actorFontSize).style("font-weight", actorFontWeight).style("font-family", actorFontFamily);
+          text5.append("tspan").attr("x", x6).attr("dy", dy).text(lines[i3]);
+          text5.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
+          _setTextAttrs(text5, textAttrs);
         }
       }
       __name(byTspan, "byTspan");
       function byFo(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
         const s2 = g2.append("switch");
         const f2 = s2.append("foreignObject").attr("x", x6).attr("y", y6).attr("width", width3).attr("height", height2);
-        const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-        text4.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
+        const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+        text5.append("div").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
         byTspan(content, s2, x6, y6, width3, height2, textAttrs, conf22);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byFo, "byFo");
       function _setTextAttrs(toText, fromTextAttrsDict) {
@@ -165749,12 +165749,12 @@ var init_chunk_V7JOEXUC = __esm({
           members.forEach((member) => this.addMember(className, member));
         }
       }
-      addNote(text4, className) {
+      addNote(text5, className) {
         const index = this.notes.size;
         const note3 = {
           id: `note${index}`,
           class: className,
-          text: text4,
+          text: text5,
           index
         };
         this.notes.set(note3.id, note3);
@@ -166423,10 +166423,10 @@ g.classGroup line {
       }
       return dir2;
     }, "getDir");
-    getClasses2 = /* @__PURE__ */ __name(function(text4, diagramObj) {
+    getClasses2 = /* @__PURE__ */ __name(function(text5, diagramObj) {
       return diagramObj.db.getClasses();
     }, "getClasses");
-    draw12 = /* @__PURE__ */ __name(async function(text4, id39, _version, diag) {
+    draw12 = /* @__PURE__ */ __name(async function(text5, id39, _version, diag) {
       log.info("REF0:");
       log.info("Drawing class diagram (v3)", id39);
       const { securityLevel, state: conf5, layout: layout7 } = getConfig2();
@@ -167547,10 +167547,10 @@ var init_chunk_EX3LRPZG = __esm({
       }
       return dir2;
     }, "getDir");
-    getClasses3 = /* @__PURE__ */ __name(function(text4, diagramObj) {
+    getClasses3 = /* @__PURE__ */ __name(function(text5, diagramObj) {
       return diagramObj.db.getClasses();
     }, "getClasses");
-    draw13 = /* @__PURE__ */ __name(async function(text4, id39, _version, diag) {
+    draw13 = /* @__PURE__ */ __name(async function(text5, id39, _version, diag) {
       log.info("REF0:");
       log.info("Drawing state diagram (v2)", id39);
       const { securityLevel, state: conf5, layout: layout7 } = getConfig2();
@@ -168743,9 +168743,9 @@ var init_stateDiagram_2N3HPSRC = __esm({
       const textElem = g2.append("text");
       textElem.style("text-anchor", "start");
       textElem.attr("class", "noteText");
-      let text4 = _text.replace(/\r\n/g, "<br/>");
-      text4 = text4.replace(/\n/g, "<br/>");
-      const lines = text4.split(common_default2.lineBreakRegex);
+      let text5 = _text.replace(/\r\n/g, "<br/>");
+      text5 = text5.replace(/\n/g, "<br/>");
+      const lines = text5.split(common_default2.lineBreakRegex);
       let tHeight = 1.25 * getConfig2().state.noteMargin;
       for (const line2 of lines) {
         const txt = line2.trim();
@@ -168763,11 +168763,11 @@ var init_stateDiagram_2N3HPSRC = __esm({
       }
       return { textWidth: textElem.node().getBBox().width, textHeight };
     }, "_drawLongText");
-    drawNote2 = /* @__PURE__ */ __name((text4, g2) => {
+    drawNote2 = /* @__PURE__ */ __name((text5, g2) => {
       g2.attr("class", "state-note");
       const note3 = g2.append("rect").attr("x", 0).attr("y", getConfig2().state.padding);
       const rectElem = g2.append("g");
-      const { textWidth, textHeight } = _drawLongText(text4, 0, 0, rectElem);
+      const { textWidth, textHeight } = _drawLongText(text5, 0, 0, rectElem);
       note3.attr("height", textHeight + 2 * getConfig2().state.noteMargin);
       note3.attr("width", textWidth + getConfig2().state.noteMargin * 2);
       return note3;
@@ -168840,13 +168840,13 @@ var init_stateDiagram_2N3HPSRC = __esm({
       if (relation.title !== void 0) {
         const label = elem.append("g").attr("class", "stateLabel");
         const { x: x6, y: y6 } = utils_default2.calcLabelPosition(path4.points);
-        const rows = common_default2.getRows(relation.title);
+        const rows2 = common_default2.getRows(relation.title);
         let titleHeight = 0;
         const titleRows = [];
         let maxWidth2 = 0;
         let minX = 0;
-        for (let i3 = 0; i3 <= rows.length; i3++) {
-          const title2 = label.append("text").attr("text-anchor", "middle").text(rows[i3]).attr("x", x6).attr("y", y6 + titleHeight);
+        for (let i3 = 0; i3 <= rows2.length; i3++) {
+          const title2 = label.append("text").attr("text-anchor", "middle").text(rows2[i3]).attr("x", x6).attr("y", y6 + titleHeight);
           const boundsTmp = title2.node().getBBox();
           maxWidth2 = Math.max(maxWidth2, boundsTmp.width);
           minX = Math.min(minX, boundsTmp.x);
@@ -168858,11 +168858,11 @@ var init_stateDiagram_2N3HPSRC = __esm({
           }
           titleRows.push(title2);
         }
-        let boxHeight = titleHeight * rows.length;
-        if (rows.length > 1) {
-          const heightAdj = (rows.length - 1) * titleHeight * 0.5;
+        let boxHeight = titleHeight * rows2.length;
+        if (rows2.length > 1) {
+          const heightAdj = (rows2.length - 1) * titleHeight * 0.5;
           titleRows.forEach((title2, i3) => title2.attr("y", y6 + i3 * titleHeight - heightAdj));
-          boxHeight = titleHeight * rows.length;
+          boxHeight = titleHeight * rows2.length;
         }
         const bounds4 = label.node().getBBox();
         label.insert("rect", ":first-child").attr("class", "box").attr("x", x6 - maxWidth2 / 2 - getConfig2().state.padding / 2).attr("y", y6 - boxHeight / 2 - getConfig2().state.padding / 2 - 3.5).attr("width", maxWidth2 + getConfig2().state.padding).attr("height", boxHeight + getConfig2().state.padding);
@@ -168876,7 +168876,7 @@ var init_stateDiagram_2N3HPSRC = __esm({
     insertMarkers2 = /* @__PURE__ */ __name(function(elem) {
       elem.append("defs").append("marker").attr("id", "dependencyEnd").attr("refX", 19).attr("refY", 7).attr("markerWidth", 20).attr("markerHeight", 28).attr("orient", "auto").append("path").attr("d", "M 19,7 L9,13 L14,7 L9,1 Z");
     }, "insertMarkers");
-    draw14 = /* @__PURE__ */ __name(function(text4, id39, _version, diagObj) {
+    draw14 = /* @__PURE__ */ __name(function(text5, id39, _version, diagObj) {
       conf3 = getConfig2().state;
       const securityLevel = getConfig2().securityLevel;
       let sandboxElement;
@@ -168885,7 +168885,7 @@ var init_stateDiagram_2N3HPSRC = __esm({
       }
       const root4 = securityLevel === "sandbox" ? select_default2(sandboxElement.nodes()[0].contentDocument.body) : select_default2("body");
       const doc = securityLevel === "sandbox" ? sandboxElement.nodes()[0].contentDocument : document;
-      log.debug("Rendering diagram " + text4);
+      log.debug("Rendering diagram " + text5);
       const diagram210 = root4.select(`[id='${id39}']`);
       insertMarkers2(diagram210);
       const rootDoc = diagObj.db.getRootDoc();
@@ -168902,8 +168902,8 @@ var init_stateDiagram_2N3HPSRC = __esm({
         `${bounds4.x - conf3.padding}  ${bounds4.y - conf3.padding} ` + width3 + " " + height2
       );
     }, "draw");
-    getLabelWidth = /* @__PURE__ */ __name((text4) => {
-      return text4 ? text4.length * conf3.fontSizeFactor : 1;
+    getLabelWidth = /* @__PURE__ */ __name((text5) => {
+      return text5 ? text5.length * conf3.fontSizeFactor : 1;
     }, "getLabelWidth");
     renderDoc = /* @__PURE__ */ __name((doc, diagram210, parentId, altBkg, root4, domDocument, diagObj) => {
       const graph = new Graph({
@@ -170164,8 +170164,8 @@ var init_journeyDiagram_5HDEW3XC = __esm({
     }, "drawBackgroundRect");
     _drawTextCandidateFunc3 = /* @__PURE__ */ (function() {
       function byText(content, g2, x6, y6, width3, height2, textAttrs, colour) {
-        const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("font-color", colour).style("text-anchor", "middle").text(content);
-        _setTextAttrs(text4, textAttrs);
+        const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("font-color", colour).style("text-anchor", "middle").text(content);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byText, "byText");
       function byTspan(content, g2, x6, y6, width3, height2, textAttrs, conf22, colour) {
@@ -170173,20 +170173,20 @@ var init_journeyDiagram_5HDEW3XC = __esm({
         const lines = content.split(/<br\s*\/?>/gi);
         for (let i3 = 0; i3 < lines.length; i3++) {
           const dy = i3 * taskFontSize - taskFontSize * (lines.length - 1) / 2;
-          const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).attr("fill", colour).style("text-anchor", "middle").style("font-size", taskFontSize).style("font-family", taskFontFamily);
-          text4.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
-          text4.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
-          _setTextAttrs(text4, textAttrs);
+          const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).attr("fill", colour).style("text-anchor", "middle").style("font-size", taskFontSize).style("font-family", taskFontFamily);
+          text5.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
+          text5.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
+          _setTextAttrs(text5, textAttrs);
         }
       }
       __name(byTspan, "byTspan");
       function byFo(content, g2, x6, y6, width3, height2, textAttrs, conf22) {
         const body = g2.append("switch");
         const f2 = body.append("foreignObject").attr("x", x6).attr("y", y6).attr("width", width3).attr("height", height2).attr("position", "fixed");
-        const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-        text4.append("div").attr("class", "label").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
+        const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+        text5.append("div").attr("class", "label").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
         byTspan(content, body, x6, y6, width3, height2, textAttrs, conf22);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byFo, "byFo");
       function _setTextAttrs(toText, fromTextAttrsDict) {
@@ -170226,7 +170226,7 @@ var init_journeyDiagram_5HDEW3XC = __esm({
     __name(drawActorLegend, "drawActorLegend");
     conf4 = getConfig2().journey;
     leftMargin = 0;
-    draw15 = /* @__PURE__ */ __name(function(text4, id39, version3, diagObj) {
+    draw15 = /* @__PURE__ */ __name(function(text5, id39, version3, diagObj) {
       const configObject = getConfig2();
       const titleColor = configObject.journey.titleColor;
       const titleFontSize = configObject.journey.titleFontSize;
@@ -170420,8 +170420,8 @@ var timeline_definition_FHXFAJF6_exports = {};
 __export(timeline_definition_FHXFAJF6_exports, {
   diagram: () => diagram18
 });
-function wrap2(text4, width3) {
-  text4.each(function() {
+function wrap2(text5, width3) {
+  text5.each(function() {
     var text22 = select_default2(this), words = text22.text().split(/(\s+|<br>)/).reverse(), word, line2 = [], lineHeight = 1.1, y6 = text22.attr("y"), dy = parseFloat(text22.attr("dy")), tspan = text22.text(null).append("tspan").attr("x", 0).attr("y", y6).attr("dy", dy + "em");
     for (let j3 = 0; j3 < words.length; j3++) {
       word = words[words.length - 1 - j3];
@@ -171320,8 +171320,8 @@ var init_timeline_definition_FHXFAJF6 = __esm({
     }, "getNoteRect");
     _drawTextCandidateFunc4 = /* @__PURE__ */ (function() {
       function byText(content, g2, x6, y6, width3, height2, textAttrs, colour) {
-        const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("font-color", colour).style("text-anchor", "middle").text(content);
-        _setTextAttrs(text4, textAttrs);
+        const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6 + height2 / 2 + 5).style("font-color", colour).style("text-anchor", "middle").text(content);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byText, "byText");
       function byTspan(content, g2, x6, y6, width3, height2, textAttrs, conf5, colour) {
@@ -171329,20 +171329,20 @@ var init_timeline_definition_FHXFAJF6 = __esm({
         const lines = content.split(/<br\s*\/?>/gi);
         for (let i3 = 0; i3 < lines.length; i3++) {
           const dy = i3 * taskFontSize - taskFontSize * (lines.length - 1) / 2;
-          const text4 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).attr("fill", colour).style("text-anchor", "middle").style("font-size", taskFontSize).style("font-family", taskFontFamily);
-          text4.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
-          text4.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
-          _setTextAttrs(text4, textAttrs);
+          const text5 = g2.append("text").attr("x", x6 + width3 / 2).attr("y", y6).attr("fill", colour).style("text-anchor", "middle").style("font-size", taskFontSize).style("font-family", taskFontFamily);
+          text5.append("tspan").attr("x", x6 + width3 / 2).attr("dy", dy).text(lines[i3]);
+          text5.attr("y", y6 + height2 / 2).attr("dominant-baseline", "central").attr("alignment-baseline", "central");
+          _setTextAttrs(text5, textAttrs);
         }
       }
       __name(byTspan, "byTspan");
       function byFo(content, g2, x6, y6, width3, height2, textAttrs, conf5) {
         const body = g2.append("switch");
         const f2 = body.append("foreignObject").attr("x", x6).attr("y", y6).attr("width", width3).attr("height", height2).attr("position", "fixed");
-        const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-        text4.append("div").attr("class", "label").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
+        const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+        text5.append("div").attr("class", "label").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").text(content);
         byTspan(content, body, x6, y6, width3, height2, textAttrs, conf5);
-        _setTextAttrs(text4, textAttrs);
+        _setTextAttrs(text5, textAttrs);
       }
       __name(byFo, "byFo");
       function _setTextAttrs(toText, fromTextAttrsDict) {
@@ -171439,7 +171439,7 @@ var init_timeline_definition_FHXFAJF6 = __esm({
       drawNode,
       getVirtualNodeHeight
     };
-    draw16 = /* @__PURE__ */ __name(function(text4, id39, version3, diagObj) {
+    draw16 = /* @__PURE__ */ __name(function(text5, id39, version3, diagObj) {
       const conf5 = getConfig2();
       const { look, theme, themeVariables } = conf5;
       const { useGradient, gradientStart, gradientStop } = themeVariables;
@@ -171664,7 +171664,7 @@ var init_timeline_definition_FHXFAJF6 = __esm({
     TASK_AXIS_GAP = 20;
     TASK_VERTICAL_GAP = 30;
     EVENT_AXIS_GAP = 50;
-    draw22 = /* @__PURE__ */ __name(function(text4, id39, version3, diagObj) {
+    draw22 = /* @__PURE__ */ __name(function(text5, id39, version3, diagObj) {
       const conf5 = getConfig2();
       const LEFT_MARGIN = conf5.timeline?.leftMargin ?? 50;
       log.debug("timeline", diagObj.db);
@@ -172031,12 +172031,12 @@ var init_timeline_definition_FHXFAJF6 = __esm({
     rendererSelector = {
       setConf: /* @__PURE__ */ __name(() => {
       }, "setConf"),
-      draw: /* @__PURE__ */ __name((text4, id39, version3, diagObj) => {
+      draw: /* @__PURE__ */ __name((text5, id39, version3, diagObj) => {
         const direction2 = diagObj?.db?.getDirection?.() ?? "LR";
         if (direction2 === "TD") {
-          return timelineRendererVertical_default.draw(text4, id39, version3, diagObj);
+          return timelineRendererVertical_default.draw(text5, id39, version3, diagObj);
         }
-        return timelineRenderer_default.draw(text4, id39, version3, diagObj);
+        return timelineRenderer_default.draw(text5, id39, version3, diagObj);
       }, "draw")
     };
     diagram18 = {
@@ -173146,8 +173146,8 @@ var init_mindmap_definition_LN4V7U3C = __esm({
         return log;
       }
     };
-    draw17 = /* @__PURE__ */ __name(async (text4, id39, _version, diagObj) => {
-      log.debug("Rendering mindmap diagram\n" + text4);
+    draw17 = /* @__PURE__ */ __name(async (text5, id39, _version, diagObj) => {
+      log.debug("Rendering mindmap diagram\n" + text5);
       const db12 = diagObj.db;
       const data4Layout = db12.getData();
       const svg2 = getDiagramElement(id39, data4Layout.config.securityLevel);
@@ -174264,8 +174264,8 @@ var init_kanban_definition_HUTT4EX6 = __esm({
       getElementById: getElementById2
     };
     kanbanDb_default = db4;
-    draw18 = /* @__PURE__ */ __name(async (text4, id39, _version, diagObj) => {
-      log.debug("Rendering kanban diagram\n" + text4);
+    draw18 = /* @__PURE__ */ __name(async (text5, id39, _version, diagObj) => {
+      log.debug("Rendering kanban diagram\n" + text5);
       const db22 = diagObj.db;
       const data4Layout = db22.getData();
       const conf5 = getConfig2();
@@ -175712,7 +175712,7 @@ var init_sankeyDiagram_HTMAVEWB = __esm({
       }
       return centralLayer;
     }, "findCentralNodeLayer");
-    draw19 = /* @__PURE__ */ __name(function(text4, id39, _version, diagObj) {
+    draw19 = /* @__PURE__ */ __name(function(text5, id39, _version, diagObj) {
       const { securityLevel, sankey: conf5 } = getConfig2();
       const defaultSankeyConfig = defaultConfig2.sankey;
       let sandboxElement;
@@ -175804,8 +175804,8 @@ ${prefix}${Math.round(value2 * 100) / 100}${suffix}`;
     sankeyRenderer_default = {
       draw: draw19
     };
-    prepareTextForParsing = /* @__PURE__ */ __name((text4) => {
-      const textToParse = text4.replaceAll(/^[^\S\n\r]+|[^\S\n\r]+$/g, "").replaceAll(/([\n\r])+/g, "\n").trim();
+    prepareTextForParsing = /* @__PURE__ */ __name((text5) => {
+      const textToParse = text5.replaceAll(/^[^\S\n\r]+|[^\S\n\r]+$/g, "").replaceAll(/([\n\r])+/g, "\n").trim();
       return textToParse;
     }, "prepareTextForParsing");
     getStyles17 = /* @__PURE__ */ __name((options2) => `.label {
@@ -175843,7 +175843,7 @@ ${prefix}${Math.round(value2 * 100) / 100}${suffix}`;
 `, "getStyles");
     styles_default15 = getStyles17;
     originalParse = sankey_default.parse.bind(sankey_default);
-    sankey_default.parse = (text4) => originalParse(prepareTextForParsing(text4));
+    sankey_default.parse = (text5) => originalParse(prepareTextForParsing(text5));
     diagram21 = {
       styles: styles_default15,
       parser: sankey_default,
@@ -176639,8 +176639,8 @@ function layoutBlocks(block2, db22, padding = 8) {
     const rowYOffsets = /* @__PURE__ */ new Map();
     {
       let offset = 0;
-      const rows = [...rowHeights.keys()].sort((a2, b3) => a2 - b3);
-      for (const row of rows) {
+      const rows2 = [...rowHeights.keys()].sort((a2, b3) => a2 - b3);
+      for (const row of rows2) {
         rowYOffsets.set(row, offset);
         offset += (rowHeights.get(row) ?? 0) + padding;
       }
@@ -179262,9 +179262,9 @@ var init_blockDiagram_677ZJIJ3 = __esm({
       } else {
         labelText = typeof node2.labelText === "string" ? node2.labelText : node2.labelText[0];
       }
-      let text4;
+      let text5;
       if (node2.labelType === "markdown") {
-        text4 = createText(
+        text5 = createText(
           label,
           sanitizeText(decodeEntities(labelText), config3),
           {
@@ -179275,7 +179275,7 @@ var init_blockDiagram_677ZJIJ3 = __esm({
           config3
         );
       } else {
-        text4 = await createLabel_default2(
+        text5 = await createLabel_default2(
           label,
           sanitizeText(decodeEntities(labelText), config3),
           node2.labelStyle,
@@ -179283,11 +179283,11 @@ var init_blockDiagram_677ZJIJ3 = __esm({
           isNode2
         );
       }
-      let bbox = text4.getBBox();
+      let bbox = text5.getBBox();
       const halfPadding = node2.padding / 2;
       if (getEffectiveHtmlLabels(config3)) {
-        const div = text4.children[0];
-        const dv = select_default2(text4);
+        const div = text5.children[0];
+        const dv = select_default2(text5);
         await configureLabelImages(div, labelText);
         bbox = div.getBoundingClientRect();
         dv.attr("width", bbox.width);
@@ -179705,18 +179705,18 @@ var init_blockDiagram_677ZJIJ3 = __esm({
         title2 = text22;
       }
       log.info("Label text abc79", title2, text22, typeof text22 === "object");
-      const text4 = await createLabel_default2(label, title2, node2.labelStyle, true, true);
+      const text5 = await createLabel_default2(label, title2, node2.labelStyle, true, true);
       let bbox = { width: 0, height: 0 };
       if (getEffectiveHtmlLabels(getConfig2())) {
-        const div = text4.children[0];
-        const dv = select_default2(text4);
+        const div = text5.children[0];
+        const dv = select_default2(text5);
         bbox = div.getBoundingClientRect();
         dv.attr("width", bbox.width);
         dv.attr("height", bbox.height);
       }
       log.info("Text 2", text22);
       const textRows = text22.slice(1, text22.length);
-      let titleBox = text4.getBBox();
+      let titleBox = text5.getBBox();
       const descr = await createLabel_default2(
         label,
         textRows.join ? textRows.join("<br/>") : textRows,
@@ -179737,7 +179737,7 @@ var init_blockDiagram_677ZJIJ3 = __esm({
         "translate( " + // (titleBox.width - bbox.width) / 2 +
         (bbox.width > titleBox.width ? 0 : (titleBox.width - bbox.width) / 2) + ", " + (titleBox.height + halfPadding + 5) + ")"
       );
-      select_default2(text4).attr(
+      select_default2(text5).attr(
         "transform",
         "translate( " + // (titleBox.width - bbox.width) / 2 +
         (bbox.width < titleBox.width ? 0 : -(titleBox.width - bbox.width) / 2) + ", 0)"
@@ -180129,10 +180129,10 @@ var init_blockDiagram_677ZJIJ3 = __esm({
     __name(calculateBlockSizes, "calculateBlockSizes");
     __name(insertBlocks, "insertBlocks");
     __name(insertEdges, "insertEdges");
-    getClasses22 = /* @__PURE__ */ __name(function(text4, diagObj) {
+    getClasses22 = /* @__PURE__ */ __name(function(text5, diagObj) {
       return diagObj.db.getClasses();
     }, "getClasses");
-    draw23 = /* @__PURE__ */ __name(async function(text4, id39, _version, diagObj) {
+    draw23 = /* @__PURE__ */ __name(async function(text5, id39, _version, diagObj) {
       const { securityLevel, block: conf5 } = getConfig();
       const db22 = diagObj.db;
       db22.setDiagramId(id39);
@@ -180445,9 +180445,9 @@ var init_diagram_OA4YK3LP = __esm({
     }, "populate");
     parser22 = {
       parse: /* @__PURE__ */ __name(async (input) => {
-        const { text: text4, lineMap } = preprocessBoxDrawing(input);
+        const { text: text5, lineMap } = preprocessBoxDrawing(input);
         try {
-          const ast = await parse4("treeView", text4);
+          const ast = await parse4("treeView", text5);
           log.debug(ast);
           populate18(ast);
         } catch (error3) {
@@ -180604,8 +180604,8 @@ var init_diagram_OA4YK3LP = __esm({
       }
       return { totalHeight, totalWidth };
     }, "drawTree");
-    draw24 = /* @__PURE__ */ __name(async (text4, id39, _ver, diagObj) => {
-      log.debug("Rendering treeView diagram\n" + text4);
+    draw24 = /* @__PURE__ */ __name(async (text5, id39, _ver, diagObj) => {
+      log.debug("Rendering treeView diagram\n" + text5);
       const db22 = diagObj.db;
       const root4 = db22.getRoot();
       const config3 = db22.getConfig();
@@ -189584,7 +189584,7 @@ var init_architectureDiagram_ZJ3FMSHR = __esm({
     __name(getAlignments, "getAlignments");
     __name(getRelativeConstraints, "getRelativeConstraints");
     __name(layoutArchitecture, "layoutArchitecture");
-    draw25 = /* @__PURE__ */ __name(async (text4, id39, _version, diagObj) => {
+    draw25 = /* @__PURE__ */ __name(async (text5, id39, _version, diagObj) => {
       const db12 = diagObj.db;
       db12.setDiagramId(id39);
       const services = db12.getServices();
@@ -190063,8 +190063,8 @@ function renderD3Box(diagram210, diagramProps2) {
     const g2 = diagram210.append("g").attr("class", "em-box");
     g2.append("rect").attr("x", box.x).attr("y", y6).attr("rx", "3").attr("width", box.dimension.width).attr("height", box.dimension.height).attr("stroke", box.visual.stroke).attr("fill", box.visual.fill);
     const f2 = g2.append("foreignObject").attr("x", box.x + diagramProps2.boxPadding).attr("y", y6 + 10).attr("width", box.dimension.width - 2 * diagramProps2.boxPadding).attr("height", box.dimension.height - 2 * diagramProps2.boxPadding);
-    const text4 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
-    text4.append("span").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").html(box.text);
+    const text5 = f2.append("xhtml:div").style("display", "table").style("height", "100%").style("width", "100%");
+    text5.append("span").style("display", "table-cell").style("text-align", "center").style("vertical-align", "middle").html(box.text);
   };
 }
 function dirUpwards(sourceY, targetY) {
@@ -190815,8 +190815,8 @@ var init_ishikawaDiagram_FXEZZL3T = __esm({
       getRoot() {
         return this.root;
       }
-      addNode(rawLevel, text4) {
-        const label = common_default2.sanitizeText(text4, getConfig2());
+      addNode(rawLevel, text5) {
+        const label = common_default2.sanitizeText(text5, getConfig2());
         if (!this.root) {
           this.root = { text: label, children: [] };
           this.stack = [{ level: 0, node: this.root }];
@@ -191026,11 +191026,11 @@ var init_ishikawaDiagram_FXEZZL3T = __esm({
       walk(children2, -1, 2);
       return { entries: entries2, yOrder };
     }, "flattenTree");
-    drawCauseLabel = /* @__PURE__ */ __name((svg2, text4, x6, y6, direction2, fontSize, roughContext) => {
+    drawCauseLabel = /* @__PURE__ */ __name((svg2, text5, x6, y6, direction2, fontSize, roughContext) => {
       const lg = svg2.append("g").attr("class", "ishikawa-label-group");
       const lt = drawMultilineText(
         lg,
-        text4,
+        text5,
         x6,
         y6 + 11 * direction2,
         "ishikawa-label cause",
@@ -191156,13 +191156,13 @@ var init_ishikawaDiagram_FXEZZL3T = __esm({
         }
       }
     }, "drawBranch");
-    splitLines = /* @__PURE__ */ __name((text4) => text4.split(/<br\s*\/?>|\n/), "splitLines");
-    wrapText = /* @__PURE__ */ __name((text4, maxChars) => {
-      if (text4.length <= maxChars) {
-        return text4;
+    splitLines = /* @__PURE__ */ __name((text5) => text5.split(/<br\s*\/?>|\n/), "splitLines");
+    wrapText = /* @__PURE__ */ __name((text5, maxChars) => {
+      if (text5.length <= maxChars) {
+        return text5;
       }
       const lines = [];
-      for (const word of text4.split(/\s+/)) {
+      for (const word of text5.split(/\s+/)) {
         const last4 = lines.length - 1;
         if (last4 >= 0 && lines[last4].length + 1 + word.length <= maxChars) {
           lines[last4] += " " + word;
@@ -191172,8 +191172,8 @@ var init_ishikawaDiagram_FXEZZL3T = __esm({
       }
       return lines.join("\n");
     }, "wrapText");
-    drawMultilineText = /* @__PURE__ */ __name((g2, text4, x6, y6, cls, anchor2, fontSize) => {
-      const lines = splitLines(text4);
+    drawMultilineText = /* @__PURE__ */ __name((g2, text5, x6, y6, cls, anchor2, fontSize) => {
+      const lines = splitLines(text5);
       const lh = fontSize * 1.05;
       const el = g2.append("text").attr("class", cls).attr("text-anchor", anchor2).attr("x", x6).attr("y", y6 - (lines.length - 1) * lh / 2);
       for (const [i3, line2] of lines.entries()) {
@@ -192440,7 +192440,7 @@ function VennDiagram(options2 = {}) {
 }
 function wrapText2(circles, labeller) {
   return function(data6) {
-    const text4 = this;
+    const text5 = this;
     const width3 = circles[data6.sets[0]].radius || 50;
     const label = labeller(data6) || "";
     const words = label.split(/\s+/).reverse();
@@ -192450,13 +192450,13 @@ function wrapText2(circles, labeller) {
     let line2 = [word];
     let lineNumber = 0;
     const lineHeight = 1.1;
-    text4.textContent = null;
+    text5.textContent = null;
     const tspans = [];
     function append3(word2) {
-      const tspan2 = text4.ownerDocument.createElementNS(text4.namespaceURI, "tspan");
+      const tspan2 = text5.ownerDocument.createElementNS(text5.namespaceURI, "tspan");
       tspan2.textContent = word2;
       tspans.push(tspan2);
-      text4.append(tspan2);
+      text5.append(tspan2);
       return tspan2;
     }
     let tspan = append3(word);
@@ -192477,8 +192477,8 @@ function wrapText2(circles, labeller) {
       }
     }
     const initial2 = 0.35 - lineNumber * lineHeight / 2;
-    const x6 = text4.getAttribute("x");
-    const y6 = text4.getAttribute("y");
+    const x6 = text5.getAttribute("x");
+    const y6 = text5.getAttribute("y");
     tspans.forEach((t4, i3) => {
       t4.setAttribute("x", x6);
       t4.setAttribute("y", y6);
@@ -192785,9 +192785,9 @@ function renderTextNodes(config3, layoutByKey, dummyD3root, textNodes2, scale3, 
     const startX2 = centerX - innerWidth / 2;
     const startY2 = centerY - innerHeight / 2 + labelOffset;
     const cols = Math.max(1, Math.ceil(Math.sqrt(nodes5.length)));
-    const rows = Math.max(1, Math.ceil(nodes5.length / cols));
+    const rows2 = Math.max(1, Math.ceil(nodes5.length / cols));
     const cellWidth = innerWidth / cols;
-    const cellHeight = innerHeight / rows;
+    const cellHeight = innerHeight / rows2;
     for (const [i3, node2] of nodes5.entries()) {
       const col = i3 % cols;
       const row = Math.floor(i3 / cols);
@@ -192800,9 +192800,9 @@ function renderTextNodes(config3, layoutByKey, dummyD3root, textNodes2, scale3, 
       const boxHeight = cellHeight * 0.9;
       const container2 = areaGroup.append("foreignObject").attr("class", "venn-text-node-fo").attr("width", boxWidth).attr("height", boxHeight).attr("x", x6 - boxWidth / 2).attr("y", y6 - boxHeight / 2).attr("overflow", "visible");
       const textColor = styleByKey.get(node2.id)?.color;
-      const text4 = container2.append("xhtml:span").attr("class", "venn-text-node").style("display", "flex").style("width", "100%").style("height", "100%").style("white-space", "normal").style("align-items", "center").style("justify-content", "center").style("text-align", "center").style("overflow-wrap", "normal").style("word-break", "normal").text(node2.label ?? node2.id);
+      const text5 = container2.append("xhtml:span").attr("class", "venn-text-node").style("display", "flex").style("width", "100%").style("height", "100%").style("white-space", "normal").style("align-items", "center").style("justify-content", "center").style("text-align", "center").style("overflow-wrap", "normal").style("word-break", "normal").text(node2.label ?? node2.id);
       if (textColor) {
-        text4.style("color", textColor);
+        text5.style("color", textColor);
       }
     }
   }
@@ -193577,8 +193577,8 @@ var init_vennDiagram_L72KCM5P = __esm({
     getSubsetData = /* @__PURE__ */ __name(() => {
       return subsets;
     }, "getSubsetData");
-    normalizeText = /* @__PURE__ */ __name((text4) => {
-      const trimmed = text4.trim();
+    normalizeText = /* @__PURE__ */ __name((text5) => {
+      const trimmed = text5.trim();
       if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
         return trimmed.slice(1, -1);
       }
@@ -194005,10 +194005,10 @@ var init_diagram_G47NLZAW = __esm({
     parser27 = {
       // @ts-expect-error - TreeMapDB is not assignable to DiagramDB
       parser: { yy: void 0 },
-      parse: /* @__PURE__ */ __name(async (text4) => {
+      parse: /* @__PURE__ */ __name(async (text5) => {
         try {
           const parseFunc = parse4;
-          const ast = await parseFunc("treemap", text4);
+          const ast = await parseFunc("treemap", text5);
           log.debug("Treemap AST:", ast);
           const db12 = parser27.parser?.yy;
           if (!(db12 instanceof TreeMapDB)) {
@@ -194407,16 +194407,16 @@ function addLink2(sourceId, targetId, dashed = false, label, flow) {
 function addTrend(nodeId, targetX, targetY) {
   builder.addTrend({ nodeId, targetX, targetY });
 }
-function addAnnotation(number7, coordinates, text4) {
+function addAnnotation(number7, coordinates, text5) {
   builder.addAnnotation({
     number: number7,
     coordinates,
-    text: text4
+    text: text5
   });
 }
-function addNote(text4, x6, y6) {
+function addNote(text5, x6, y6) {
   builder.addNote({
-    text: text4,
+    text: text5,
     x: x6,
     y: y6
   });
@@ -194850,8 +194850,8 @@ var init_wardleyDiagram_EHGQE667 = __esm({
         useMaxWidth: wardleyConfig?.useMaxWidth ?? true
       };
     }, "getConfigValues");
-    draw30 = /* @__PURE__ */ __name((text4, id39, _version, diagObj) => {
-      log.debug("Rendering Wardley map\n" + text4);
+    draw30 = /* @__PURE__ */ __name((text5, id39, _version, diagObj) => {
+      log.debug("Rendering Wardley map\n" + text5);
       const configValues = getConfigValues();
       const theme = getTheme();
       const squareSize = configValues.nodeRadius * 1.6;
@@ -195839,8 +195839,8 @@ var init_chunk_MOJQB5TN = __esm({
     accDescription2 = "";
     rules = [];
     ruleMap = /* @__PURE__ */ new Map();
-    sanitizeText24 = /* @__PURE__ */ __name((text4) => {
-      return sanitizeText(text4, getConfig2());
+    sanitizeText24 = /* @__PURE__ */ __name((text5) => {
+      return sanitizeText(text5, getConfig2());
     }, "sanitizeText");
     sanitizeAstNode = /* @__PURE__ */ __name((node2) => {
       switch (node2.type) {
@@ -195873,9 +195873,9 @@ var init_chunk_MOJQB5TN = __esm({
       clear();
       log.debug("[Railroad] Database cleared");
     }, "clear");
-    setTitle2 = /* @__PURE__ */ __name((text4) => {
-      diagramTitle2 = sanitizeText24(text4);
-      log.debug("[Railroad] Title set:", text4);
+    setTitle2 = /* @__PURE__ */ __name((text5) => {
+      diagramTitle2 = sanitizeText24(text5);
+      log.debug("[Railroad] Title set:", text5);
     }, "setTitle");
     getTitle2 = /* @__PURE__ */ __name(() => {
       return diagramTitle2;
@@ -195900,16 +195900,16 @@ var init_chunk_MOJQB5TN = __esm({
     getRule2 = /* @__PURE__ */ __name((name) => {
       return ruleMap.get(name);
     }, "getRule");
-    setAccTitle2 = /* @__PURE__ */ __name((text4) => {
-      accTitle2 = sanitizeText24(text4).replace(/^\s+/g, "");
-      log.debug("[Railroad] Accessibility title set:", text4);
+    setAccTitle2 = /* @__PURE__ */ __name((text5) => {
+      accTitle2 = sanitizeText24(text5).replace(/^\s+/g, "");
+      log.debug("[Railroad] Accessibility title set:", text5);
     }, "setAccTitle");
     getAccTitle2 = /* @__PURE__ */ __name(() => {
       return accTitle2;
     }, "getAccTitle");
-    setAccDescription2 = /* @__PURE__ */ __name((text4) => {
-      accDescription2 = sanitizeText24(text4).replace(/\n\s+/g, "\n");
-      log.debug("[Railroad] Accessibility description set:", text4);
+    setAccDescription2 = /* @__PURE__ */ __name((text5) => {
+      accDescription2 = sanitizeText24(text5).replace(/\n\s+/g, "\n");
+      log.debug("[Railroad] Accessibility description set:", text5);
     }, "setAccDescription");
     getAccDescription2 = /* @__PURE__ */ __name(() => {
       return accDescription2;
@@ -196321,15 +196321,15 @@ var init_chunk_MOJQB5TN = __esm({
       /**
        * Measure text dimensions
        */
-      measureText(text4) {
-        if (this.textCache.has(text4)) {
-          return this.textCache.get(text4);
+      measureText(text5) {
+        if (this.textCache.has(text5)) {
+          return this.textCache.get(text5);
         }
-        const tempText = this.svg.append("text").attr("font-family", this.config.fontFamily).attr("font-size", this.config.fontSize).text(text4);
+        const tempText = this.svg.append("text").attr("font-family", this.config.fontFamily).attr("font-size", this.config.fontSize).text(text5);
         const bbox = tempText.node().getBBox();
         const dimensions2 = { width: bbox.width, height: bbox.height };
         tempText.remove();
-        this.textCache.set(text4, dimensions2);
+        this.textCache.set(text5, dimensions2);
         return dimensions2;
       }
       /**
@@ -196571,13 +196571,13 @@ var init_chunk_MOJQB5TN = __esm({
       /**
        * Render special sequence
        */
-      renderSpecial(parent4, text4) {
-        const textDim = this.measureText("? " + text4 + " ?");
+      renderSpecial(parent4, text5) {
+        const textDim = this.measureText("? " + text5 + " ?");
         const width3 = textDim.width + this.config.padding * 2;
         const height2 = textDim.height + this.config.padding * 2;
         const group2 = parent4.append("g").attr("class", "railroad-special");
         group2.append("rect").attr("x", 0).attr("y", 0).attr("width", width3).attr("height", height2);
-        group2.append("text").attr("x", width3 / 2).attr("y", height2 / 2).text("? " + text4 + " ?");
+        group2.append("text").attr("x", width3 / 2).attr("y", height2 / 2).text("? " + text5 + " ?");
         return {
           element: group2.node(),
           dimensions: {
@@ -196664,8 +196664,8 @@ var init_chunk_MOJQB5TN = __esm({
       configureSvgSize(svg2, dimensions2.height, dimensions2.width, useMaxWidth);
       svg2.attr("viewBox", `0 0 ${dimensions2.width} ${dimensions2.height}`);
     }, "configureRailroadSvgSize");
-    draw32 = /* @__PURE__ */ __name((text4, id39, _version) => {
-      log.debug("[Railroad] Rendering diagram\n" + text4);
+    draw32 = /* @__PURE__ */ __name((text5, id39, _version) => {
+      log.debug("[Railroad] Rendering diagram\n" + text5);
       try {
         const svg2 = selectSvgElement(id39);
         svg2.attr("class", "railroad-diagram");
@@ -197219,49 +197219,94 @@ __export(main_exports2, {
 module.exports = __toCommonJS(main_exports2);
 var import_promises2 = require("node:fs/promises");
 var import_node_path2 = require("node:path");
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // src/defaults.ts
 var VIEW_TYPE_PUBLISHER = "wechat-obsidian-publisher-view";
 var DEFAULT_MODULES = [
   {
-    id: "series-intro",
-    name: "\u7CFB\u5217\u5BFC\u8BED",
+    id: "md2-intro",
+    name: "\u5F00\u5934",
+    kind: "intro",
     placement: "before",
-    enabled: false,
-    markdown: "> \u8FD9\u662F\u4E00\u4E2A\u6301\u7EED\u66F4\u65B0\u7684\u4E13\u9898\u7CFB\u5217\u3002\u672C\u7BC7\u4ECE\u95EE\u9898\u3001\u65B9\u6CD5\u548C\u5B9E\u8DF5\u4E09\u4E2A\u5C42\u9762\u5C55\u5F00\u3002"
+    enabled: true,
+    markdown: "> \u5199\u5728\u524D\u9762\uFF1A\u8FD9\u7BC7\u6587\u7AE0\u6765\u81EA\u672C\u5730 Markdown \u5DE5\u4F5C\u6D41\uFF0C\u53EF\u4EE5\u5728\u8FD9\u91CC\u8865\u5145\u5BFC\u8BED\u3001\u680F\u76EE\u8BF4\u660E\u6216\u6D3B\u52A8\u63D0\u793A\u3002"
   },
   {
-    id: "reader-note",
-    name: "\u9605\u8BFB\u63D0\u793A",
-    placement: "before",
-    enabled: false,
-    markdown: "**\u9605\u8BFB\u63D0\u793A**\uFF1A\u5EFA\u8BAE\u5148\u6536\u85CF\uFF0C\u5B8C\u6574\u9605\u8BFB\u7EA6\u9700 8 \u5206\u949F\u3002"
+    id: "md2-table-before",
+    name: "\u8868\u683C\u524D\u63D2\u5165",
+    kind: "table-before",
+    placement: "before-first-table",
+    enabled: true,
+    markdown: "## \u6570\u636E\u8BF4\u660E\n\n\u4E0B\u9762\u8FD9\u5F20\u8868\u662F\u53D1\u5E03\u524D\u68C0\u67E5\u9879\uFF0C\u53EF\u4EE5\u5728\u8FD9\u91CC\u8865\u5145\u53E3\u5F84\u3001\u6837\u672C\u8303\u56F4\u6216\u8BFB\u8005\u63D0\u793A\u3002"
   },
   {
-    id: "follow-card",
-    name: "\u5173\u6CE8\u5F15\u5BFC",
+    id: "md2-table-after",
+    name: "\u8868\u683C\u540E\u63D2\u5165",
+    kind: "table-after",
+    placement: "after-first-table",
+    enabled: true,
+    markdown: "\u8868\u683C\u7ED3\u8BBA\uFF1A\u4F18\u5148\u5904\u7406\u5931\u8D25\u9879\uFF0C\u518D\u8FDB\u5165\u8349\u7A3F\u7BB1\u53D1\u5E03\u3002"
+  },
+  {
+    id: "md2-ending",
+    name: "\u7ED3\u5C3E",
+    kind: "ending",
+    placement: "after",
+    enabled: true,
+    markdown: "## \u7ED3\u5C3E\n\n\u4EE5\u4E0A\u662F\u8FD9\u6B21\u7684\u4E3B\u8981\u5185\u5BB9\u3002\u5982\u679C\u8FD9\u5957\u6D41\u7A0B\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u6B22\u8FCE\u7EE7\u7EED\u5173\u6CE8\u540E\u7EED\u66F4\u65B0\u3002"
+  },
+  {
+    id: "md2-recommendations",
+    name: "\u5F80\u671F\u63A8\u8350",
+    kind: "recommendations",
+    placement: "after",
+    enabled: true,
+    markdown: "## \u5EF6\u4F38\u9605\u8BFB\n\n- [\u672C\u5730\u4F18\u5148\u5DE5\u5177\u94FE\u590D\u76D8](https://example.com/local-first)\n- [Obsidian \u53D1\u5E03\u6D41\u7684\u56FE\u7247\u5904\u7406](https://example.com/obsidian-images)"
+  },
+  {
+    id: "md2-author",
+    name: "\u4F5C\u8005\u4ECB\u7ECD",
+    kind: "author",
+    placement: "after",
+    enabled: true,
+    markdown: "## \u4F5C\u8005\u4ECB\u7ECD\n\n\u957F\u671F\u5199\u4F5C\u4EA7\u54C1\u3001\u5DE5\u5177\u548C\u672C\u5730\u5DE5\u4F5C\u6D41\uFF0C\u5173\u6CE8\u8BA9\u521B\u4F5C\u66F4\u7A33\u5B9A\u7684\u5DE5\u7A0B\u7EC6\u8282\u3002"
+  },
+  {
+    id: "md2-follow",
+    name: "\u5173\u6CE8\u5361\u7247",
+    kind: "follow",
     placement: "after",
     enabled: false,
-    markdown: "---\n\n\u5982\u679C\u8FD9\u7BC7\u6587\u7AE0\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u6B22\u8FCE\u5173\u6CE8\u5E76\u5206\u4EAB\u7ED9\u9700\u8981\u7684\u4EBA\u3002"
+    markdown: "## \u5173\u6CE8\u6211\n\n\u5982\u679C\u8FD9\u7BC7\u6587\u7AE0\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF0C\u6B22\u8FCE\u5173\u6CE8\u5E76\u5206\u4EAB\u7ED9\u9700\u8981\u7684\u4EBA\u3002"
   },
   {
-    id: "copyright",
-    name: "\u7248\u6743\u8BF4\u660E",
+    id: "md2-copyright",
+    name: "\u7248\u6743\u58F0\u660E",
+    kind: "copyright",
+    placement: "after",
+    enabled: true,
+    markdown: "> \u672C\u6587\u7531\u4F5C\u8005\u539F\u521B\u53D1\u5E03\uFF0C\u8F6C\u8F7D\u8BF7\u8054\u7CFB\u6388\u6743\u5E76\u4FDD\u7559\u6765\u6E90\u94FE\u63A5\u3002"
+  },
+  {
+    id: "md2-custom",
+    name: "\u81EA\u5B9A\u4E49\u6A21\u5757",
+    kind: "custom",
     placement: "after",
     enabled: false,
-    markdown: "> \u672C\u6587\u7531\u4F5C\u8005\u539F\u521B\uFF0C\u8F6C\u8F7D\u8BF7\u8054\u7CFB\u6388\u6743\u5E76\u4FDD\u7559\u51FA\u5904\u3002"
+    markdown: "## \u81EA\u5B9A\u4E49\u6A21\u5757\n\n\u8FD9\u91CC\u53EF\u4EE5\u653E\u6D3B\u52A8\u63D0\u9192\u3001\u8D44\u6599\u9886\u53D6\u3001\u793E\u7FA4\u5165\u53E3\u6216\u5176\u4ED6\u56FA\u5B9A\u5185\u5BB9\u3002"
   }
 ];
 var DEFAULT_SETTINGS = {
-  version: 1,
-  activeTemplateId: "md2-forest",
+  version: 2,
+  activeTemplateId: "mdnice-forest",
   previewDevice: "desktop",
   activeTab: "preview",
   defaultAccountId: "",
   defaultAuthor: "",
   defaultCoverPath: "",
   accounts: [],
+  connectionDiagnostics: {},
   modules: DEFAULT_MODULES,
   customTemplates: [],
   lastDraftByFile: {}
@@ -198193,8 +198238,8 @@ var treemap = {
   loader: loader32
 };
 var id33 = "wardley";
-var detector33 = /* @__PURE__ */ __name((text4) => {
-  return /^\s*wardley-beta/i.test(text4);
+var detector33 = /* @__PURE__ */ __name((text5) => {
+  return /^\s*wardley-beta/i.test(text5);
 }, "detector");
 var loader33 = /* @__PURE__ */ __name(async () => {
   const { diagram: diagram210 } = await Promise.resolve().then(() => (init_wardleyDiagram_EHGQE667(), wardleyDiagram_EHGQE667_exports));
@@ -198277,8 +198322,8 @@ var addDiagrams = /* @__PURE__ */ __name(() => {
     return;
   }
   hasLoadedDiagrams = true;
-  registerDiagram("error", errorDiagram_default, (text4) => {
-    return text4.toLowerCase().trim() === "error";
+  registerDiagram("error", errorDiagram_default, (text5) => {
+    return text5.toLowerCase().trim() === "error";
   });
   registerDiagram(
     "---",
@@ -198304,8 +198349,8 @@ var addDiagrams = /* @__PURE__ */ __name(() => {
       init: /* @__PURE__ */ __name(() => null, "init")
       // no op
     },
-    (text4) => {
-      return text4.toLowerCase().trimStart().startsWith("---");
+    (text5) => {
+      return text5.toLowerCase().trimStart().startsWith("---");
     }
   );
   if (true) {
@@ -198404,9 +198449,9 @@ function addSVGa11yTitleDescription(svg2, a11yTitle, a11yDesc, baseId) {
 }
 __name(addSVGa11yTitleDescription, "addSVGa11yTitleDescription");
 var Diagram = class _Diagram {
-  constructor(type3, text4, db12, parser34, renderer22) {
+  constructor(type3, text5, db12, parser34, renderer22) {
     this.type = type3;
-    this.text = text4;
+    this.text = text5;
     this.db = db12;
     this.parser = parser34;
     this.renderer = renderer22;
@@ -198414,10 +198459,10 @@ var Diagram = class _Diagram {
   static {
     __name(this, "Diagram");
   }
-  static async fromText(text4, metadata = {}) {
+  static async fromText(text5, metadata = {}) {
     const config3 = getConfig();
-    const type3 = detectType(text4, config3);
-    text4 = encodeEntities(text4) + "\n";
+    const type3 = detectType(text5, config3);
+    text5 = encodeEntities(text5) + "\n";
     try {
       getDiagram(type3);
     } catch {
@@ -198437,8 +198482,8 @@ var Diagram = class _Diagram {
     if (metadata.title) {
       db12.setDiagramTitle?.(metadata.title);
     }
-    await parser34.parse(text4);
-    return new _Diagram(type3, text4, db12, parser34, renderer22);
+    await parser34.parse(text5);
+    return new _Diagram(type3, text5, db12, parser34, renderer22);
   }
   async render(id39, version3) {
     await this.renderer.draw(this.text, id39, version3, this);
@@ -198457,14 +198502,14 @@ var attachFunctions = /* @__PURE__ */ __name(() => {
   });
   interactionFunctions = [];
 }, "attachFunctions");
-var cleanupComments = /* @__PURE__ */ __name((text4) => {
-  return text4.replace(/^\s*%%(?!{)[^\n]+\n?/gm, "").trimStart();
+var cleanupComments = /* @__PURE__ */ __name((text5) => {
+  return text5.replace(/^\s*%%(?!{)[^\n]+\n?/gm, "").trimStart();
 }, "cleanupComments");
-function extractFrontMatter(text4) {
-  const matches33 = text4.match(frontMatterRegex);
+function extractFrontMatter(text5) {
+  const matches33 = text5.match(frontMatterRegex);
   if (!matches33) {
     return {
-      text: text4,
+      text: text5,
       metadata: {}
     };
   }
@@ -198487,7 +198532,7 @@ function extractFrontMatter(text4) {
     metadata.config = parsed.config;
   }
   return {
-    text: text4.slice(matches33[0].length),
+    text: text5.slice(matches33[0].length),
     metadata
   };
 }
@@ -198499,7 +198544,7 @@ var cleanupText = /* @__PURE__ */ __name((code) => {
   );
 }, "cleanupText");
 var processFrontmatter = /* @__PURE__ */ __name((code) => {
-  const { text: text4, metadata } = extractFrontMatter(code);
+  const { text: text5, metadata } = extractFrontMatter(code);
   const { displayMode: displayMode2, title: title2, config: config3 = {} } = metadata;
   if (displayMode2) {
     if (!config3.gantt) {
@@ -198507,7 +198552,7 @@ var processFrontmatter = /* @__PURE__ */ __name((code) => {
     }
     config3.gantt.displayMode = displayMode2;
   }
-  return { title: title2, config: config3, text: text4 };
+  return { title: title2, config: config3, text: text5 };
 }, "processFrontmatter");
 var processDirectives = /* @__PURE__ */ __name((code) => {
   const initDirective = utils_default2.detectInit(code) ?? {};
@@ -198556,17 +198601,17 @@ var IFRAME_SANDBOX_OPTS = "allow-top-navigation-by-user-activation allow-popups"
 var IFRAME_NOT_SUPPORTED_MSG = 'The "iframe" tag is not supported by your browser.';
 var DOMPURIFY_TAGS = ["foreignobject"];
 var DOMPURIFY_ATTR = ["dominant-baseline"];
-function processAndSetConfigs(text4) {
-  const processed2 = preprocessDiagram(text4);
+function processAndSetConfigs(text5) {
+  const processed2 = preprocessDiagram(text5);
   reset();
   addDirective(processed2.config ?? {});
   return processed2;
 }
 __name(processAndSetConfigs, "processAndSetConfigs");
-async function parse5(text4, parseOptions) {
+async function parse5(text5, parseOptions) {
   addDiagrams();
   try {
-    const { code, config: config3 } = processAndSetConfigs(text4);
+    const { code, config: config3 } = processAndSetConfigs(text5);
     const diagram210 = await getDiagramFromText(code);
     return { diagramType: diagram210.type, config: config3 };
   } catch (error3) {
@@ -198724,14 +198769,14 @@ var removeExistingElements = /* @__PURE__ */ __name((doc, id39, divId, iFrameId)
   doc.getElementById(divId)?.remove();
   doc.getElementById(iFrameId)?.remove();
 }, "removeExistingElements");
-var render7 = /* @__PURE__ */ __name(async function(id39, text4, svgContainingElement) {
+var render7 = /* @__PURE__ */ __name(async function(id39, text5, svgContainingElement) {
   addDiagrams();
-  const processed2 = processAndSetConfigs(text4);
-  text4 = processed2.code;
+  const processed2 = processAndSetConfigs(text5);
+  text5 = processed2.code;
   const config3 = getConfig();
   log.debug(config3);
-  if (text4.length > (config3?.maxTextSize ?? MAX_TEXTLENGTH)) {
-    text4 = MAX_TEXTLENGTH_EXCEEDED_MSG;
+  if (text5.length > (config3?.maxTextSize ?? MAX_TEXTLENGTH)) {
+    text5 = MAX_TEXTLENGTH_EXCEEDED_MSG;
   }
   const idSelector = `#${id39}`;
   const iFrameID = "i" + id39;
@@ -198775,7 +198820,7 @@ var render7 = /* @__PURE__ */ __name(async function(id39, text4, svgContainingEl
   let diag;
   let parseEncounteredException;
   try {
-    diag = await Diagram.fromText(text4, { title: processed2.title });
+    diag = await Diagram.fromText(text5, { title: processed2.title });
   } catch (error3) {
     if (config3.suppressErrorRendering) {
       removeTempElements();
@@ -198788,18 +198833,18 @@ var render7 = /* @__PURE__ */ __name(async function(id39, text4, svgContainingEl
   const diagramType = diag.type;
   const svg2 = element3.firstChild;
   const firstChild = svg2.firstChild;
-  const diagramClassDefs = diag.renderer.getClasses?.(text4, diag);
+  const diagramClassDefs = diag.renderer.getClasses?.(text5, diag);
   const rules2 = createUserStyles(config3, diagramType, diagramClassDefs, idSelector);
   const style1 = document.createElement("style");
   style1.innerHTML = rules2;
   svg2.insertBefore(style1, firstChild);
   try {
-    await diag.renderer.draw(text4, id39, "11.16.0", diag);
+    await diag.renderer.draw(text5, id39, "11.16.0", diag);
   } catch (e3) {
     if (config3.suppressErrorRendering) {
       removeTempElements();
     } else {
-      errorRenderer_default.draw(text4, id39, "11.16.0");
+      errorRenderer_default.draw(text5, id39, "11.16.0");
     }
     throw e3;
   }
@@ -198853,8 +198898,8 @@ function initialize(userOptions = {}) {
   addDiagrams();
 }
 __name(initialize, "initialize");
-var getDiagramFromText = /* @__PURE__ */ __name((text4, metadata = {}) => {
-  const { code } = preprocessDiagram(text4);
+var getDiagramFromText = /* @__PURE__ */ __name((text5, metadata = {}) => {
+  const { code } = preprocessDiagram(text5);
   return Diagram.fromText(code, metadata);
 }, "getDiagramFromText");
 function addA11yInfo(diagramType, svgNode2, a11yTitle, a11yDescr) {
@@ -199033,10 +199078,10 @@ var executeQueue = /* @__PURE__ */ __name(async () => {
   }
   executionQueueRunning = false;
 }, "executeQueue");
-var parse22 = /* @__PURE__ */ __name(async (text4, parseOptions) => {
+var parse22 = /* @__PURE__ */ __name(async (text5, parseOptions) => {
   return new Promise((resolve2, reject3) => {
     const performCall = /* @__PURE__ */ __name(() => new Promise((res, rej) => {
-      mermaidAPI.parse(text4, parseOptions).then(
+      mermaidAPI.parse(text5, parseOptions).then(
         (r2) => {
           res(r2);
           resolve2(r2);
@@ -199053,10 +199098,10 @@ var parse22 = /* @__PURE__ */ __name(async (text4, parseOptions) => {
     executeQueue().catch(reject3);
   });
 }, "parse");
-var render23 = /* @__PURE__ */ __name((id39, text4, container2) => {
+var render23 = /* @__PURE__ */ __name((id39, text5, container2) => {
   return new Promise((resolve2, reject3) => {
     const performCall = /* @__PURE__ */ __name(() => new Promise((res, rej) => {
-      mermaidAPI.render(id39, text4, container2).then(
+      mermaidAPI.render(id39, text5, container2).then(
         (r2) => {
           res(r2);
           resolve2(r2);
@@ -199136,13 +199181,55 @@ function parseDocument(markdown, fallbackTitle, defaultAuthor) {
 // src/core/modules.ts
 function composeMarkdown(body, modules2) {
   const before = modules2.filter((module2) => module2.enabled && module2.placement === "before");
+  const beforeTable = modules2.filter((module2) => module2.enabled && module2.placement === "before-first-table");
+  const afterTable = modules2.filter((module2) => module2.enabled && module2.placement === "after-first-table");
   const after = modules2.filter((module2) => module2.enabled && module2.placement === "after");
+  const tableModules = injectFirstTableModules(
+    body.trim(),
+    beforeTable.map((module2) => module2.markdown.trim()).filter(Boolean),
+    afterTable.map((module2) => module2.markdown.trim()).filter(Boolean)
+  );
   const sections6 = [
     ...before.map((module2) => module2.markdown.trim()),
-    body.trim(),
+    tableModules,
     ...after.map((module2) => module2.markdown.trim())
   ].filter(Boolean);
   return sections6.join("\n\n");
+}
+function isTableDivider(line2) {
+  const cells = line2.trim().replace(/^\||\|$/g, "").split("|");
+  return cells.length > 0 && cells.every((cell) => /^\s*:?-{3,}:?\s*$/.test(cell));
+}
+function firstTableRange(markdown) {
+  const lines = markdown.split("\n");
+  let fence = "";
+  for (let index = 1; index < lines.length; index += 1) {
+    const fenceMatch = lines[index - 1].match(/^\s*(`{3,}|~{3,})/);
+    if (fenceMatch) {
+      const marker = fenceMatch[1][0];
+      if (!fence) fence = marker;
+      else if (fence === marker) fence = "";
+    }
+    if (fence) continue;
+    if (!lines[index - 1].includes("|") || !isTableDivider(lines[index])) continue;
+    let end2 = index + 1;
+    while (end2 < lines.length && lines[end2].includes("|") && lines[end2].trim()) end2 += 1;
+    return { start: index - 1, end: end2 };
+  }
+  return null;
+}
+function injectFirstTableModules(markdown, before, after) {
+  if (!before.length && !after.length) return markdown;
+  const lines = markdown.split("\n");
+  const range3 = firstTableRange(markdown);
+  if (!range3) return [markdown, ...before, ...after].filter(Boolean).join("\n\n");
+  return [
+    lines.slice(0, range3.start).join("\n").trimEnd(),
+    ...before,
+    lines.slice(range3.start, range3.end).join("\n"),
+    ...after,
+    lines.slice(range3.end).join("\n").trimStart()
+  ].filter(Boolean).join("\n\n");
 }
 
 // src/core/renderer.ts
@@ -199189,20 +199276,25 @@ function applyTemplate(root4, template) {
       applyDeclarations(root4, declarations);
       continue;
     }
-    root4.querySelectorAll(selector).forEach((element3) => applyDeclarations(element3, declarations));
+    try {
+      root4.querySelectorAll(selector).forEach((element3) => applyDeclarations(element3, declarations));
+    } catch {
+      continue;
+    }
   }
   root4.dataset.template = template.id;
+  root4.dataset.themeGroup = template.group;
 }
 function enhanceStructure(root4, resolvePreviewImage) {
   const sources = [];
   root4.querySelectorAll("pre code").forEach((code) => {
     const language = [...code.classList].find((name) => name.startsWith("language-"))?.slice(9);
     if (language === "mermaid") return;
-    const text4 = code.textContent ?? "";
+    const text5 = code.textContent ?? "";
     try {
-      code.innerHTML = language && common_default.getLanguage(language) ? common_default.highlight(text4, { language }).value : common_default.highlightAuto(text4).value;
+      code.innerHTML = language && common_default.getLanguage(language) ? common_default.highlight(text5, { language }).value : common_default.highlightAuto(text5).value;
     } catch {
-      code.textContent = text4;
+      code.textContent = text5;
     }
   });
   root4.querySelectorAll("img").forEach((image) => {
@@ -199266,29 +199358,206 @@ var RenderEngine = class {
   }
 };
 
-// src/core/templates.ts
+// src/core/md2-theme-catalog.ts
+var UPSTREAM_BY_SOURCE = {
+  "Design Lab": "Adapted from doocs/md, mdnice/markdown-nice, WeMD, Typora Gallery and github-markdown-css",
+  Wenyan: "caol64/wenyan-core @wenyan-md/core 3.0.10",
+  "markdown-nice": "mdnice/markdown-nice src/template/basic.js and markdown/normal.js",
+  "doocs/md": "doocs/md packages/shared/src/configs/theme-css",
+  WeMD: "tenngoxars/WeMD packages/core/src/themes",
+  "WeChat Format": "lyricat/wechat-format src/assets/scripts/themes",
+  NeuraPress: "tianyaxiang/neurapress src/config/wechat-templates.ts",
+  "MD2 Catalog": "geekjourneyx/md2wechat-skill themes/api.yaml"
+};
+var rows = [
+  ["design-github-readme", "GitHub README", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "github-readme", "", "#0969da", "#d1d9e0", "#f6f8fa", "#1f2328", "#1f2328"],
+  ["design-doocs-grace", "Doocs Grace", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "doocs-grace", "", "#77639b", "#c7bddc", "#f7f4fb", "#2e2938", "#34303d", "#665287"],
+  ["design-mdnice-blue", "Mdnice Blue", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "mdnice-blue", "", "#426a8f", "#b8c9d8", "#f5f8fa", "#1d252c", "#2b343a", "#315f8f"],
+  ["design-wemd-aurora", "Aurora Glass", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "wemd-aurora", "", "#5267a8", "#9c72a5", "#f7f4fb", "#2d3348", "#34364d"],
+  ["design-typora-nord", "Nord Note", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "typora-nord", "", "#5e81ac", "#b7c7d8", "#eceff4", "#2e3440", "#3b4252", "#4c729f"],
+  ["design-typora-cobalt", "Cobalt Code", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "typora-cobalt", "", "#193549", "#0088cc", "#edf7ff", "#193549", "#213748", "#0088cc"],
+  ["design-typora-eloquent", "Eloquent", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "typora-eloquent", "", "#404040", "#dfe2e5", "#f8f8f8", "#404040", "#333333", "#0d6efd"],
+  ["design-typora-newsprint", "Newsprint", "\u8BBE\u8BA1\u5B9E\u9A8C\u5BA4", "Design Lab", "source-informed", "design-lab", "typora-newsprint", "", "#2f2a24", "#d7c7ad", "#f5efe2", "#2f2a24", "#3a332c", "#9b2c2c"],
+  ["signal-forge", "\u7EFF\u8109\u7EC8\u7AEF", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "terminal", "#00d992", "#2fd6a1", "#eafff7", "#0b2b22", "#24352f", "#00a878", "#008f70"],
+  ["terracotta-brief", "\u9676\u571F\u624B\u672D", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "editorial", "#c86f4a", "#f3c6aa", "#fff3ea", "#33231d", "#3f312b", "#a94f31", "#a9583e"],
+  ["waveform-night", "\u58F0\u7EB9\u591C\u822A", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "cinematic", "#7c5cff", "#25d7ff", "#f4f1ff", "#1f1b46", "#302b4b", "#6b4eff", "#5a46cc"],
+  ["neon-ledger", "\u9713\u8679\u9ED1\u7BB1", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "neon", "#00a8b8", "#ff4fd8", "#ecfeff", "#101828", "#25313a", "#008ea0", "#006d7a"],
+  ["violet-blueprint", "\u7D2B\u96FE\u84DD\u56FE", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "blueprint", "#8b5cf6", "#38bdf8", "#eef2ff", "#312e81", "#26324a", "#6d4bd1", "#5b3fc1"],
+  ["mono-command", "\u9ED1\u767D\u547D\u4EE4", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "mono", "#111111", "#a3a3a3", "#f5f5f5", "#111111", "#242424"],
+  ["mint-docs", "\u8584\u8377\u6587\u6863", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "docs", "#10b981", "#a7f3d0", "#ecfdf5", "#064e3b", "#1f3a34", "#059669", "#047857"],
+  ["paper-cinema", "\u80F6\u7247\u767D\u7A3F", "\u72EC\u5BB6\u7B7E\u540D", "MD2 Signature", "internal", "signature", "", "cinema-paper", "#111111", "#e5484d", "#faf7f2", "#111111", "#292524", "#b42318", "#b42318"],
+  ["wenyan-default", "\u6E05\u767D", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "default", "", "", "#0069c2", "#d8d8d8", "#f8f8f8", "#222222", "#222222"],
+  ["wenyan-orange-heart", "\u6A59\u7B7E", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "orangeheart", "", "", "#ef7060", "#efebe9", "#fff9f9", "#222222", "#222222"],
+  ["wenyan-rainbow", "\u5F69\u7B3A", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "rainbow", "", "", "#ffbfbf", "#ffe8e8", "#fff9f2", "#666666", "#222222", "#1f75ff"],
+  ["wenyan", "\u7EA2\u7EBF", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "pie", "", "", "#da282a", "#f27f79", "#fff2f0", "#262626", "#262626"],
+  ["wenyan-lapis", "\u84DD\u5370", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "lapis", "", "", "#4870ac", "#d9dfe4", "#f6f8fa", "#4870ac", "#40464f"],
+  ["wenyan-maize", "\u9EA6\u7A57", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "maize", "", "", "#ffb11b", "#ffd8b5", "#fff9f9", "#222222", "#222222", "#e49123"],
+  ["wenyan-purple", "\u7D2B\u85E4", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "purple", "", "", "#8064a9", "#b9add7", "#f4f2f9", "#8064a9", "#444444", "#2aa899"],
+  ["wenyan-mint", "\u8584\u8377", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "phycat", "", "", "#3db8bf", "#7aeaf0", "#edfafa", "#3db8bf", "#222222", "#089ba3"],
+  ["wenyan-juejin-default", "\u6398\u91D1", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "juejin_default", "", "", "#1e80ff", "#ececec", "#f8f8f8", "#111111", "#222222", "#0069c2"],
+  ["wenyan-medium-default", "\u4E2D\u7248", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "medium_default", "", "", "#111111", "#c4c7ce", "#f9f9f9", "#111111", "#222222"],
+  ["wenyan-toutiao-default", "\u5934\u6761", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "toutiao_default", "", "", "#ff403a", "#d8d8d8", "#f8f8f8", "#222222", "#222222", "#0069c2"],
+  ["wenyan-zhihu-default", "\u77E5\u4E4E", "Wenyan \u517C\u5BB9", "Wenyan", "Apache-2.0", "zhihu_default", "", "", "#0069c2", "#c4c7ce", "#f8f8fa", "#191b1f", "#222222", "#0069c2"],
+  ["markdown-nice-default", "Mdnice \u9ED8\u8BA4", "\u5F00\u6E90\u4E3B\u9898", "markdown-nice", "GPL-3.0", "markdown-nice", "", "", "#426a8f", "#d9e3ea", "#f7f9fa", "#1d252c", "#2b343a", "#315f8f"],
+  ["doocs-classic", "Doocs \u7ECF\u5178", "\u5F00\u6E90\u4E3B\u9898", "doocs/md", "WTFPL", "doocs-md", "default", "", "#315f8f", "#a8c6d5", "#f4f8fa", "#213342", "#2d3338"],
+  ["doocs-grace", "Doocs \u4F18\u96C5", "\u5F00\u6E90\u4E3B\u9898", "doocs/md", "WTFPL", "doocs-md", "grace", "", "#77639b", "#c7bddc", "#f7f4fb", "#2e2938", "#2d3338"],
+  ["doocs-simple", "Doocs \u7B80\u6D01", "\u5F00\u6E90\u4E3B\u9898", "doocs/md", "WTFPL", "doocs-md", "simple", "", "#4f8068", "#b7d3c2", "#f3f8f5", "#1f352b", "#2d3338"],
+  ["wemd-default", "WeMD \u9ED8\u8BA4", "WeMD", "WeMD", "MIT", "wemd", "default", "", "#315f8f", "#b7c7d8", "#f7f8f8", "#1f2933", "#333333"],
+  ["wemd-academic-paper", "\u5B66\u672F\u8BBA\u6587", "WeMD", "WeMD", "MIT", "wemd", "academic-paper", "", "#8a3f4d", "#d7b8ac", "#faf7f4", "#2f2a28", "#333333"],
+  ["wemd-aurora-glass", "\u6781\u5149\u73BB\u7483", "WeMD", "WeMD", "MIT", "wemd", "aurora-glass", "", "#5267a8", "#9c72a5", "#f7f4fb", "#2d3348", "#333333"],
+  ["wemd-bauhaus", "\u5305\u8C6A\u65AF", "WeMD", "WeMD", "MIT", "wemd", "bauhaus", "", "#b85b4a", "#426a8f", "#fbf4e8", "#1f1f1f", "#333333"],
+  ["wemd-cyberpunk-neon", "\u8D5B\u535A\u670B\u514B", "WeMD", "WeMD", "MIT", "wemd", "cyberpunk-neon", "", "#2d9da9", "#a65b9a", "#f4fbfb", "#17262a", "#333333"],
+  ["wemd-knowledge-base", "\u77E5\u8BC6\u5E93", "WeMD", "WeMD", "MIT", "wemd", "knowledge-base", "", "#b08a3c", "#d8d0bd", "#f7f5f0", "#37352f", "#333333"],
+  ["wemd-luxury-gold", "\u9ED1\u91D1\u5962\u534E", "WeMD", "WeMD", "MIT", "wemd", "luxury-gold", "", "#a88a54", "#d9c690", "#fbf6ea", "#171717", "#333333"],
+  ["wemd-morandi-forest", "\u83AB\u5170\u8FEA\u68EE\u6797", "WeMD", "WeMD", "MIT", "wemd", "morandi-forest", "", "#5c735f", "#9caf95", "#f3f5f1", "#25312a", "#3a4d39"],
+  ["wemd-neo-brutalism", "\u65B0\u7C97\u91CE\u4E3B\u4E49", "WeMD", "WeMD", "MIT", "wemd", "neo-brutalism", "", "#6e5b8f", "#c76f45", "#f6f1d8", "#161616", "#333333"],
+  ["wemd-receipt", "\u8D2D\u7269\u5C0F\u7968", "WeMD", "WeMD", "MIT", "wemd", "receipt", "", "#2a2a2a", "#c9c9c9", "#fafafa", "#111111", "#333333"],
+  ["wemd-sunset-film", "\u843D\u65E5\u80F6\u7247", "WeMD", "WeMD", "MIT", "wemd", "sunset-film", "", "#a75f4b", "#d9a08d", "#fbf2e8", "#43322d", "#5d4037"],
+  ["wechat-format-default", "WF \u9ED8\u8BA4", "\u5FAE\u4FE1\u6392\u7248", "WeChat Format", "source-available", "wechat-format", "default", "", "#b45f42", "#d7cdc2", "#f8f5ec", "#2f2f2f", "#3f3f3f"],
+  ["wechat-format-lupeng", "\u9C81\u9E4F", "\u5FAE\u4FE1\u6392\u7248", "WeChat Format", "source-available", "wechat-format", "lupeng", "", "#8f5f4a", "#d8cbc0", "#fbfaf7", "#3a3836", "#595959"],
+  ["neurapress-default", "NP \u9ED8\u8BA4", "NeuraPress", "NeuraPress", "MIT", "neurapress", "default", "", "#4f8068", "#b7d3c2", "#f3f8f5", "#26342d", "#333333"],
+  ["neurapress-simple", "\u96F7\u519B\u98CE\u683C", "NeuraPress", "NeuraPress", "MIT", "neurapress", "simple", "", "#bd6a45", "#e1b394", "#fbf4ee", "#3c302a", "#333333"],
+  ["neurapress-elegant", "\u6587\u5B66\u4F18\u96C5", "NeuraPress", "NeuraPress", "MIT", "neurapress", "elegant", "", "#4f8068", "#b7d3c2", "#f7faf7", "#2c3e50", "#2c3e50"],
+  ["neurapress-creative", "\u79D1\u6280\u6E10\u53D8", "NeuraPress", "NeuraPress", "MIT", "neurapress", "creative", "", "#426a8f", "#b2c2dc", "#f4f8fa", "#26364b", "#333333"],
+  ["neurapress-smartisan", "\u9524\u5B50\u4FBF\u7B7E", "NeuraPress", "NeuraPress", "MIT", "neurapress", "smartisan", "", "#7b665f", "#e0d2c5", "#fbf7ee", "#333333", "#333333"],
+  ["mdnice", "\u6D77\u76D0", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "mdnice", "", "", "#246bfe", "#bfdbfe", "#eff5ff", "#1b2a41", "#334155"],
+  ["mdnice-forest", "\u9752\u68EE", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "mdnice-forest", "", "", "#0f9f7a", "#b7ead6", "#ecfdf5", "#1d332d", "#293a35", "#057f63"],
+  ["doocs", "\u7AF9\u7B80", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "doocs", "", "", "#0f766e", "#99f6e4", "#f2fbf8", "#22313f", "#263442"],
+  ["doocs-blue", "\u84DD\u56FE", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "doocs-blue", "", "", "#1d4ed8", "#bfdbfe", "#eef4ff", "#1e3a8a", "#253142"],
+  ["github", "\u7070\u9875", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "github", "", "", "#0969da", "#d0d7de", "#f6f8fa", "#24292f", "#24292f"],
+  ["juejin", "\u661F\u84DD", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "juejin", "", "", "#1e80ff", "#cce3ff", "#f4f8ff", "#1d3557", "#252933"],
+  ["sspai", "\u7EA2\u8BC4", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "sspai", "", "", "#d71920", "#ffd1d1", "#fff5f5", "#202020", "#2d2d2d"],
+  ["wired", "\u9ED1\u94C5", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "wired", "", "", "#000000", "#d9d9d9", "#f5f5f5", "#000000", "#202020", "#057dbc"],
+  ["verge", "\u7535\u6CE2", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "inspired preset", "verge", "", "", "#3cffd0", "#bffdef", "#effffb", "#131313", "#1f2428", "#3860be"],
+  ["internal", "\u7D20\u7B3A", "\u7F16\u8F91\u7CBE\u9009", "MD2 Editorial", "internal", "internal", "", "", "#394150", "#d0d5dd", "#f7f8fa", "#101828", "#344054"]
+];
+var palette = {
+  gold: ["#b88928", "#fff8e6", "#2f2615", "#e8c56a"],
+  green: ["#0f9f7a", "#ecfdf5", "#213a33", "#9ee7d2"],
+  blue: ["#246bfe", "#eff5ff", "#1b2a41", "#a9c7ff"],
+  orange: ["#e86f35", "#fff3e8", "#3f2d24", "#f4b38a"],
+  red: ["#d71920", "#fff2f2", "#341c1c", "#ffb3b6"],
+  navy: ["#233b63", "#eef3fa", "#172033", "#9aa9c7"],
+  gray: ["#5f6874", "#f3f5f7", "#25292f", "#c9d0d8"],
+  sky: ["#38a8ff", "#edf8ff", "#183548", "#b6e4ff"]
+};
+var colorNames = {
+  gold: "\u91D1",
+  green: "\u7EFF",
+  blue: "\u84DD",
+  orange: "\u6A59",
+  red: "\u7EA2",
+  navy: "\u85CF\u9752",
+  gray: "\u7070",
+  sky: "\u5929\u84DD"
+};
+var md2Basics = [
+  ["default", "\u5FAE\u4FE1\u539F\u751F", "basic", "green", "\u5FAE\u4FE1\u7ECF\u5178\u98CE\u683C\uFF0C\u6E29\u6696\u8212\u9002"],
+  ["bytedance", "\u5B57\u8282\u84DD", "basic", "blue", "\u79D1\u6280\u73B0\u4EE3\u98CE\u683C\uFF0C\u7B80\u6D01\u5229\u843D"],
+  ["apple", "\u82F9\u679C\u6E10\u53D8", "basic", "sky", "\u89C6\u89C9\u6E10\u53D8\u98CE\u683C\uFF0C\u7CBE\u81F4\u4F18\u96C5"],
+  ["sports", "\u8FD0\u52A8\u6A59", "basic", "orange", "\u6D3B\u529B\u52A8\u611F\u98CE\u683C\uFF0C\u5145\u6EE1\u80FD\u91CF"],
+  ["chinese", "\u5B8B\u97F5", "basic", "red", "\u53E4\u5178\u96C5\u81F4\u98CE\u683C\uFF0C\u4E66\u5377\u6C14\u606F"],
+  ["cyber", "\u8D5B\u535A\u9752", "basic", "sky", "\u672A\u6765\u79D1\u6280\u98CE\u683C\uFF0C\u9713\u8679\u5149\u5F71"],
+  ["sspai-red", "\u5C11\u6570\u6D3E\u7EA2", "featured", "red", "\u5C11\u6570\u6D3E\u7EA2\u8272\u98CE\u683C\uFF0C\u5229\u843D\u9192\u76EE"],
+  ["wechat-native", "\u539F\u751F\u7EFF", "featured", "green", "\u5FAE\u4FE1\u516C\u4F17\u53F7\u539F\u751F\uFF0C\u7A33\u59A5\u8010\u8BFB"]
+];
+var seriesNames = { minimal: "\u6781\u7B80", focus: "\u805A\u7126", elegant: "\u96C5\u81F4", bold: "\u9192\u76EE" };
+var seriesDescriptions = {
+  minimal: "\u5E72\u51C0\u514B\u5236\uFF0C\u7EAF\u8272\u6587\u5B57\u65E0\u88C5\u9970",
+  focus: "\u5C45\u4E2D\u5BF9\u79F0\uFF0C\u6807\u9898\u4E0A\u4E0B\u53CC\u6A2A\u7EBF",
+  elegant: "\u5C42\u6B21\u4E30\u5BCC\uFF0C\u5DE6\u8FB9\u6846\u9012\u51CF\u548C\u6E10\u53D8\u80CC\u666F",
+  bold: "\u89C6\u89C9\u51B2\u51FB\uFF0C\u6807\u9898\u6EE1\u5E95\u8272\u548C\u5706\u89D2\u6295\u5F71"
+};
+function fromRow(row) {
+  const [id39, name, group2, sourceLabel, license, variant, style3, shape, accent2, accentSoft, tint, heading, body, link2, strong] = row;
+  return {
+    id: id39,
+    name,
+    description: `${name}\u4E3B\u9898\uFF0C\u5B8C\u6574\u517C\u5BB9 MD2 \u4E3B\u9898\u76EE\u5F55\u3002`,
+    group: group2,
+    sourceLabel,
+    license,
+    upstream: UPSTREAM_BY_SOURCE[sourceLabel],
+    tags: [group2, sourceLabel, variant, style3, shape].filter(Boolean),
+    tokens: {
+      variant,
+      style: style3 || void 0,
+      shape: shape || void 0,
+      accent: accent2,
+      accentSoft,
+      tint,
+      heading,
+      body,
+      link: link2 || accent2,
+      strong: strong || link2 || accent2
+    }
+  };
+}
+function md2Definition(slug, name, series, color2, description) {
+  const [accent2, tint, heading, accentSoft] = palette[color2];
+  return {
+    id: `md2wechat-${slug}`,
+    name,
+    description,
+    group: "MD2 \u5168\u91CF",
+    sourceLabel: "MD2 Catalog",
+    license: "MIT",
+    upstream: UPSTREAM_BY_SOURCE["MD2 Catalog"],
+    tags: ["md2wechat", series, color2],
+    tokens: {
+      variant: "md2wechat-api",
+      series,
+      color: color2,
+      accent: accent2,
+      accentSoft,
+      tint,
+      heading,
+      body: "#2d3338",
+      link: accent2,
+      strong: accent2
+    }
+  };
+}
+var md2Generated = [
+  ...md2Basics.map(([slug, name, series, color2, description]) => md2Definition(slug, name, series, color2, description)),
+  ...Object.entries(seriesNames).flatMap(
+    ([series, seriesName]) => Object.keys(palette).map(
+      (color2) => md2Definition(`${series}-${color2}`, `${seriesName}${colorNames[color2]}`, series, color2, seriesDescriptions[series])
+    )
+  )
+];
+var MD2_THEME_DEFINITIONS = [
+  ...rows.slice(0, 50).map(fromRow),
+  ...md2Generated,
+  ...rows.slice(50).map(fromRow)
+];
+var MD2_THEME_GROUPS = [...new Set(MD2_THEME_DEFINITIONS.map((theme) => theme.group))];
+
+// src/core/theme-compiler.ts
 var baseStyles = {
   body: {
-    color: "#26312d",
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    color: "#2d3338",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif",
     fontSize: "16px",
     lineHeight: "1.85",
     letterSpacing: "0.02em",
-    padding: "28px 34px 52px",
+    padding: "32px 36px 56px",
     backgroundColor: "#ffffff",
     boxSizing: "border-box"
   },
   p: { margin: "1.15em 0", textAlign: "justify" },
-  h1: { fontSize: "28px", lineHeight: "1.35", margin: "0 0 1.4em", fontWeight: "750" },
-  h2: { fontSize: "22px", lineHeight: "1.45", margin: "2.3em 0 1em", fontWeight: "750" },
+  h1: { fontSize: "28px", lineHeight: "1.35", margin: "0 0 1.55em", fontWeight: "750" },
+  h2: { fontSize: "22px", lineHeight: "1.45", margin: "2.25em 0 1em", fontWeight: "750" },
   h3: { fontSize: "18px", lineHeight: "1.5", margin: "1.8em 0 0.8em", fontWeight: "700" },
-  blockquote: { margin: "1.4em 0", padding: "0.9em 1.1em", borderRadius: "10px" },
+  h4: { fontSize: "16px", lineHeight: "1.5", margin: "1.5em 0 0.7em", fontWeight: "700" },
+  blockquote: { margin: "1.4em 0", padding: "0.9em 1.1em", borderRadius: "8px" },
+  "blockquote p": { margin: "0.45em 0" },
   strong: { fontWeight: "750" },
   a: { textDecoration: "none" },
-  img: { display: "block", maxWidth: "100%", height: "auto", margin: "1.5em auto", borderRadius: "10px" },
+  img: { display: "block", maxWidth: "100%", height: "auto", margin: "1.5em auto", borderRadius: "8px" },
   figure: { margin: "1.6em 0" },
   figcaption: { marginTop: "0.6em", color: "#7a8580", fontSize: "13px", textAlign: "center" },
-  pre: { margin: "1.4em 0", padding: "18px", borderRadius: "10px", overflowX: "auto", lineHeight: "1.65" },
+  pre: { margin: "1.4em 0", padding: "18px", borderRadius: "8px", overflowX: "auto", lineHeight: "1.65" },
   code: { fontFamily: "'SFMono-Regular', Consolas, monospace", fontSize: "0.88em" },
   "p code, li code": { padding: "0.18em 0.38em", borderRadius: "4px" },
   ul: { paddingLeft: "1.35em", margin: "1.1em 0" },
@@ -199298,125 +199567,212 @@ var baseStyles = {
   table: { width: "100%", borderCollapse: "collapse", margin: "1.5em 0", fontSize: "14px" },
   "th, td": { padding: "9px 10px", textAlign: "left" }
 };
-function withStyles(identity8, styles7) {
+function mergeStyles(...maps) {
+  const selectors = new Set(maps.flatMap((map6) => Object.keys(map6)));
+  return Object.fromEntries([...selectors].map((selector) => [
+    selector,
+    Object.assign({}, ...maps.map((map6) => map6[selector] ?? {}))
+  ]));
+}
+function genericStyles(theme) {
+  const t4 = theme.tokens;
   return {
-    ...identity8,
-    styles: Object.fromEntries(
-      [.../* @__PURE__ */ new Set([...Object.keys(baseStyles), ...Object.keys(styles7)])].map((selector) => [
-        selector,
-        { ...baseStyles[selector] ?? {}, ...styles7[selector] ?? {} }
-      ])
-    )
+    body: { color: t4.body },
+    h1: { color: t4.heading },
+    h2: { color: t4.heading, borderLeft: `6px solid ${t4.accent}`, paddingLeft: "0.72em" },
+    h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}`, paddingBottom: "0.35em" },
+    h4: { color: t4.heading },
+    blockquote: { color: t4.heading, backgroundColor: t4.tint, borderLeft: `5px solid ${t4.accent}` },
+    strong: { color: t4.strong },
+    a: { color: t4.link, borderBottom: `1px solid ${t4.accentSoft}` },
+    pre: { color: "#edf7f3", backgroundColor: t4.heading },
+    "p code, li code": { color: t4.strong, backgroundColor: t4.tint },
+    hr: { borderTop: `2px solid ${t4.accent}` },
+    table: { border: `1px solid ${t4.accentSoft}` },
+    "th, td": { border: `1px solid ${t4.accentSoft}` },
+    th: { color: t4.heading, backgroundColor: t4.tint }
   };
 }
-var BUILT_IN_TEMPLATES = [
-  withStyles(
-    {
-      id: "md2-forest",
-      name: "MD2 \u68EE\u6797\u7EFF",
-      description: "\u7EB8\u5F20\u611F\u4E0E\u514B\u5236\u7684\u6DF1\u7EFF\u8272\uFF0C\u9002\u5408\u7814\u7A76\u548C\u957F\u6587",
-      source: "md2-inspired",
-      accent: "#356348",
-      canvas: "#f3f0e9"
-    },
-    {
-      body: { color: "#26342d" },
-      h1: { color: "#1d3326" },
-      h2: {
-        color: "#ffffff",
-        backgroundColor: "#356348",
-        padding: "0.3em 0.9em",
-        borderRadius: "18px",
-        textAlign: "center"
-      },
-      h3: { color: "#356348", borderBottom: "1px solid #b9cbbb", paddingBottom: "0.35em" },
-      blockquote: { color: "#284534", backgroundColor: "#eef5ef", borderLeft: "6px solid #356348" },
-      strong: { color: "#356348" },
-      a: { color: "#356348", borderBottom: "1px solid #9ab69f" },
-      pre: { color: "#e8f2eb", backgroundColor: "#203229" },
-      "p code, li code": { color: "#315c43", backgroundColor: "#edf4ef" },
-      hr: { borderTop: "3px solid #356348" },
-      table: { border: "1px solid #c9d7cb" },
-      "th, td": { border: "1px solid #c9d7cb" },
-      th: { color: "#ffffff", backgroundColor: "#356348" }
-    }
-  ),
-  withStyles(
-    {
-      id: "md2-mint",
-      name: "MD2 \u8584\u8377",
-      description: "\u8F7B\u76C8\u7684\u8584\u8377\u8272\u5757\uFF0C\u9002\u5408\u6559\u7A0B\u548C\u4EA7\u54C1\u8BF4\u660E",
-      source: "md2-inspired",
-      accent: "#2f8f83",
-      canvas: "#edf7f5"
-    },
-    {
-      body: { color: "#243c39" },
-      h1: { color: "#163d37" },
-      h2: { color: "#18675e", backgroundColor: "#dff3ee", padding: "0.55em 0.8em", borderRadius: "8px" },
-      h3: { color: "#2f8f83" },
-      blockquote: { color: "#285a54", backgroundColor: "#ebf8f5", borderLeft: "5px solid #56aa9d" },
-      strong: { color: "#247b70" },
-      a: { color: "#247b70", borderBottom: "1px solid #7fc2b8" },
-      pre: { color: "#dff8f2", backgroundColor: "#153e38" },
-      "p code, li code": { color: "#246f65", backgroundColor: "#e1f4f0" },
-      hr: { borderTop: "2px solid #65b7aa" },
-      "th, td": { border: "1px solid #b9dcd6" },
-      th: { backgroundColor: "#dff3ee" }
-    }
-  ),
-  withStyles(
-    {
-      id: "wenyan-redline",
-      name: "\u6587\u989C \u7EA2\u7EBF",
-      description: "\u53C2\u8003 Wenyan Pie \u7684\u8282\u594F\u91CD\u65B0\u8BBE\u8BA1\uFF0C\u5F3A\u8C03\u6807\u9898\u5C42\u7EA7",
-      source: "wenyan-inspired",
-      accent: "#b33a3a",
-      canvas: "#f7f1eb"
-    },
-    {
-      body: { color: "#342b29" },
-      h1: { color: "#852f2f", textAlign: "center" },
-      h2: { color: "#9d3030", borderLeft: "8px solid #b33a3a", padding: "0.15em 0 0.15em 0.75em" },
-      h3: { color: "#a33b32", borderBottom: "2px solid #dca39b", paddingBottom: "0.32em" },
-      blockquote: { color: "#65413c", backgroundColor: "#fbf1ef", borderLeft: "5px solid #c75c50" },
-      strong: { color: "#a33834" },
-      a: { color: "#a33834", borderBottom: "1px solid #d9a29b" },
-      pre: { color: "#f8eae6", backgroundColor: "#3b2725" },
-      "p code, li code": { color: "#a13a35", backgroundColor: "#faece9" },
-      hr: { borderTop: "2px solid #b33a3a" },
-      "th, td": { border: "1px solid #e0beb8" },
-      th: { color: "#ffffff", backgroundColor: "#b33a3a" }
-    }
-  ),
-  withStyles(
-    {
-      id: "wenyan-minimal",
-      name: "\u6587\u989C \u7559\u767D",
-      description: "\u53C2\u8003 Wenyan \u7684\u5185\u8054\u6837\u5F0F\u7B56\u7565\uFF0C\u7A81\u51FA\u9605\u8BFB\u7559\u767D",
-      source: "wenyan-inspired",
-      accent: "#315d8a",
-      canvas: "#f2f4f7"
-    },
-    {
-      body: { color: "#242a30", lineHeight: "1.95", padding: "36px 42px 60px" },
-      h1: { color: "#17293b", textAlign: "center", marginBottom: "2em" },
-      h2: { color: "#244f78", borderBottom: "1px solid #95acc1", paddingBottom: "0.42em" },
-      h3: { color: "#315d8a" },
-      blockquote: { color: "#536474", backgroundColor: "#f4f7fa", borderLeft: "4px solid #7695b2" },
-      strong: { color: "#244f78" },
-      a: { color: "#315d8a", borderBottom: "1px solid #9fb3c7" },
-      pre: { color: "#eaf1f7", backgroundColor: "#1e2b38" },
-      "p code, li code": { color: "#315d8a", backgroundColor: "#edf2f7" },
-      hr: { borderTop: "1px solid #7695b2" },
-      "th, td": { border: "1px solid #c7d2dc" },
-      th: { backgroundColor: "#edf2f7" }
-    }
-  )
-];
+function md2CatalogStyles(theme) {
+  const t4 = theme.tokens;
+  switch (t4.series) {
+    case "minimal":
+      return {
+        body: { lineHeight: "1.92" },
+        h1: { textAlign: "center", color: t4.heading },
+        h2: { color: t4.accent, borderLeft: "none", borderBottom: `2px solid ${t4.accent}`, padding: "0 0 0.38em" },
+        h3: { color: t4.heading, borderBottom: "none" },
+        blockquote: { backgroundColor: "#ffffff", borderLeft: `3px solid ${t4.accent}`, borderRadius: "0" }
+      };
+    case "focus":
+      return {
+        h1: { textAlign: "center", letterSpacing: "0.08em" },
+        h2: { color: t4.heading, textAlign: "center", borderLeft: "none", borderTop: `2px solid ${t4.accent}`, borderBottom: `2px solid ${t4.accent}`, padding: "0.48em 0" },
+        h3: { color: t4.accent, textAlign: "center", borderBottom: "none" },
+        blockquote: { textAlign: "center", borderLeft: "none", borderTop: `1px solid ${t4.accentSoft}`, borderBottom: `1px solid ${t4.accentSoft}` }
+      };
+    case "elegant":
+      return {
+        h1: { color: t4.heading, textAlign: "center" },
+        h2: { color: t4.heading, backgroundColor: t4.tint, borderLeft: `8px solid ${t4.accent}`, padding: "0.5em 0.8em", borderRadius: "0 8px 8px 0" },
+        h3: { color: t4.accent, borderLeft: `4px solid ${t4.accentSoft}`, borderBottom: "none", padding: "0.2em 0 0.2em 0.65em" },
+        blockquote: { backgroundColor: t4.tint, borderLeft: `6px solid ${t4.accent}`, boxShadow: `0 5px 18px ${t4.accentSoft}` }
+      };
+    case "bold":
+      return {
+        h1: { color: t4.heading, textAlign: "center" },
+        h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", padding: "0.48em 0.82em", borderRadius: "10px", boxShadow: `4px 4px 0 ${t4.accentSoft}` },
+        h3: { color: t4.heading, backgroundColor: t4.tint, borderBottom: "none", padding: "0.35em 0.65em", borderRadius: "6px" },
+        blockquote: { color: t4.heading, backgroundColor: t4.tint, border: `2px solid ${t4.accent}`, boxShadow: `3px 3px 0 ${t4.accentSoft}` },
+        th: { color: "#ffffff", backgroundColor: t4.accent }
+      };
+    case "featured":
+      return {
+        h1: { textAlign: "center" },
+        h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", padding: "0.35em 0.8em", borderRadius: "3px" },
+        h3: { color: t4.accent, borderBottom: `2px solid ${t4.accent}` }
+      };
+    default:
+      return {
+        h1: { textAlign: "center" },
+        h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", padding: "0.38em 0.8em", borderRadius: "18px", textAlign: "center" },
+        h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}` }
+      };
+  }
+}
+function wenyanStyles(theme) {
+  const t4 = theme.tokens;
+  const variant = t4.variant;
+  const common2 = { body: { lineHeight: "1.9" }, h1: { textAlign: "center" } };
+  if (variant === "pie") return mergeStyles(common2, {
+    h2: { color: t4.accent, borderLeft: `8px solid ${t4.accent}`, padding: "0.12em 0 0.12em 0.72em" },
+    h3: { color: t4.accent, borderBottom: `2px dashed ${t4.accentSoft}` },
+    blockquote: { backgroundColor: t4.tint, borderLeft: `5px solid ${t4.accent}` }
+  });
+  if (variant === "lapis") return mergeStyles(common2, {
+    h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", borderRadius: "20px", padding: "0.28em 0.9em", textAlign: "center" },
+    h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}` }
+  });
+  if (variant === "orangeheart") return mergeStyles(common2, {
+    h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", display: "inline-block", padding: "0.25em 0.72em", borderRadius: "4px" },
+    h3: { color: t4.accent, borderBottom: `2px solid ${t4.accent}` }
+  });
+  if (variant === "rainbow") return mergeStyles(common2, {
+    h2: { color: t4.heading, backgroundColor: t4.tint, border: `2px solid ${t4.accent}`, borderRadius: "8px", padding: "0.45em 0.75em" },
+    blockquote: { borderLeft: `6px solid ${t4.accentSoft}`, backgroundColor: t4.tint }
+  });
+  if (variant === "phycat") return mergeStyles(common2, {
+    h2: { color: "#ffffff", backgroundImage: `linear-gradient(90deg, ${t4.accent}, ${t4.accentSoft})`, borderLeft: "none", padding: "0.42em 0.82em", borderRadius: "8px" }
+  });
+  if (variant === "medium_default") return mergeStyles(common2, {
+    body: { fontFamily: "Georgia, 'Times New Roman', 'Songti SC', serif", lineHeight: "1.95" },
+    h2: { borderLeft: "none", borderBottom: `1px solid ${t4.accentSoft}`, paddingBottom: "0.35em" }
+  });
+  return mergeStyles(common2, {
+    h2: { color: t4.heading, borderLeft: `5px solid ${t4.accent}`, paddingLeft: "0.7em" },
+    blockquote: { backgroundColor: t4.tint, borderLeft: `4px solid ${t4.accent}` }
+  });
+}
+function sourceThemeStyles(theme) {
+  const t4 = theme.tokens;
+  const style3 = t4.style ?? "default";
+  if (t4.variant === "markdown-nice" || t4.variant === "mdnice" || t4.variant === "mdnice-forest" || style3 === "mdnice-blue") {
+    return {
+      h1: { textAlign: "center", color: t4.heading },
+      h2: { color: t4.accent, borderLeft: "none", borderBottom: `2px solid ${t4.accent}`, paddingBottom: "0.38em" },
+      h3: { color: t4.heading, borderBottom: `1px solid ${t4.accentSoft}` },
+      blockquote: { color: t4.heading, backgroundColor: t4.tint, borderLeft: `5px solid ${t4.accent}` }
+    };
+  }
+  if (t4.variant === "doocs-md" || t4.variant === "doocs" || t4.variant === "doocs-blue" || style3 === "doocs-grace") {
+    return {
+      h1: { textAlign: "center", borderBottom: `2px solid ${t4.accent}`, paddingBottom: "0.45em" },
+      h2: { color: "#ffffff", backgroundColor: t4.accent, borderLeft: "none", padding: "0.35em 0.78em", borderRadius: style3 === "grace" || style3 === "doocs-grace" ? "18px" : "3px" },
+      h3: { color: t4.accent, borderBottom: `1px dashed ${t4.accentSoft}` }
+    };
+  }
+  if (t4.variant === "wemd" || style3 === "wemd-aurora") {
+    const square = ["bauhaus", "neo-brutalism", "receipt"].includes(style3);
+    return {
+      body: { fontFamily: style3 === "academic-paper" ? "Georgia, 'Songti SC', serif" : baseStyles.body.fontFamily },
+      h1: { textAlign: "center", color: t4.heading },
+      h2: { color: square ? t4.heading : "#ffffff", backgroundColor: square ? t4.tint : t4.accent, border: square ? `2px solid ${t4.heading}` : "none", borderLeft: square ? `8px solid ${t4.accent}` : "none", padding: "0.42em 0.78em", borderRadius: square ? "0" : "8px", boxShadow: square ? `4px 4px 0 ${t4.accentSoft}` : "none" },
+      h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}` },
+      blockquote: { backgroundColor: t4.tint, borderLeft: `5px solid ${t4.accent}` }
+    };
+  }
+  if (t4.variant === "design-lab") {
+    if (style3 === "github-readme") return {
+      h1: { borderBottom: `1px solid ${t4.accentSoft}`, paddingBottom: "0.35em" },
+      h2: { borderLeft: "none", borderBottom: `1px solid ${t4.accentSoft}`, paddingBottom: "0.35em" },
+      h3: { color: t4.heading, borderBottom: "none" },
+      blockquote: { color: "#57606a", backgroundColor: "#ffffff", borderLeft: `4px solid ${t4.accentSoft}`, borderRadius: "0" },
+      pre: { color: t4.heading, backgroundColor: t4.tint }
+    };
+    if (style3 === "typora-newsprint") return {
+      body: { fontFamily: "Georgia, 'Songti SC', serif", backgroundColor: "#fffaf0" },
+      h1: { textAlign: "center", textTransform: "uppercase", borderTop: `4px solid ${t4.heading}`, borderBottom: `1px solid ${t4.heading}`, padding: "0.5em 0" },
+      h2: { borderLeft: "none", borderTop: `2px solid ${t4.heading}`, borderBottom: `1px solid ${t4.heading}`, padding: "0.35em 0" }
+    };
+    if (style3 === "typora-eloquent") return {
+      body: { fontFamily: "Georgia, 'Songti SC', serif" },
+      h1: { textAlign: "center", textTransform: "uppercase", letterSpacing: "0.12em" },
+      h2: { borderLeft: "none", borderTop: `3px solid ${t4.accent}`, padding: "0.5em 0 0" }
+    };
+  }
+  if (["github", "wired", "sspai", "verge", "juejin"].includes(t4.variant)) {
+    const hard = t4.variant === "wired" || t4.variant === "sspai";
+    return {
+      h1: { textAlign: hard ? "left" : "center", color: t4.heading, borderBottom: hard ? `4px solid ${t4.accent}` : "none", paddingBottom: hard ? "0.35em" : "0" },
+      h2: { color: t4.heading, backgroundColor: t4.variant === "verge" ? t4.accent : "transparent", borderLeft: `7px solid ${t4.accent}`, padding: "0.25em 0.65em", borderRadius: "0" },
+      h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}` }
+    };
+  }
+  if (t4.variant === "neurapress" && style3 === "creative") return {
+    h1: { textAlign: "center" },
+    h2: { color: "#ffffff", backgroundImage: `linear-gradient(90deg, ${t4.accent}, ${t4.accentSoft})`, borderLeft: "none", padding: "0.45em 0.8em", borderRadius: "8px" }
+  };
+  return {};
+}
+function signatureStyles(theme) {
+  const t4 = theme.tokens;
+  const shape = t4.shape ?? "docs";
+  const hard = ["terminal", "neon", "mono", "blueprint"].includes(shape);
+  return {
+    h1: { color: t4.heading, textAlign: hard ? "left" : "center", borderBottom: hard ? `3px solid ${t4.accent}` : "none", paddingBottom: hard ? "0.45em" : "0" },
+    h2: { color: hard ? t4.heading : "#ffffff", backgroundColor: hard ? t4.tint : t4.accent, border: hard ? `1px solid ${t4.accent}` : "none", borderLeft: hard ? `7px solid ${t4.accent}` : "none", padding: "0.45em 0.75em", borderRadius: hard ? "0" : "8px", boxShadow: hard ? `4px 4px 0 ${t4.accentSoft}` : "none" },
+    h3: { color: t4.accent, borderBottom: `1px solid ${t4.accentSoft}` },
+    blockquote: { color: t4.heading, backgroundColor: t4.tint, border: hard ? `1px solid ${t4.accentSoft}` : "none", borderLeft: `5px solid ${t4.accent}`, borderRadius: hard ? "0" : "8px" },
+    pre: { color: t4.accentSoft, backgroundColor: shape === "terminal" || shape === "neon" ? "#101414" : t4.heading, border: `1px solid ${t4.accent}` },
+    "p code, li code": { color: t4.strong, backgroundColor: t4.tint, border: `1px solid ${t4.accentSoft}` }
+  };
+}
+function compileTheme(theme) {
+  const variantStyles = theme.tokens.variant === "md2wechat-api" ? md2CatalogStyles(theme) : theme.tokens.variant === "signature" ? signatureStyles(theme) : ["default", "orangeheart", "rainbow", "pie", "lapis", "maize", "purple", "phycat", "juejin_default", "medium_default", "toutiao_default", "zhihu_default"].includes(theme.tokens.variant) ? wenyanStyles(theme) : sourceThemeStyles(theme);
+  return {
+    id: theme.id,
+    name: theme.name,
+    description: theme.description,
+    source: "md2-catalog",
+    group: theme.group,
+    sourceLabel: theme.sourceLabel,
+    license: theme.license,
+    upstream: theme.upstream,
+    tags: theme.tags,
+    accent: theme.tokens.accent,
+    canvas: theme.tokens.tint,
+    tokens: structuredClone(theme.tokens),
+    styles: mergeStyles(baseStyles, genericStyles(theme), variantStyles)
+  };
+}
+
+// src/core/templates.ts
+var BUILT_IN_TEMPLATES = MD2_THEME_DEFINITIONS.map(compileTheme);
 var ALLOWED_STYLE_PROPERTIES = /* @__PURE__ */ new Set([
   "color",
+  "background",
   "backgroundColor",
+  "backgroundImage",
   "fontFamily",
   "fontSize",
   "fontWeight",
@@ -199425,6 +199781,8 @@ var ALLOWED_STYLE_PROPERTIES = /* @__PURE__ */ new Set([
   "letterSpacing",
   "textAlign",
   "textDecoration",
+  "textIndent",
+  "textTransform",
   "margin",
   "marginTop",
   "marginRight",
@@ -199440,26 +199798,71 @@ var ALLOWED_STYLE_PROPERTIES = /* @__PURE__ */ new Set([
   "borderRight",
   "borderBottom",
   "borderLeft",
+  "borderColor",
+  "borderStyle",
+  "borderWidth",
   "borderRadius",
   "boxSizing",
+  "boxShadow",
   "display",
   "width",
+  "minWidth",
   "maxWidth",
   "height",
+  "minHeight",
+  "maxHeight",
+  "overflow",
   "overflowX",
   "whiteSpace",
   "wordBreak",
-  "verticalAlign"
+  "overflowWrap",
+  "verticalAlign",
+  "opacity",
+  "borderCollapse",
+  "listStyleType"
 ]);
+var SAFE_SELECTOR = /^(body|[a-z][a-z0-9]*(?:\s+[a-z][a-z0-9]*)?(?:,\s*[a-z][a-z0-9]*(?:\s+[a-z][a-z0-9]*)?)*)$/i;
+function text4(value2, fallback, maxLength = 160) {
+  return typeof value2 === "string" && value2.trim() ? value2.trim().slice(0, maxLength) : fallback;
+}
+function safeColor(value2, fallback) {
+  if (typeof value2 !== "string") return fallback;
+  const trimmed = value2.trim();
+  return /^(#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\)|hsla?\([\d\s.,%]+\)|[a-z]+)$/i.test(trimmed) ? trimmed : fallback;
+}
+function sanitizeTokens(value2, accent2, canvas) {
+  const tokens2 = value2 && typeof value2 === "object" ? value2 : {};
+  return {
+    variant: text4(tokens2.variant, "custom", 48),
+    style: typeof tokens2.style === "string" ? tokens2.style.slice(0, 48) : void 0,
+    series: typeof tokens2.series === "string" ? tokens2.series.slice(0, 48) : void 0,
+    color: typeof tokens2.color === "string" ? tokens2.color.slice(0, 48) : void 0,
+    shape: typeof tokens2.shape === "string" ? tokens2.shape.slice(0, 48) : void 0,
+    accent: accent2,
+    accentSoft: safeColor(tokens2.accentSoft, accent2),
+    tint: safeColor(tokens2.tint, canvas),
+    heading: safeColor(tokens2.heading, "#1f2933"),
+    body: safeColor(tokens2.body, "#2d3338"),
+    link: safeColor(tokens2.link, accent2),
+    strong: safeColor(tokens2.strong, accent2),
+    surface: typeof tokens2.surface === "string" ? tokens2.surface.slice(0, 80) : void 0,
+    gradient: typeof tokens2.gradient === "string" ? tokens2.gradient.slice(0, 180) : void 0,
+    glow: typeof tokens2.glow === "string" ? tokens2.glow.slice(0, 180) : void 0
+  };
+}
 function findTemplate(id39, customTemplates) {
   return [...customTemplates, ...BUILT_IN_TEMPLATES].find((template) => template.id === id39) ?? BUILT_IN_TEMPLATES[0];
 }
 function cloneTemplate(template, name) {
   return {
     ...structuredClone(template),
-    id: `custom-${Date.now().toString(36)}`,
+    id: `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
     name: name ?? `${template.name} \u526F\u672C`,
-    source: "custom"
+    source: "custom",
+    group: "\u7528\u6237\u6A21\u677F",
+    sourceLabel: "\u7528\u6237\u6A21\u677F",
+    license: "user-defined",
+    tags: [.../* @__PURE__ */ new Set([...template.tags ?? [], "\u7528\u6237\u6A21\u677F"])]
   };
 }
 function validateTemplate(candidate) {
@@ -199468,66 +199871,188 @@ function validateTemplate(candidate) {
   if (!value2.id || !value2.name || !value2.accent || !value2.canvas || !value2.styles) {
     throw new Error("\u6A21\u677F\u7F3A\u5C11 id\u3001name\u3001accent\u3001canvas \u6216 styles\u3002");
   }
+  const accent2 = safeColor(value2.accent, "#356348");
+  const canvas = safeColor(value2.canvas, "#f3f0e9");
   const sanitizedStyles = {};
   for (const [selector, declarations] of Object.entries(value2.styles)) {
-    if (!declarations || typeof declarations !== "object") continue;
+    if (!SAFE_SELECTOR.test(selector) || !declarations || typeof declarations !== "object") continue;
     sanitizedStyles[selector] = {};
     for (const [property3, raw] of Object.entries(declarations)) {
-      if (ALLOWED_STYLE_PROPERTIES.has(property3) && typeof raw === "string") {
+      if (ALLOWED_STYLE_PROPERTIES.has(property3) && typeof raw === "string" && raw.length <= 240 && !/(?:url|expression)\s*\(/i.test(raw)) {
         sanitizedStyles[selector][property3] = raw;
       }
     }
   }
+  if (!Object.keys(sanitizedStyles).length) throw new Error("\u6A21\u677F\u6CA1\u6709\u53EF\u7528\u7684\u6837\u5F0F\u89C4\u5219\u3002");
   return {
-    id: value2.id,
-    name: value2.name,
-    description: value2.description ?? "\u7528\u6237\u81EA\u5B9A\u4E49\u6A21\u677F",
+    id: text4(value2.id, `custom-${Date.now().toString(36)}`, 80).replace(/[^a-z0-9_-]/gi, "-"),
+    name: text4(value2.name, "\u7528\u6237\u6A21\u677F", 64),
+    description: text4(value2.description, "\u7528\u6237\u81EA\u5B9A\u4E49\u6A21\u677F", 180),
     source: "custom",
-    accent: value2.accent,
-    canvas: value2.canvas,
+    group: "\u7528\u6237\u6A21\u677F",
+    sourceLabel: "\u7528\u6237\u6A21\u677F",
+    license: "user-defined",
+    upstream: typeof value2.upstream === "string" ? value2.upstream.slice(0, 240) : void 0,
+    tags: Array.isArray(value2.tags) ? value2.tags.filter((tag) => typeof tag === "string").slice(0, 16) : ["\u7528\u6237\u6A21\u677F"],
+    accent: accent2,
+    canvas,
+    tokens: sanitizeTokens(value2.tokens, accent2, canvas),
     styles: sanitizedStyles
   };
 }
+function parseTemplateBundle(json3) {
+  let parsed;
+  try {
+    parsed = JSON.parse(json3);
+  } catch {
+    throw new Error("JSON \u6587\u4EF6\u65E0\u6CD5\u89E3\u6790\uFF0C\u8BF7\u68C0\u67E5\u683C\u5F0F\u3002");
+  }
+  const candidates = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" && Array.isArray(parsed.templates) ? parsed.templates : [parsed];
+  if (!candidates.length) throw new Error("JSON \u6587\u4EF6\u4E2D\u6CA1\u6709\u6A21\u677F\u3002");
+  return candidates.map(validateTemplate);
+}
+function serializeTemplateBundle(templates) {
+  return JSON.stringify({
+    format: "wechat-obsidian-publisher.templates",
+    version: 1,
+    exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    templates
+  }, null, 2);
+}
+function makeUniqueTemplate(template, existingIds) {
+  const next3 = structuredClone(template);
+  const base = next3.id.replace(/^custom-/, "") || "template";
+  let id39 = next3.id.startsWith("custom-") ? next3.id : `custom-${base}`;
+  let suffix = 2;
+  while (existingIds.has(id39)) {
+    id39 = `custom-${base}-${suffix}`;
+    suffix += 1;
+  }
+  next3.id = id39;
+  next3.source = "custom";
+  next3.group = "\u7528\u6237\u6A21\u677F";
+  next3.sourceLabel = "\u7528\u6237\u6A21\u677F";
+  next3.license = "user-defined";
+  existingIds.add(id39);
+  return next3;
+}
 
 // src/publish/credential-vault.ts
-function getSafeStorage() {
-  const electron = require("electron");
-  if (!electron.safeStorage?.isEncryptionAvailable()) {
-    throw new Error("\u7CFB\u7EDF\u52A0\u5BC6\u670D\u52A1\u6682\u4E0D\u53EF\u7528\uFF0CAppSecret \u672A\u4FDD\u5B58\u3002");
+var SECRET_REFERENCE_PREFIX = "obsidian-secret:";
+var SECRET_ID_PREFIX = "wechat-obsidian-publisher";
+function normalizeSecretId(accountId) {
+  const suffix = accountId.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  return `${SECRET_ID_PREFIX}-${suffix || "account"}`;
+}
+function readLegacyEncryptedSecret(encryptedSecret) {
+  try {
+    const electron = require("electron");
+    if (!electron.safeStorage?.isEncryptionAvailable()) throw new Error();
+    return electron.safeStorage.decryptString(Buffer.from(encryptedSecret, "base64"));
+  } catch {
+    throw new Error("\u65E7\u7248 AppSecret \u65E0\u6CD5\u89E3\u5BC6\uFF0C\u8BF7\u5728\u8BBE\u7F6E\u4E2D\u91CD\u65B0\u5BFC\u5165\u6216\u66F4\u65B0\u3002\u7559\u5B58\u6570\u636E\u672A\u88AB\u6539\u5199\u3002");
   }
-  return electron.safeStorage;
 }
 var CredentialVault = class {
-  encrypt(secret) {
-    if (!secret.trim()) throw new Error("AppSecret \u4E0D\u80FD\u4E3A\u7A7A\u3002");
-    return getSafeStorage().encryptString(secret.trim()).toString("base64");
+  constructor(getSecretStorage) {
+    this.getSecretStorage = getSecretStorage;
   }
-  decrypt(encryptedSecret) {
-    if (!encryptedSecret) throw new Error("\u5F53\u524D\u8D26\u53F7\u5C1A\u672A\u4FDD\u5B58 AppSecret\u3002");
-    return getSafeStorage().decryptString(Buffer.from(encryptedSecret, "base64"));
+  store(accountId, secret) {
+    const normalizedSecret = secret.trim();
+    if (!normalizedSecret) throw new Error("AppSecret \u4E0D\u80FD\u4E3A\u7A7A\u3002");
+    const secretId = normalizeSecretId(accountId);
+    this.getSecretStorage().setSecret(secretId, normalizedSecret);
+    return `${SECRET_REFERENCE_PREFIX}${secretId}`;
+  }
+  read(secretReference) {
+    if (!secretReference) throw new Error("\u5F53\u524D\u8D26\u53F7\u5C1A\u672A\u4FDD\u5B58 AppSecret\u3002");
+    if (!secretReference.startsWith(SECRET_REFERENCE_PREFIX)) {
+      return readLegacyEncryptedSecret(secretReference);
+    }
+    const secretId = secretReference.slice(SECRET_REFERENCE_PREFIX.length);
+    const secret = this.getSecretStorage().getSecret(secretId);
+    if (!secret) throw new Error("\u7CFB\u7EDF\u5BC6\u94A5\u5B58\u50A8\u4E2D\u627E\u4E0D\u5230 AppSecret\uFF0C\u8BF7\u91CD\u65B0\u5BFC\u5165\u6216\u66F4\u65B0\u3002");
+    return secret;
+  }
+  clear(secretReference) {
+    if (!secretReference.startsWith(SECRET_REFERENCE_PREFIX)) return;
+    const secretId = secretReference.slice(SECRET_REFERENCE_PREFIX.length);
+    this.getSecretStorage().setSecret(secretId, "");
   }
 };
 
 // src/publish/wechat-client.ts
+var import_obsidian2 = require("obsidian");
 var API = "https://api.weixin.qq.com/cgi-bin";
+var WechatApiError = class extends Error {
+  constructor(message, code, rejectedIp) {
+    super(message);
+    this.code = code;
+    this.rejectedIp = rejectedIp;
+    this.name = "WechatApiError";
+  }
+};
+function extractRejectedIp(message) {
+  const ipv4 = message.match(/(?:invalid\s+ip|ip)[^0-9]{0,12}((?:\d{1,3}\.){3}\d{1,3})/i)?.[1];
+  if (ipv4) return ipv4;
+  const ipv6 = message.match(/(?:invalid\s+ip|ip)[^0-9a-f]{0,12}([0-9a-f]{1,4}(?::[0-9a-f]{0,4}){2,})/i)?.[1];
+  return ipv6?.replace(/^::ffff:/i, "") ?? "";
+}
 function assertWechatSuccess(payload, action) {
-  if (payload.errcode && payload.errcode !== 0) {
-    throw new Error(`${action}\u5931\u8D25\uFF1A${payload.errmsg ?? `\u5FAE\u4FE1\u9519\u8BEF\u7801 ${payload.errcode}`}`);
+  if (typeof payload.errcode === "number" && payload.errcode !== 0) {
+    const detail = payload.errmsg ?? `\u5FAE\u4FE1\u9519\u8BEF\u7801 ${payload.errcode}`;
+    throw new WechatApiError(`${action}\u5931\u8D25\uFF1A${detail}`, payload.errcode, payload.errcode === 40164 ? extractRejectedIp(detail) : "");
   }
 }
-async function parseResponse(response, action) {
-  if (!response.ok) throw new Error(`${action}\u5931\u8D25\uFF1AHTTP ${response.status}`);
-  const payload = await response.json();
+function parseResponse(response, action) {
+  if (response.status < 200 || response.status >= 300) throw new Error(`${action}\u5931\u8D25\uFF1AHTTP ${response.status}`);
+  let payload;
+  try {
+    payload = JSON.parse(response.text);
+  } catch {
+    throw new Error(`${action}\u5931\u8D25\uFF1A\u5FAE\u4FE1\u8FD4\u56DE\u4E86\u65E0\u6CD5\u8BC6\u522B\u7684\u54CD\u5E94\u3002`);
+  }
   assertWechatSuccess(payload, action);
   return payload;
 }
+function concatBytes(parts) {
+  const total = parts.reduce((length2, part) => length2 + part.byteLength, 0);
+  const result = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    result.set(part, offset);
+    offset += part.byteLength;
+  }
+  return result.buffer;
+}
+function multipartBody(asset) {
+  const encoder = new TextEncoder();
+  const boundary = `----WechatObsidianPublisher${crypto.randomUUID().replace(/-/g, "")}`;
+  const filename = asset.filename.replace(/["\r\n]/g, "_");
+  const opening = encoder.encode(
+    `--${boundary}\r
+Content-Disposition: form-data; name="media"; filename="${filename}"\r
+Content-Type: ${asset.mimeType}\r
+\r
+`
+  );
+  const closing = encoder.encode(`\r
+--${boundary}--\r
+`);
+  return {
+    body: concatBytes([opening, new Uint8Array(asset.bytes), closing]),
+    contentType: `multipart/form-data; boundary=${boundary}`
+  };
+}
 async function uploadAsset(endpoint, token2, asset, action, extraQuery = {}) {
-  const form = new FormData();
-  form.append("media", new Blob([asset.bytes], { type: asset.mimeType }), asset.filename);
   const query = new URLSearchParams({ access_token: token2, ...extraQuery });
-  const response = await fetch(`${API}/${endpoint}?${query.toString()}`, {
+  const multipart = multipartBody(asset);
+  const response = await (0, import_obsidian2.requestUrl)({
+    url: `${API}/${endpoint}?${query.toString()}`,
     method: "POST",
-    body: form
+    contentType: multipart.contentType,
+    body: multipart.body,
+    throw: false
   });
   return parseResponse(response, action);
 }
@@ -199578,8 +200103,8 @@ async function svgToPngAsset(svg2, index) {
 var WechatClient = class {
   async accessToken(appId, secret) {
     const query = new URLSearchParams({ grant_type: "client_credential", appid: appId, secret });
-    const response = await fetch(`${API}/token?${query.toString()}`);
-    const payload = await parseResponse(response, "\u83B7\u53D6\u8BBF\u95EE\u51ED\u636E");
+    const response = await (0, import_obsidian2.requestUrl)({ url: `${API}/token?${query.toString()}`, throw: false });
+    const payload = parseResponse(response, "\u83B7\u53D6\u8BBF\u95EE\u51ED\u636E");
     if (!payload.access_token) throw new Error("\u5FAE\u4FE1\u672A\u8FD4\u56DE\u8BBF\u95EE\u51ED\u636E\u3002");
     return payload.access_token;
   }
@@ -199642,20 +200167,24 @@ var WechatClient = class {
     const isUpdate = Boolean(input.existingMediaId);
     const endpoint = isUpdate ? "draft/update" : "draft/add";
     const requestBody = isUpdate ? { media_id: input.existingMediaId, index: 0, articles: article } : { articles: [article] };
-    const response = await fetch(`${API}/${endpoint}?access_token=${encodeURIComponent(token2)}`, {
+    const response = await (0, import_obsidian2.requestUrl)({
+      url: `${API}/${endpoint}?access_token=${encodeURIComponent(token2)}`,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody)
+      contentType: "application/json",
+      body: JSON.stringify(requestBody),
+      throw: false
     });
-    const payload = await parseResponse(response, isUpdate ? "\u66F4\u65B0\u8349\u7A3F" : "\u521B\u5EFA\u8349\u7A3F");
+    const payload = parseResponse(response, isUpdate ? "\u66F4\u65B0\u8349\u7A3F" : "\u521B\u5EFA\u8349\u7A3F");
     const mediaId = input.existingMediaId || payload.media_id;
     if (!mediaId) throw new Error("\u5FAE\u4FE1\u672A\u8FD4\u56DE\u8349\u7A3F\u7D20\u6750 ID\u3002");
-    const verifyResponse = await fetch(`${API}/draft/get?access_token=${encodeURIComponent(token2)}`, {
+    const verifyResponse = await (0, import_obsidian2.requestUrl)({
+      url: `${API}/draft/get?access_token=${encodeURIComponent(token2)}`,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ media_id: mediaId })
+      contentType: "application/json",
+      body: JSON.stringify({ media_id: mediaId }),
+      throw: false
     });
-    const verified = await parseResponse(verifyResponse, "\u56DE\u8BFB\u8349\u7A3F");
+    const verified = parseResponse(verifyResponse, "\u56DE\u8BFB\u8349\u7A3F");
     const saved = verified.news_item?.[0];
     if (!saved?.content || saved.title !== article.title) {
       throw new Error("\u8349\u7A3F\u5DF2\u63D0\u4EA4\uFF0C\u4F46\u56DE\u8BFB\u5185\u5BB9\u4E0E\u5F53\u524D\u6587\u7AE0\u4E0D\u4E00\u81F4\uFF0C\u8BF7\u5230\u5FAE\u4FE1\u540E\u53F0\u68C0\u67E5\u3002");
@@ -199674,7 +200203,7 @@ var WechatClient = class {
 var import_promises = require("node:fs/promises");
 var import_node_os = require("node:os");
 var import_node_path = require("node:path");
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 function parseEnv(content) {
   const values3 = {};
   for (const line2 of content.split(/\r?\n/)) {
@@ -199691,7 +200220,7 @@ function parseEnv(content) {
   }
   return values3;
 }
-var PublisherSettingTab = class extends import_obsidian2.PluginSettingTab {
+var PublisherSettingTab = class extends import_obsidian3.PluginSettingTab {
   constructor(host) {
     super(host.app, host);
     this.host = host;
@@ -199702,14 +200231,14 @@ var PublisherSettingTab = class extends import_obsidian2.PluginSettingTab {
     containerEl.addClass("wop-settings");
     containerEl.createEl("h2", { text: "WeChat Obsidian Publisher" });
     containerEl.createEl("p", {
-      text: "AppSecret \u4F7F\u7528 macOS \u7CFB\u7EDF\u52A0\u5BC6\u670D\u52A1\u4FDD\u5B58\uFF0C\u4E0D\u4F1A\u5199\u5165\u660E\u6587\u914D\u7F6E\u3002\u53D1\u5E03\u524D\u4ECD\u4F1A\u663E\u793A\u786E\u8BA4\u7A97\u53E3\u3002",
+      text: "AppSecret \u4FDD\u5B58\u5230 Obsidian \u4E13\u7528\u5BC6\u94A5\u5B58\u50A8\uFF0C\u63D2\u4EF6\u914D\u7F6E\u53EA\u4FDD\u7559\u5F15\u7528\uFF0C\u4E0D\u5199\u5165\u660E\u6587\u3002\u53D1\u5E03\u524D\u4ECD\u4F1A\u663E\u793A\u786E\u8BA4\u7A97\u53E3\u3002",
       cls: "setting-item-description"
     });
-    new import_obsidian2.Setting(containerEl).setName("\u9ED8\u8BA4\u4F5C\u8005").setDesc("\u6587\u7AE0 frontmatter \u672A\u586B\u5199 author \u65F6\u4F7F\u7528").addText((text4) => text4.setPlaceholder("\u516C\u4F17\u53F7\u4F5C\u8005").setValue(this.host.settings.defaultAuthor).onChange(async (value2) => {
+    new import_obsidian3.Setting(containerEl).setName("\u9ED8\u8BA4\u4F5C\u8005").setDesc("\u6587\u7AE0 frontmatter \u672A\u586B\u5199 author \u65F6\u4F7F\u7528").addText((text5) => text5.setPlaceholder("\u516C\u4F17\u53F7\u4F5C\u8005").setValue(this.host.settings.defaultAuthor).onChange(async (value2) => {
       this.host.settings.defaultAuthor = value2.trim();
       await this.host.saveSettings();
     }));
-    new import_obsidian2.Setting(containerEl).setName("\u9ED8\u8BA4\u5C01\u9762\u8DEF\u5F84").setDesc("\u652F\u6301\u5E93\u5185\u76F8\u5BF9\u8DEF\u5F84\u3002frontmatter \u7684 cover \u4F18\u5148\u7EA7\u66F4\u9AD8").addText((text4) => text4.setPlaceholder("images/cover.png").setValue(this.host.settings.defaultCoverPath).onChange(async (value2) => {
+    new import_obsidian3.Setting(containerEl).setName("\u9ED8\u8BA4\u5C01\u9762\u8DEF\u5F84").setDesc("\u652F\u6301\u5E93\u5185\u76F8\u5BF9\u8DEF\u5F84\u3002frontmatter \u7684 cover \u4F18\u5148\u7EA7\u66F4\u9AD8").addText((text5) => text5.setPlaceholder("images/cover.png").setValue(this.host.settings.defaultCoverPath).onChange(async (value2) => {
       this.host.settings.defaultCoverPath = value2.trim();
       await this.host.saveSettings();
     }));
@@ -199719,7 +200248,7 @@ var PublisherSettingTab = class extends import_obsidian2.PluginSettingTab {
       accounts.createEl("p", { text: "\u8FD8\u6CA1\u6709\u914D\u7F6E\u8D26\u53F7\u3002\u53EF\u4ECE\u73B0\u6709 Wenyan \u914D\u7F6E\u5BFC\u5165\uFF0C\u6216\u624B\u52A8\u6DFB\u52A0\u3002", cls: "wop-empty" });
     }
     for (const account of this.host.settings.accounts) this.renderAccount(accounts, account);
-    const importSetting = new import_obsidian2.Setting(containerEl).setName("\u5BFC\u5165\u73B0\u6709 Wenyan \u8D26\u53F7").setDesc("\u8BFB\u53D6\u672C\u673A Wenyan \u53D1\u5E03\u914D\u7F6E\u5E76\u7ACB\u5373\u7528\u7CFB\u7EDF\u52A0\u5BC6\u670D\u52A1\u91CD\u65B0\u4FDD\u5B58");
+    const importSetting = new import_obsidian3.Setting(containerEl).setName("\u5BFC\u5165\u73B0\u6709 Wenyan \u8D26\u53F7").setDesc("\u8BFB\u53D6\u672C\u673A Wenyan \u53D1\u5E03\u914D\u7F6E\u5E76\u7ACB\u5373\u8F6C\u5B58\u5230 Obsidian \u4E13\u7528\u5BC6\u94A5\u5B58\u50A8");
     importSetting.addButton((button) => button.setButtonText("\u5B89\u5168\u5BFC\u5165").onClick(async () => {
       try {
         const envPath = (0, import_node_path.join)((0, import_node_os.homedir)(), "Library", "Application Support", "wechat-official-account-publisher", ".env");
@@ -199729,23 +200258,24 @@ var PublisherSettingTab = class extends import_obsidian2.PluginSettingTab {
         if (!appId || !secret) throw new Error("Wenyan \u914D\u7F6E\u4E2D\u7F3A\u5C11 WECHAT_APP_ID \u6216 WECHAT_APP_SECRET\u3002");
         const existing = this.host.settings.accounts.find((item) => item.appId === appId);
         if (existing) {
-          existing.encryptedSecret = this.host.credentials.encrypt(secret);
+          existing.encryptedSecret = this.host.credentials.store(existing.id, secret);
           this.host.settings.defaultAccountId = existing.id;
         } else {
+          const accountId = `account-${Date.now().toString(36)}`;
           const account = {
-            id: `account-${Date.now().toString(36)}`,
+            id: accountId,
             name: "Wenyan \u8D26\u53F7",
             appId,
-            encryptedSecret: this.host.credentials.encrypt(secret)
+            encryptedSecret: this.host.credentials.store(accountId, secret)
           };
           this.host.settings.accounts.push(account);
           this.host.settings.defaultAccountId = account.id;
         }
         await this.host.saveSettings();
-        new import_obsidian2.Notice("\u8D26\u53F7\u5DF2\u5B89\u5168\u5BFC\u5165\uFF0CAppSecret \u672A\u4EE5\u660E\u6587\u4FDD\u5B58\u3002");
+        new import_obsidian3.Notice("\u8D26\u53F7\u5DF2\u5B89\u5168\u5BFC\u5165\uFF0CAppSecret \u672A\u4EE5\u660E\u6587\u4FDD\u5B58\u3002");
         this.display();
       } catch (error3) {
-        new import_obsidian2.Notice(error3 instanceof Error ? error3.message : "\u5BFC\u5165\u5931\u8D25\u3002");
+        new import_obsidian3.Notice(error3 instanceof Error ? error3.message : "\u5BFC\u5165\u5931\u8D25\u3002");
       }
     }));
     this.renderAddAccount(containerEl);
@@ -199755,87 +200285,128 @@ var PublisherSettingTab = class extends import_obsidian2.PluginSettingTab {
     const header = card2.createDiv({ cls: "wop-settings-card-header" });
     header.createEl("strong", { text: account.name });
     header.createEl("span", { text: account.appId.replace(/^(.{4}).*(.{4})$/, "$1\u2022\u2022\u2022\u2022$2") });
-    new import_obsidian2.Setting(card2).setName("\u8BBE\u4E3A\u9ED8\u8BA4").addToggle((toggle) => toggle.setValue(this.host.settings.defaultAccountId === account.id).onChange(async (value2) => {
+    new import_obsidian3.Setting(card2).setName("\u8BBE\u4E3A\u9ED8\u8BA4").addToggle((toggle) => toggle.setValue(this.host.settings.defaultAccountId === account.id).onChange(async (value2) => {
       if (value2) this.host.settings.defaultAccountId = account.id;
       await this.host.saveSettings();
       this.display();
     }));
     let replacementSecret = "";
-    new import_obsidian2.Setting(card2).setName("\u66F4\u65B0 AppSecret").setDesc("\u7559\u7A7A\u4E0D\u4F1A\u4FEE\u6539\u73B0\u6709\u5BC6\u94A5").addText((text4) => {
-      text4.inputEl.type = "password";
-      text4.setPlaceholder("\u8F93\u5165\u65B0\u7684 AppSecret").onChange((value2) => {
+    new import_obsidian3.Setting(card2).setName("\u66F4\u65B0 AppSecret").setDesc("\u7559\u7A7A\u4E0D\u4F1A\u4FEE\u6539\u73B0\u6709\u5BC6\u94A5").addText((text5) => {
+      text5.inputEl.type = "password";
+      text5.setPlaceholder("\u8F93\u5165\u65B0\u7684 AppSecret").onChange((value2) => {
         replacementSecret = value2;
       });
     }).addButton((button) => button.setButtonText("\u66F4\u65B0").onClick(async () => {
       if (!replacementSecret.trim()) {
-        new import_obsidian2.Notice("\u8BF7\u8F93\u5165\u65B0\u7684 AppSecret\u3002");
+        new import_obsidian3.Notice("\u8BF7\u8F93\u5165\u65B0\u7684 AppSecret\u3002");
         return;
       }
-      account.encryptedSecret = this.host.credentials.encrypt(replacementSecret);
+      account.encryptedSecret = this.host.credentials.store(account.id, replacementSecret);
       await this.host.saveSettings();
       replacementSecret = "";
-      new import_obsidian2.Notice("AppSecret \u5DF2\u52A0\u5BC6\u66F4\u65B0\u3002");
+      new import_obsidian3.Notice("AppSecret \u5DF2\u52A0\u5BC6\u66F4\u65B0\u3002");
       this.display();
     }));
-    new import_obsidian2.Setting(card2).setName("\u8FDE\u63A5\u68C0\u67E5").setDesc("\u53EA\u83B7\u53D6 access token\uFF0C\u4E0D\u521B\u5EFA\u6216\u4FEE\u6539\u8349\u7A3F").addButton((button) => button.setButtonText("\u6D4B\u8BD5\u8FDE\u63A5").onClick(async () => {
+    new import_obsidian3.Setting(card2).setName("\u8FDE\u63A5\u68C0\u67E5").setDesc("\u53EA\u83B7\u53D6 access token\uFF0C\u4E0D\u521B\u5EFA\u6216\u4FEE\u6539\u8349\u7A3F").addButton((button) => button.setButtonText("\u6D4B\u8BD5\u8FDE\u63A5").onClick(async () => {
       button.setDisabled(true).setButtonText("\u68C0\u67E5\u4E2D");
       try {
-        await this.host.wechat.testConnection(account.appId, this.host.credentials.decrypt(account.encryptedSecret));
-        new import_obsidian2.Notice("\u8FDE\u63A5\u6210\u529F\uFF0C\u8D26\u53F7\u51ED\u636E\u53EF\u7528\u3002");
+        await this.host.wechat.testConnection(account.appId, this.host.credentials.read(account.encryptedSecret));
+        this.host.settings.connectionDiagnostics[account.id] = {
+          status: "ok",
+          message: "\u8D26\u53F7\u51ED\u636E\u53EF\u7528\uFF0C\u5F53\u524D IP \u5DF2\u901A\u8FC7\u5FAE\u4FE1\u63A5\u53E3\u68C0\u67E5\u3002",
+          rejectedIp: "",
+          checkedAt: Date.now()
+        };
+        await this.host.saveSettings();
+        new import_obsidian3.Notice("\u8FDE\u63A5\u6210\u529F\uFF0C\u8D26\u53F7\u51ED\u636E\u53EF\u7528\u3002");
       } catch (error3) {
-        new import_obsidian2.Notice(error3 instanceof Error ? error3.message : "\u8FDE\u63A5\u5931\u8D25\u3002");
+        const blocked = error3 instanceof WechatApiError && error3.code === 40164;
+        this.host.settings.connectionDiagnostics[account.id] = {
+          status: blocked ? "ip-blocked" : "error",
+          message: error3 instanceof Error ? error3.message : "\u8FDE\u63A5\u5931\u8D25\u3002",
+          rejectedIp: blocked ? error3.rejectedIp : "",
+          checkedAt: Date.now()
+        };
+        await this.host.saveSettings();
+        new import_obsidian3.Notice(error3 instanceof Error ? error3.message : "\u8FDE\u63A5\u5931\u8D25\u3002");
       } finally {
         button.setDisabled(false).setButtonText("\u6D4B\u8BD5\u8FDE\u63A5");
+        this.display();
       }
     })).addButton((button) => button.setButtonText("\u5220\u9664").setWarning().onClick(async () => {
+      this.host.credentials.clear(account.encryptedSecret);
       this.host.settings.accounts = this.host.settings.accounts.filter((item) => item.id !== account.id);
+      delete this.host.settings.connectionDiagnostics[account.id];
       if (this.host.settings.defaultAccountId === account.id) {
         this.host.settings.defaultAccountId = this.host.settings.accounts[0]?.id ?? "";
       }
       await this.host.saveSettings();
       this.display();
     }));
+    this.renderConnectionDiagnostic(card2, account);
+  }
+  renderConnectionDiagnostic(container2, account) {
+    const diagnostic = this.host.settings.connectionDiagnostics[account.id];
+    if (!diagnostic) return;
+    const panel = container2.createDiv({ cls: `wop-connection-diagnostic is-${diagnostic.status}` });
+    const copy5 = panel.createDiv({ cls: "wop-connection-copy" });
+    copy5.createEl("strong", { text: diagnostic.status === "ok" ? "\u8FDE\u63A5\u6B63\u5E38" : diagnostic.status === "ip-blocked" ? "IP \u767D\u540D\u5355\u672A\u901A\u8FC7" : "\u8FDE\u63A5\u68C0\u67E5\u5931\u8D25" });
+    copy5.createEl("span", { text: diagnostic.status === "ip-blocked" && diagnostic.rejectedIp ? `\u5FAE\u4FE1\u62D2\u7EDD\u7684 IP\uFF1A${diagnostic.rejectedIp}` : diagnostic.message });
+    if (diagnostic.status === "ip-blocked") {
+      copy5.createEl("span", { text: "\u590D\u5236\u540E\u524D\u5F80\uFF1A\u8BBE\u7F6E\u4E0E\u5F00\u53D1 \u2192 \u57FA\u672C\u914D\u7F6E \u2192 IP \u767D\u540D\u5355\u3002" });
+    }
+    const actions = panel.createDiv({ cls: "wop-connection-actions" });
+    if (diagnostic.rejectedIp) {
+      const copyIp = actions.createEl("button", { text: "\u590D\u5236 IP" });
+      copyIp.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(diagnostic.rejectedIp);
+        new import_obsidian3.Notice(`\u5DF2\u590D\u5236 IP\uFF1A${diagnostic.rejectedIp}`);
+      });
+    }
+    const openPlatform = actions.createEl("button", { text: "\u6253\u5F00\u516C\u4F17\u53F7\u540E\u53F0", cls: "mod-cta" });
+    openPlatform.addEventListener("click", () => window.open("https://mp.weixin.qq.com/", "_blank", "noopener,noreferrer"));
   }
   renderAddAccount(container2) {
     container2.createEl("h3", { text: "\u624B\u52A8\u6DFB\u52A0\u8D26\u53F7" });
     let name = "\u6211\u7684\u516C\u4F17\u53F7";
     let appId = "";
     let secret = "";
-    new import_obsidian2.Setting(container2).setName("\u8D26\u53F7\u540D\u79F0").addText((text4) => text4.setValue(name).onChange((value2) => {
+    new import_obsidian3.Setting(container2).setName("\u8D26\u53F7\u540D\u79F0").addText((text5) => text5.setValue(name).onChange((value2) => {
       name = value2;
     }));
-    new import_obsidian2.Setting(container2).setName("AppID").addText((text4) => text4.setPlaceholder("wx...").onChange((value2) => {
+    new import_obsidian3.Setting(container2).setName("AppID").addText((text5) => text5.setPlaceholder("wx...").onChange((value2) => {
       appId = value2;
     }));
-    new import_obsidian2.Setting(container2).setName("AppSecret").addText((text4) => {
-      text4.inputEl.type = "password";
-      text4.setPlaceholder("\u4EC5\u5728\u672C\u673A\u52A0\u5BC6\u4FDD\u5B58").onChange((value2) => {
+    new import_obsidian3.Setting(container2).setName("AppSecret").addText((text5) => {
+      text5.inputEl.type = "password";
+      text5.setPlaceholder("\u4EC5\u5728\u672C\u673A\u52A0\u5BC6\u4FDD\u5B58").onChange((value2) => {
         secret = value2;
       });
     });
-    new import_obsidian2.Setting(container2).addButton((button) => button.setButtonText("\u6DFB\u52A0\u8D26\u53F7").setCta().onClick(async () => {
+    new import_obsidian3.Setting(container2).addButton((button) => button.setButtonText("\u6DFB\u52A0\u8D26\u53F7").setCta().onClick(async () => {
       if (!name.trim() || !appId.trim() || !secret.trim()) {
-        new import_obsidian2.Notice("\u8BF7\u586B\u5199\u8D26\u53F7\u540D\u79F0\u3001AppID \u548C AppSecret\u3002");
+        new import_obsidian3.Notice("\u8BF7\u586B\u5199\u8D26\u53F7\u540D\u79F0\u3001AppID \u548C AppSecret\u3002");
         return;
       }
+      const accountId = `account-${Date.now().toString(36)}`;
       const account = {
-        id: `account-${Date.now().toString(36)}`,
+        id: accountId,
         name: name.trim(),
         appId: appId.trim(),
-        encryptedSecret: this.host.credentials.encrypt(secret)
+        encryptedSecret: this.host.credentials.store(accountId, secret)
       };
       this.host.settings.accounts.push(account);
       if (!this.host.settings.defaultAccountId) this.host.settings.defaultAccountId = account.id;
       await this.host.saveSettings();
-      new import_obsidian2.Notice("\u8D26\u53F7\u5DF2\u6DFB\u52A0\u3002");
+      new import_obsidian3.Notice("\u8D26\u53F7\u5DF2\u6DFB\u52A0\u3002");
       this.display();
     }));
   }
 };
 
 // src/ui/modals.ts
-var import_obsidian3 = require("obsidian");
-var ModuleEditorModal = class extends import_obsidian3.Modal {
+var import_obsidian4 = require("obsidian");
+var ModuleEditorModal = class extends import_obsidian4.Modal {
   constructor(app, module2, onSave) {
     super(app);
     this.onSave = onSave;
@@ -199851,10 +200422,10 @@ var ModuleEditorModal = class extends import_obsidian3.Modal {
   onOpen() {
     this.titleEl.setText(this.draft.id.startsWith("module-") ? "\u65B0\u589E\u5185\u5BB9\u6A21\u5757" : "\u7F16\u8F91\u5185\u5BB9\u6A21\u5757");
     this.contentEl.addClass("wop-modal");
-    new import_obsidian3.Setting(this.contentEl).setName("\u6A21\u5757\u540D\u79F0").addText((text4) => text4.setValue(this.draft.name).onChange((value2) => {
+    new import_obsidian4.Setting(this.contentEl).setName("\u6A21\u5757\u540D\u79F0").addText((text5) => text5.setValue(this.draft.name).onChange((value2) => {
       this.draft.name = value2;
     }));
-    new import_obsidian3.Setting(this.contentEl).setName("\u63D2\u5165\u4F4D\u7F6E").addDropdown((dropdown) => dropdown.addOption("before", "\u6B63\u6587\u524D").addOption("after", "\u6B63\u6587\u540E").setValue(this.draft.placement).onChange((value2) => {
+    new import_obsidian4.Setting(this.contentEl).setName("\u63D2\u5165\u4F4D\u7F6E").addDropdown((dropdown) => dropdown.addOption("before", "\u6B63\u6587\u524D").addOption("before-first-table", "\u9996\u4E2A\u8868\u683C\u524D").addOption("after-first-table", "\u9996\u4E2A\u8868\u683C\u540E").addOption("after", "\u6B63\u6587\u540E").setValue(this.draft.placement).onChange((value2) => {
       this.draft.placement = value2;
     }));
     this.contentEl.createEl("label", { text: "Markdown \u5185\u5BB9", cls: "wop-field-label" });
@@ -199870,7 +200441,7 @@ var ModuleEditorModal = class extends import_obsidian3.Modal {
     const save = actions.createEl("button", { text: "\u4FDD\u5B58\u6A21\u5757", cls: "mod-cta" });
     save.addEventListener("click", () => {
       if (!this.draft.name.trim() || !this.draft.markdown.trim()) {
-        new import_obsidian3.Notice("\u8BF7\u586B\u5199\u6A21\u5757\u540D\u79F0\u548C\u5185\u5BB9\u3002");
+        new import_obsidian4.Notice("\u8BF7\u586B\u5199\u6A21\u5757\u540D\u79F0\u548C\u5185\u5BB9\u3002");
         return;
       }
       this.onSave({ ...this.draft, name: this.draft.name.trim() });
@@ -199881,7 +200452,7 @@ var ModuleEditorModal = class extends import_obsidian3.Modal {
     this.contentEl.empty();
   }
 };
-var TemplateEditorModal = class extends import_obsidian3.Modal {
+var TemplateEditorModal = class extends import_obsidian4.Modal {
   constructor(app, template, onSave) {
     super(app);
     this.onSave = onSave;
@@ -199911,7 +200482,7 @@ var TemplateEditorModal = class extends import_obsidian3.Modal {
         this.onSave(template);
         this.close();
       } catch (error3) {
-        new import_obsidian3.Notice(error3 instanceof Error ? error3.message : "\u6A21\u677F JSON \u65E0\u6548\u3002");
+        new import_obsidian4.Notice(error3 instanceof Error ? error3.message : "\u6A21\u677F JSON \u65E0\u6548\u3002");
       }
     });
   }
@@ -199919,7 +200490,7 @@ var TemplateEditorModal = class extends import_obsidian3.Modal {
     this.contentEl.empty();
   }
 };
-var ConfirmPublishModal = class _ConfirmPublishModal extends import_obsidian3.Modal {
+var ConfirmPublishModal = class _ConfirmPublishModal extends import_obsidian4.Modal {
   constructor(app, articleTitle, operation) {
     super(app);
     this.articleTitle = articleTitle;
@@ -199956,24 +200527,26 @@ var ConfirmPublishModal = class _ConfirmPublishModal extends import_obsidian3.Mo
 };
 
 // src/ui/publisher-view.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 function iconButton(parent4, icon2, label, action) {
   const button = parent4.createEl("button", { cls: "wop-icon-button", attr: { "aria-label": label } });
-  (0, import_obsidian4.setIcon)(button, icon2);
+  (0, import_obsidian5.setIcon)(button, icon2);
   button.addEventListener("click", () => void action());
   return button;
 }
-function textButton(parent4, text4, action, cta = false) {
-  const button = parent4.createEl("button", { text: text4, cls: cta ? "wop-button wop-button-primary" : "wop-button" });
+function textButton(parent4, text5, action, cta = false) {
+  const button = parent4.createEl("button", { text: text5, cls: cta ? "wop-button wop-button-primary" : "wop-button" });
   button.addEventListener("click", () => void action());
   return button;
 }
-var PublisherView = class extends import_obsidian4.ItemView {
+var PublisherView = class extends import_obsidian5.ItemView {
   constructor(leaf, host) {
     super(leaf);
     this.host = host;
   }
   generation = 0;
+  templateQuery = "";
+  templateGroup = "\u5168\u90E8";
   getViewType() {
     return VIEW_TYPE_PUBLISHER;
   }
@@ -200007,7 +200580,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
     const toolbar = this.contentEl.createDiv({ cls: "wop-toolbar" });
     const identity8 = toolbar.createDiv({ cls: "wop-document-identity" });
     const mark = identity8.createDiv({ cls: "wop-document-mark" });
-    (0, import_obsidian4.setIcon)(mark, "file-text");
+    (0, import_obsidian5.setIcon)(mark, "file-text");
     const titleGroup = identity8.createDiv({ cls: "wop-document-title-group" });
     titleGroup.createEl("strong", { text: article?.meta.title || basename });
     titleGroup.createEl("span", { text: path4 || "\u6253\u5F00\u6587\u7AE0\u540E\u81EA\u52A8\u9884\u89C8" });
@@ -200018,7 +200591,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
     const copy5 = iconButton(controls, "copy", "\u590D\u5236\u516C\u4F17\u53F7 HTML", async () => {
       if (!article) return;
       await navigator.clipboard.writeText(article.html);
-      new import_obsidian4.Notice("\u5DF2\u590D\u5236\u516C\u4F17\u53F7 HTML\u3002");
+      new import_obsidian5.Notice("\u5DF2\u590D\u5236\u516C\u4F17\u53F7 HTML\u3002");
     });
     copy5.disabled = !article;
     const publish = textButton(controls, "\u53D1\u5E03\u8349\u7A3F", () => article ? this.host.publishCurrent(article) : void 0, true);
@@ -200044,7 +200617,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
     if (error3) {
       const empty3 = panel.createDiv({ cls: "wop-empty-state" });
       const icon2 = empty3.createDiv({ cls: "wop-empty-icon" });
-      (0, import_obsidian4.setIcon)(icon2, "file-search");
+      (0, import_obsidian5.setIcon)(icon2, "file-search");
       empty3.createEl("h3", { text: "\u7B49\u5F85\u4E00\u7BC7\u6587\u7AE0" });
       empty3.createEl("p", { text: error3 });
       return;
@@ -200052,13 +200625,13 @@ var PublisherView = class extends import_obsidian4.ItemView {
     if (!article) return;
     if (this.host.settings.activeTab === "preview") this.renderPreview(panel, path4, article);
     if (this.host.settings.activeTab === "modules") this.renderModules(panel);
-    if (this.host.settings.activeTab === "templates") this.renderTemplates(panel);
+    if (this.host.settings.activeTab === "templates") this.renderTemplates(panel, path4, article);
     if (this.host.settings.activeTab === "publish") this.renderPublishCheck(panel, path4, article);
   }
   renderAccountSelect(parent4) {
     const wrap3 = parent4.createDiv({ cls: "wop-select-wrap" });
     const icon2 = wrap3.createSpan();
-    (0, import_obsidian4.setIcon)(icon2, "badge-check");
+    (0, import_obsidian5.setIcon)(icon2, "badge-check");
     const select = wrap3.createEl("select", { attr: { "aria-label": "\u53D1\u5E03\u8D26\u53F7" } });
     select.createEl("option", { text: "\u672A\u914D\u7F6E\u8D26\u53F7", value: "" });
     for (const account of this.host.settings.accounts) {
@@ -200073,10 +200646,13 @@ var PublisherView = class extends import_obsidian4.ItemView {
   renderTemplateSelect(parent4) {
     const wrap3 = parent4.createDiv({ cls: "wop-select-wrap" });
     const icon2 = wrap3.createSpan();
-    (0, import_obsidian4.setIcon)(icon2, "palette");
+    (0, import_obsidian5.setIcon)(icon2, "palette");
     const select = wrap3.createEl("select", { attr: { "aria-label": "\u6392\u7248\u6A21\u677F" } });
-    for (const template of [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates]) {
-      select.createEl("option", { text: template.name, value: template.id });
+    for (const groupName of [...MD2_THEME_GROUPS, "\u7528\u6237\u6A21\u677F"]) {
+      const templates = groupName === "\u7528\u6237\u6A21\u677F" ? this.host.settings.customTemplates : BUILT_IN_TEMPLATES.filter((template) => template.group === groupName);
+      if (!templates.length) continue;
+      const group2 = select.createEl("optgroup", { attr: { label: `${groupName} \xB7 ${templates.length}` } });
+      for (const template of templates) group2.createEl("option", { text: template.name, value: template.id });
     }
     select.value = this.host.settings.activeTemplateId;
     select.addEventListener("change", async () => {
@@ -200099,7 +200675,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
     }
     if (article.warnings.length) {
       const warning = panel.createDiv({ cls: "wop-warning" });
-      (0, import_obsidian4.setIcon)(warning.createSpan(), "triangle-alert");
+      (0, import_obsidian5.setIcon)(warning.createSpan(), "triangle-alert");
       warning.createSpan({ text: article.warnings.join(" ") });
     }
     const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
@@ -200112,12 +200688,20 @@ var PublisherView = class extends import_obsidian4.ItemView {
   renderModules(panel) {
     const header = panel.createDiv({ cls: "wop-panel-header" });
     const copy5 = header.createDiv();
-    copy5.createEl("h3", { text: "\u6587\u7AE0\u524D\u540E\u6A21\u5757" });
-    copy5.createEl("p", { text: "\u6A21\u5757\u4E0E\u6B63\u6587\u4E00\u8D77\u7ECF\u8FC7\u6A21\u677F\u7F16\u8BD1\uFF0C\u9884\u89C8\u5373\u6700\u7EC8\u6392\u7248\u3002" });
+    copy5.createEl("h3", { text: "\u5185\u5BB9\u6A21\u5757" });
+    copy5.createEl("p", { text: "\u5B8C\u6574\u652F\u6301 MD2 \u7684 9 \u7C7B\u6A21\u5757\u3002\u53EF\u4EE5\u65B0\u589E\u3001\u7F16\u8F91\u3001\u542F\u7528\u548C\u6392\u5E8F\u3002" });
     textButton(header, "\u65B0\u589E\u6A21\u5757", () => this.openModuleEditor(null), true);
-    for (const placement of ["before", "after"]) {
+    const placements = [
+      ["before", "\u6B63\u6587\u524D", "\u5BFC\u8BED\u4E0E\u5F00\u5934\u6A21\u5757"],
+      ["before-first-table", "\u9996\u4E2A\u8868\u683C\u524D", "\u8868\u683C\u53E3\u5F84\u4E0E\u9605\u8BFB\u63D0\u793A"],
+      ["after-first-table", "\u9996\u4E2A\u8868\u683C\u540E", "\u8868\u683C\u7ED3\u8BBA\u4E0E\u8865\u5145\u8BF4\u660E"],
+      ["after", "\u6B63\u6587\u540E", "\u7ED3\u5C3E\u3001\u63A8\u8350\u3001\u4F5C\u8005\u3001\u5173\u6CE8\u3001\u7248\u6743\u548C\u81EA\u5B9A\u4E49\u6A21\u5757"]
+    ];
+    for (const [placement, title2, description] of placements) {
       const section = panel.createDiv({ cls: "wop-module-section" });
-      section.createEl("h4", { text: placement === "before" ? "\u6B63\u6587\u524D" : "\u6B63\u6587\u540E" });
+      const sectionTitle = section.createDiv({ cls: "wop-module-section-title" });
+      sectionTitle.createEl("h4", { text: title2 });
+      sectionTitle.createEl("span", { text: description });
       const modules2 = this.host.settings.modules.filter((module2) => module2.placement === placement);
       if (!modules2.length) section.createEl("p", { text: "\u6682\u65E0\u6A21\u5757", cls: "wop-empty" });
       modules2.forEach((module2, index) => this.renderModuleRow(section, module2, index, modules2.length));
@@ -200131,9 +200715,9 @@ var PublisherView = class extends import_obsidian4.ItemView {
       module2.enabled = toggle.checked;
       await this.host.saveSettings();
     });
-    const text4 = row.createDiv({ cls: "wop-module-copy" });
-    text4.createEl("strong", { text: module2.name });
-    text4.createEl("span", { text: module2.markdown.replace(/\s+/g, " ").slice(0, 72) || "\u7A7A\u6A21\u5757" });
+    const text5 = row.createDiv({ cls: "wop-module-copy" });
+    text5.createEl("strong", { text: module2.name });
+    text5.createEl("span", { text: module2.markdown.replace(/\s+/g, " ").slice(0, 72) || "\u7A7A\u6A21\u5757" });
     const actions = row.createDiv({ cls: "wop-row-actions" });
     const up = iconButton(actions, "chevron-up", "\u4E0A\u79FB", async () => {
       const currentIndex = this.host.settings.modules.findIndex((item) => item.id === module2.id);
@@ -200168,45 +200752,93 @@ var PublisherView = class extends import_obsidian4.ItemView {
       void this.host.saveSettings();
     }).open();
   }
-  renderTemplates(panel) {
-    const header = panel.createDiv({ cls: "wop-panel-header" });
+  renderTemplates(panel, path4, article) {
+    panel.addClass("wop-template-workbench");
+    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
+    const preview = panel.createDiv({ cls: "wop-template-live-preview" });
+    const meta3 = preview.createDiv({ cls: "wop-preview-meta" });
+    meta3.createEl("span", { text: template.name });
+    meta3.createEl("span", { text: `${article.imageSources.length} \u5F20\u56FE\u7247` });
+    meta3.createEl("span", { text: path4 });
+    const stage = preview.createDiv({ cls: "wop-preview-stage", attr: { "data-device": this.host.settings.previewDevice } });
+    stage.style.setProperty("--wop-template-canvas", template.canvas);
+    const paper = stage.createDiv({ cls: "wop-paper" });
+    paper.innerHTML = article.html;
+    const drawer = panel.createDiv({ cls: "wop-template-drawer" });
+    const header = drawer.createDiv({ cls: "wop-template-drawer-header" });
     const copy5 = header.createDiv();
-    copy5.createEl("h3", { text: "\u6392\u7248\u6A21\u677F" });
-    copy5.createEl("p", { text: "\u5185\u7F6E\u6A21\u677F\u4FDD\u6301\u7A33\u5B9A\u3002\u590D\u5236\u540E\u53EF\u7F16\u8F91\u4EE4\u724C\uFF0C\u4E5F\u53EF\u5BFC\u5165\u6216\u5BFC\u51FA JSON\u3002" });
-    const actions = header.createDiv({ cls: "wop-header-actions" });
-    textButton(actions, "\u5BFC\u51FA\u5F53\u524D", async () => {
+    copy5.createEl("strong", { text: "\u6A21\u677F" });
+    copy5.createEl("span", { text: `${BUILT_IN_TEMPLATES.length} \u5185\u7F6E` });
+    const actions = header.createDiv({ cls: "wop-template-drawer-actions" });
+    iconButton(actions, "download", "\u5BFC\u51FA\u5F53\u524D\u6A21\u677F", () => {
       const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-      await navigator.clipboard.writeText(JSON.stringify(active, null, 2));
-      new import_obsidian4.Notice("\u6A21\u677F JSON \u5DF2\u590D\u5236\u3002");
+      this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
+      new import_obsidian5.Notice("\u6A21\u677F JSON \u5DF2\u5BFC\u51FA\u3002");
     });
-    textButton(actions, "\u5BFC\u5165 JSON", () => {
-      const seed = cloneTemplate(findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates), "\u5BFC\u5165\u6A21\u677F");
-      new TemplateEditorModal(this.app, seed, (template) => void this.saveCustomTemplate(template)).open();
-    }, true);
-    const grid = panel.createDiv({ cls: "wop-template-grid" });
-    for (const template of [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates]) {
-      this.renderTemplateCard(grid, template);
-    }
+    iconButton(actions, "archive", "\u5BFC\u51FA\u5168\u90E8\u7528\u6237\u6A21\u677F", () => {
+      if (!this.host.settings.customTemplates.length) {
+        new import_obsidian5.Notice("\u8FD8\u6CA1\u6709\u7528\u6237\u6A21\u677F\u53EF\u5BFC\u51FA\u3002");
+        return;
+      }
+      this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
+      new import_obsidian5.Notice(`\u5DF2\u5BFC\u51FA ${this.host.settings.customTemplates.length} \u4E2A\u7528\u6237\u6A21\u677F\u3002`);
+    });
+    const importInput = actions.createEl("input", {
+      type: "file",
+      cls: "wop-hidden-input",
+      attr: { accept: ".json,application/json", "aria-label": "\u9009\u62E9\u6A21\u677F JSON \u6587\u4EF6" }
+    });
+    importInput.addEventListener("change", () => void this.importTemplateFiles(importInput.files));
+    iconButton(actions, "upload", "\u5BFC\u5165\u6A21\u677F JSON", () => importInput.click());
+    const filters = drawer.createDiv({ cls: "wop-template-filters" });
+    const searchWrap = filters.createDiv({ cls: "wop-template-search" });
+    (0, import_obsidian5.setIcon)(searchWrap.createSpan(), "search");
+    const search = searchWrap.createEl("input", { type: "search", attr: { placeholder: "\u641C\u7D22\u4E3B\u9898\u3001\u6765\u6E90\u6216\u6807\u7B7E", "aria-label": "\u641C\u7D22\u6A21\u677F" } });
+    search.value = this.templateQuery;
+    const groupSelect = filters.createEl("select", { attr: { "aria-label": "\u7B5B\u9009\u6A21\u677F\u5206\u7EC4" } });
+    for (const group2 of ["\u5168\u90E8", ...MD2_THEME_GROUPS, "\u7528\u6237\u6A21\u677F"]) groupSelect.createEl("option", { text: group2, value: group2 });
+    groupSelect.value = this.templateGroup;
+    const results = drawer.createDiv({ cls: "wop-template-results" });
+    const updateResults = () => {
+      this.templateQuery = search.value.trim();
+      this.templateGroup = groupSelect.value;
+      this.renderTemplateResults(results);
+    };
+    search.addEventListener("input", updateResults);
+    groupSelect.addEventListener("change", updateResults);
+    this.renderTemplateResults(results);
   }
-  renderTemplateCard(parent4, template) {
+  renderTemplateResults(parent4) {
+    parent4.empty();
+    const query = this.templateQuery.toLocaleLowerCase("zh-CN");
+    const templates = [...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates].filter((template) => {
+      const groupMatches = this.templateGroup === "\u5168\u90E8" || template.group === this.templateGroup;
+      const haystack = [template.name, template.description, template.group, template.sourceLabel, ...template.tags].join(" ").toLocaleLowerCase("zh-CN");
+      return groupMatches && (!query || haystack.includes(query));
+    });
+    const summary = parent4.createDiv({ cls: "wop-template-summary" });
+    summary.createEl("span", { text: `${templates.length} \u4E2A \xB7 ${this.templateGroup === "\u5168\u90E8" ? "\u5168\u76EE\u5F55" : this.templateGroup}` });
+    if (!templates.length) {
+      parent4.createEl("p", { text: "\u6CA1\u6709\u5339\u914D\u7684\u6A21\u677F\u3002", cls: "wop-empty wop-template-empty" });
+      return;
+    }
+    const list = parent4.createDiv({ cls: "wop-template-strip-list" });
+    for (const template of templates) this.renderTemplateStrip(list, template);
+  }
+  renderTemplateStrip(parent4, template) {
     const active = template.id === this.host.settings.activeTemplateId;
-    const card2 = parent4.createDiv({ cls: `wop-template-card${active ? " is-active" : ""}` });
-    card2.style.setProperty("--wop-accent", template.accent);
-    card2.style.setProperty("--wop-canvas", template.canvas);
-    const preview = card2.createDiv({ cls: "wop-template-swatch" });
-    preview.createDiv({ cls: "wop-swatch-heading" });
-    preview.createDiv({ cls: "wop-swatch-line is-long" });
-    preview.createDiv({ cls: "wop-swatch-line" });
-    const info2 = card2.createDiv({ cls: "wop-template-info" });
+    const row = parent4.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
+    row.style.setProperty("--wop-accent", template.accent);
+    row.createDiv({ cls: "wop-template-color" });
+    const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
     info2.createEl("strong", { text: template.name });
-    info2.createEl("span", { text: template.description });
-    const source = template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.source === "md2-inspired" ? "MD2 \u98CE\u683C" : template.source === "wenyan-inspired" ? "Wenyan \u98CE\u683C" : "\u5185\u7F6E";
-    info2.createEl("small", { text: source });
-    card2.addEventListener("click", async () => {
+    info2.createEl("span", { text: template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group });
+    if (template.upstream) row.title = `\u6765\u6E90\uFF1A${template.upstream}`;
+    row.addEventListener("click", async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
     });
-    const actions = card2.createDiv({ cls: "wop-template-actions" });
+    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "\u590D\u5236\u4E3A\u7528\u6237\u6A21\u677F", () => {
       const cloned = cloneTemplate(template);
       new TemplateEditorModal(this.app, cloned, (saved) => void this.saveCustomTemplate(saved)).open();
@@ -200214,7 +200846,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
     duplicate.addEventListener("click", (event3) => event3.stopPropagation());
     if (template.source === "custom") {
       const edit = iconButton(actions, "pencil", "\u7F16\u8F91\u6A21\u677F", () => {
-        new TemplateEditorModal(this.app, template, (saved) => void this.saveCustomTemplate(saved)).open();
+        new TemplateEditorModal(this.app, template, (saved) => void this.saveCustomTemplate(saved, template.id)).open();
       });
       edit.addEventListener("click", (event3) => event3.stopPropagation());
       const remove3 = iconButton(actions, "trash-2", "\u5220\u9664\u6A21\u677F", async () => {
@@ -200225,12 +200857,41 @@ var PublisherView = class extends import_obsidian4.ItemView {
       remove3.addEventListener("click", (event3) => event3.stopPropagation());
     }
   }
-  async saveCustomTemplate(template) {
-    const index = this.host.settings.customTemplates.findIndex((item) => item.id === template.id);
-    if (index >= 0) this.host.settings.customTemplates[index] = template;
-    else this.host.settings.customTemplates.push(template);
-    this.host.settings.activeTemplateId = template.id;
+  async saveCustomTemplate(template, replaceId) {
+    const existingIds = /* @__PURE__ */ new Set([
+      ...BUILT_IN_TEMPLATES.map((item) => item.id),
+      ...this.host.settings.customTemplates.filter((item) => item.id !== replaceId).map((item) => item.id)
+    ]);
+    const saved = existingIds.has(template.id) ? makeUniqueTemplate(template, existingIds) : template;
+    const index = replaceId ? this.host.settings.customTemplates.findIndex((item) => item.id === replaceId) : -1;
+    if (index >= 0) this.host.settings.customTemplates[index] = saved;
+    else this.host.settings.customTemplates.push(saved);
+    this.host.settings.activeTemplateId = saved.id;
     await this.host.saveSettings();
+  }
+  async importTemplateFiles(files) {
+    const file = files?.[0];
+    if (!file) return;
+    try {
+      const imported = parseTemplateBundle(await file.text());
+      const existingIds = new Set([...BUILT_IN_TEMPLATES, ...this.host.settings.customTemplates].map((template) => template.id));
+      const templates = imported.map((template) => makeUniqueTemplate(template, existingIds));
+      this.host.settings.customTemplates.push(...templates);
+      this.host.settings.activeTemplateId = templates[0].id;
+      this.templateGroup = "\u7528\u6237\u6A21\u677F";
+      await this.host.saveSettings();
+      new import_obsidian5.Notice(`\u5DF2\u5BFC\u5165 ${templates.length} \u4E2A\u7528\u6237\u6A21\u677F\u3002`);
+    } catch (error3) {
+      new import_obsidian5.Notice(error3 instanceof Error ? error3.message : "\u6A21\u677F\u5BFC\u5165\u5931\u8D25\u3002");
+    }
+  }
+  downloadJson(filename, content) {
+    const url = URL.createObjectURL(new Blob([content], { type: "application/json;charset=utf-8" }));
+    const link2 = document.createElement("a");
+    link2.href = url;
+    link2.download = filename;
+    link2.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1e3);
   }
   renderPublishCheck(panel, path4, article) {
     const header = panel.createDiv({ cls: "wop-panel-header" });
@@ -200254,7 +200915,7 @@ var PublisherView = class extends import_obsidian4.ItemView {
   renderCheck(parent4, label, value2, ok) {
     const row = parent4.createDiv({ cls: `wop-check-row ${ok ? "is-ok" : "is-warning"}` });
     const icon2 = row.createDiv({ cls: "wop-check-icon" });
-    (0, import_obsidian4.setIcon)(icon2, ok ? "circle-check" : "circle-alert");
+    (0, import_obsidian5.setIcon)(icon2, ok ? "circle-check" : "circle-alert");
     const copy5 = row.createDiv();
     copy5.createEl("strong", { text: label });
     copy5.createEl("span", { text: value2 });
@@ -200270,10 +200931,10 @@ var MIME_BY_EXTENSION = {
   webp: "image/webp",
   bmp: "image/bmp"
 };
-var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
+var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
   settings = structuredClone(DEFAULT_SETTINGS);
   renderer = new RenderEngine();
-  credentials = new CredentialVault();
+  credentials = new CredentialVault(() => this.app.secretStorage);
   wechat = new WechatClient();
   refreshTimer = 0;
   async onload() {
@@ -200303,18 +200964,46 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
   }
   async loadSettings() {
     const loaded = await this.loadData();
+    const modules2 = this.migrateModules(loaded?.modules ?? []);
+    const customTemplates = (loaded?.customTemplates ?? []).flatMap((template) => {
+      try {
+        return [validateTemplate(template)];
+      } catch {
+        return [];
+      }
+    });
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...loaded ?? {},
+      version: 2,
+      activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
       accounts: loaded?.accounts ?? [],
-      modules: loaded?.modules ?? structuredClone(DEFAULT_SETTINGS.modules),
-      customTemplates: loaded?.customTemplates ?? [],
+      connectionDiagnostics: loaded?.connectionDiagnostics ?? {},
+      modules: modules2,
+      customTemplates,
       lastDraftByFile: loaded?.lastDraftByFile ?? {}
     };
   }
+  migrateModules(loaded) {
+    if (!loaded.length) return structuredClone(DEFAULT_MODULES);
+    const legacyKinds = {
+      "series-intro": "intro",
+      "follow-card": "follow",
+      copyright: "copyright"
+    };
+    const migrated = loaded.map((module2) => ({
+      ...module2,
+      kind: module2.kind ?? legacyKinds[module2.id]
+    }));
+    const presentKinds = new Set(migrated.flatMap((module2) => module2.kind ? [module2.kind] : []));
+    for (const module2 of DEFAULT_MODULES) {
+      if (module2.kind && !presentKinds.has(module2.kind)) migrated.push(structuredClone(module2));
+    }
+    return migrated;
+  }
   async saveSettings() {
     await this.saveData(this.settings);
-    if (this.manifest.dir && this.app.vault.adapter instanceof import_obsidian5.FileSystemAdapter) {
+    if (this.manifest.dir && this.app.vault.adapter instanceof import_obsidian6.FileSystemAdapter) {
       const dataPath = (0, import_node_path2.join)(this.app.vault.adapter.getBasePath(), this.manifest.dir, "data.json");
       await (0, import_promises2.chmod)(dataPath, 384).catch(() => void 0);
     }
@@ -200324,7 +201013,7 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
     const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_PUBLISHER)[0];
     const leaf = existing ?? this.app.workspace.getRightLeaf(false);
     if (!leaf) {
-      new import_obsidian5.Notice("\u65E0\u6CD5\u6253\u5F00\u53F3\u4FA7\u53D1\u5E03\u5DE5\u4F5C\u53F0\u3002");
+      new import_obsidian6.Notice("\u65E0\u6CD5\u6253\u5F00\u53F3\u4FA7\u53D1\u5E03\u5DE5\u4F5C\u53F0\u3002");
       return;
     }
     if (!existing) await leaf.setViewState({ type: VIEW_TYPE_PUBLISHER, active: true });
@@ -200337,7 +201026,7 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
   }
   async renderActiveArticle() {
     const file = this.app.workspace.getActiveFile();
-    if (!(file instanceof import_obsidian5.TFile) || file.extension !== "md") throw new Error("\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7 Markdown \u7B14\u8BB0\u3002");
+    if (!(file instanceof import_obsidian6.TFile) || file.extension !== "md") throw new Error("\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7 Markdown \u7B14\u8BB0\u3002");
     const markdown = await this.app.vault.cachedRead(file);
     const template = this.getActiveTemplate();
     const article = await this.renderer.render({
@@ -200358,7 +201047,7 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
   async publishCurrent(articleOverride) {
     try {
       const file = this.app.workspace.getActiveFile();
-      if (!(file instanceof import_obsidian5.TFile)) throw new Error("\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7 Markdown \u7B14\u8BB0\u3002");
+      if (!(file instanceof import_obsidian6.TFile)) throw new Error("\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7 Markdown \u7B14\u8BB0\u3002");
       const account = this.settings.accounts.find((item) => item.id === this.settings.defaultAccountId);
       if (!account) {
         this.openSettings();
@@ -200368,10 +201057,10 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
       const existingMediaId = this.settings.lastDraftByFile[file.path];
       const confirmed = await ConfirmPublishModal.ask(this.app, article.meta.title, existingMediaId ? "update" : "add");
       if (!confirmed) return;
-      const progress2 = new import_obsidian5.Notice(existingMediaId ? "\u6B63\u5728\u66F4\u65B0\u5E76\u56DE\u8BFB\u5FAE\u4FE1\u8349\u7A3F\u2026" : "\u6B63\u5728\u521B\u5EFA\u5E76\u56DE\u8BFB\u5FAE\u4FE1\u8349\u7A3F\u2026", 0);
+      const progress2 = new import_obsidian6.Notice(existingMediaId ? "\u6B63\u5728\u66F4\u65B0\u5E76\u56DE\u8BFB\u5FAE\u4FE1\u8349\u7A3F\u2026" : "\u6B63\u5728\u521B\u5EFA\u5E76\u56DE\u8BFB\u5FAE\u4FE1\u8349\u7A3F\u2026", 0);
       const receipt = await this.wechat.publish({
         account,
-        secret: this.credentials.decrypt(account.encryptedSecret),
+        secret: this.credentials.read(account.encryptedSecret),
         article,
         sourcePath: file.path,
         existingMediaId,
@@ -200379,9 +201068,9 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
       }).finally(() => progress2.hide());
       this.settings.lastDraftByFile[file.path] = receipt.mediaId;
       await this.saveSettings();
-      new import_obsidian5.Notice(`${receipt.operation === "update" ? "\u8349\u7A3F\u5DF2\u66F4\u65B0" : "\u8349\u7A3F\u5DF2\u521B\u5EFA"}\u5E76\u901A\u8FC7\u56DE\u8BFB\u6821\u9A8C\uFF1A${receipt.title}`, 8e3);
+      new import_obsidian6.Notice(`${receipt.operation === "update" ? "\u8349\u7A3F\u5DF2\u66F4\u65B0" : "\u8349\u7A3F\u5DF2\u521B\u5EFA"}\u5E76\u901A\u8FC7\u56DE\u8BFB\u6821\u9A8C\uFF1A${receipt.title}`, 8e3);
     } catch (error3) {
-      new import_obsidian5.Notice(error3 instanceof Error ? error3.message : "\u53D1\u5E03\u5931\u8D25\u3002", 1e4);
+      new import_obsidian6.Notice(error3 instanceof Error ? error3.message : "\u53D1\u5E03\u5931\u8D25\u3002", 1e4);
     }
   }
   scheduleRefresh() {
@@ -200405,20 +201094,30 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian5.Plugin {
     } catch {
     }
     const linked = this.app.metadataCache.getFirstLinkpathDest(decoded, sourcePath);
-    if (linked instanceof import_obsidian5.TFile) return linked;
-    const direct = this.app.vault.getAbstractFileByPath((0, import_obsidian5.normalizePath)(decoded));
-    return direct instanceof import_obsidian5.TFile ? direct : null;
+    if (linked instanceof import_obsidian6.TFile) return linked;
+    const direct = this.app.vault.getAbstractFileByPath((0, import_obsidian6.normalizePath)(decoded));
+    return direct instanceof import_obsidian6.TFile ? direct : null;
   }
   async resolveImageAsset(source, sourcePath) {
-    if (/^(https?:|data:)/i.test(source)) {
+    if (/^data:/i.test(source)) {
       const response = await fetch(source);
       if (!response.ok) throw new Error(`\u65E0\u6CD5\u8BFB\u53D6\u56FE\u7247\uFF1AHTTP ${response.status}`);
-      const pathname = source.startsWith("data:") ? "image.png" : new URL(source).pathname;
-      const filename = decodeURIComponent(pathname.split("/").pop() || "image.png");
       return {
         source,
         bytes: await response.arrayBuffer(),
         mimeType: response.headers.get("content-type")?.split(";")[0] || "image/png",
+        filename: "image.png"
+      };
+    }
+    if (/^https?:/i.test(source)) {
+      const response = await (0, import_obsidian6.requestUrl)({ url: source, throw: false });
+      if (response.status < 200 || response.status >= 300) throw new Error(`\u65E0\u6CD5\u8BFB\u53D6\u56FE\u7247\uFF1AHTTP ${response.status}`);
+      const pathname = new URL(source).pathname;
+      const filename = decodeURIComponent(pathname.split("/").pop() || "image.png");
+      return {
+        source,
+        bytes: response.arrayBuffer,
+        mimeType: (response.headers["content-type"] ?? response.headers["Content-Type"] ?? "image/png").split(";")[0],
         filename
       };
     }

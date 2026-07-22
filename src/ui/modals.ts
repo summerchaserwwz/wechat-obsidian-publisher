@@ -26,6 +26,8 @@ export class ModuleEditorModal extends Modal {
       .setName("插入位置")
       .addDropdown((dropdown) => dropdown
         .addOption("before", "正文前")
+        .addOption("before-first-table", "首个表格前")
+        .addOption("after-first-table", "首个表格后")
         .addOption("after", "正文后")
         .setValue(this.draft.placement)
         .onChange((value) => { this.draft.placement = value as ContentModule["placement"]; }));

@@ -1,3 +1,4 @@
+import { requestUrl, type RequestUrlResponse } from "obsidian";
 import type { ImageAsset, PublishInput, PublishReceipt } from "../types";
 
 const API = "https://api.weixin.qq.com/cgi-bin";
@@ -11,17 +12,66 @@ interface WechatResponse {
   news_item?: Array<{ title?: string; content?: string }>;
 }
 
-function assertWechatSuccess(payload: WechatResponse, action: string): void {
-  if (payload.errcode && payload.errcode !== 0) {
-    throw new Error(`${action}失败：${payload.errmsg ?? `微信错误码 ${payload.errcode}`}`);
+export class WechatApiError extends Error {
+  constructor(
+    message: string,
+    readonly code: number,
+    readonly rejectedIp: string
+  ) {
+    super(message);
+    this.name = "WechatApiError";
   }
 }
 
-async function parseResponse(response: Response, action: string): Promise<WechatResponse> {
-  if (!response.ok) throw new Error(`${action}失败：HTTP ${response.status}`);
-  const payload = await response.json() as WechatResponse;
+export function extractRejectedIp(message: string): string {
+  const ipv4 = message.match(/(?:invalid\s+ip|ip)[^0-9]{0,12}((?:\d{1,3}\.){3}\d{1,3})/i)?.[1];
+  if (ipv4) return ipv4;
+  const ipv6 = message.match(/(?:invalid\s+ip|ip)[^0-9a-f]{0,12}([0-9a-f]{1,4}(?::[0-9a-f]{0,4}){2,})/i)?.[1];
+  return ipv6?.replace(/^::ffff:/i, "") ?? "";
+}
+
+function assertWechatSuccess(payload: WechatResponse, action: string): void {
+  if (typeof payload.errcode === "number" && payload.errcode !== 0) {
+    const detail = payload.errmsg ?? `微信错误码 ${payload.errcode}`;
+    throw new WechatApiError(`${action}失败：${detail}`, payload.errcode, payload.errcode === 40164 ? extractRejectedIp(detail) : "");
+  }
+}
+
+function parseResponse(response: RequestUrlResponse, action: string): WechatResponse {
+  if (response.status < 200 || response.status >= 300) throw new Error(`${action}失败：HTTP ${response.status}`);
+  let payload: WechatResponse;
+  try {
+    payload = JSON.parse(response.text) as WechatResponse;
+  } catch {
+    throw new Error(`${action}失败：微信返回了无法识别的响应。`);
+  }
   assertWechatSuccess(payload, action);
   return payload;
+}
+
+function concatBytes(parts: Uint8Array[]): ArrayBuffer {
+  const total = parts.reduce((length, part) => length + part.byteLength, 0);
+  const result = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    result.set(part, offset);
+    offset += part.byteLength;
+  }
+  return result.buffer;
+}
+
+function multipartBody(asset: ImageAsset): { body: ArrayBuffer; contentType: string } {
+  const encoder = new TextEncoder();
+  const boundary = `----WechatObsidianPublisher${crypto.randomUUID().replace(/-/g, "")}`;
+  const filename = asset.filename.replace(/["\r\n]/g, "_");
+  const opening = encoder.encode(
+    `--${boundary}\r\nContent-Disposition: form-data; name="media"; filename="${filename}"\r\nContent-Type: ${asset.mimeType}\r\n\r\n`
+  );
+  const closing = encoder.encode(`\r\n--${boundary}--\r\n`);
+  return {
+    body: concatBytes([opening, new Uint8Array(asset.bytes), closing]),
+    contentType: `multipart/form-data; boundary=${boundary}`
+  };
 }
 
 async function uploadAsset(
@@ -31,12 +81,14 @@ async function uploadAsset(
   action: string,
   extraQuery: Record<string, string> = {}
 ): Promise<WechatResponse> {
-  const form = new FormData();
-  form.append("media", new Blob([asset.bytes], { type: asset.mimeType }), asset.filename);
   const query = new URLSearchParams({ access_token: token, ...extraQuery });
-  const response = await fetch(`${API}/${endpoint}?${query.toString()}`, {
+  const multipart = multipartBody(asset);
+  const response = await requestUrl({
+    url: `${API}/${endpoint}?${query.toString()}`,
     method: "POST",
-    body: form
+    contentType: multipart.contentType,
+    body: multipart.body,
+    throw: false
   });
   return parseResponse(response, action);
 }
@@ -90,8 +142,8 @@ async function svgToPngAsset(svg: SVGSVGElement, index: number): Promise<ImageAs
 export class WechatClient {
   private async accessToken(appId: string, secret: string): Promise<string> {
     const query = new URLSearchParams({ grant_type: "client_credential", appid: appId, secret });
-    const response = await fetch(`${API}/token?${query.toString()}`);
-    const payload = await parseResponse(response, "获取访问凭据");
+    const response = await requestUrl({ url: `${API}/token?${query.toString()}`, throw: false });
+    const payload = parseResponse(response, "获取访问凭据");
     if (!payload.access_token) throw new Error("微信未返回访问凭据。");
     return payload.access_token;
   }
@@ -164,21 +216,25 @@ export class WechatClient {
     const requestBody = isUpdate
       ? { media_id: input.existingMediaId, index: 0, articles: article }
       : { articles: [article] };
-    const response = await fetch(`${API}/${endpoint}?access_token=${encodeURIComponent(token)}`, {
+    const response = await requestUrl({
+      url: `${API}/${endpoint}?access_token=${encodeURIComponent(token)}`,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody)
+      contentType: "application/json",
+      body: JSON.stringify(requestBody),
+      throw: false
     });
-    const payload = await parseResponse(response, isUpdate ? "更新草稿" : "创建草稿");
+    const payload = parseResponse(response, isUpdate ? "更新草稿" : "创建草稿");
     const mediaId = input.existingMediaId || payload.media_id;
     if (!mediaId) throw new Error("微信未返回草稿素材 ID。");
 
-    const verifyResponse = await fetch(`${API}/draft/get?access_token=${encodeURIComponent(token)}`, {
+    const verifyResponse = await requestUrl({
+      url: `${API}/draft/get?access_token=${encodeURIComponent(token)}`,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ media_id: mediaId })
+      contentType: "application/json",
+      body: JSON.stringify({ media_id: mediaId }),
+      throw: false
     });
-    const verified = await parseResponse(verifyResponse, "回读草稿");
+    const verified = parseResponse(verifyResponse, "回读草稿");
     const saved = verified.news_item?.[0];
     if (!saved?.content || saved.title !== article.title) {
       throw new Error("草稿已提交，但回读内容与当前文章不一致，请到微信后台检查。");

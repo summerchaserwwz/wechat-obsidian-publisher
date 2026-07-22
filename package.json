@@ -1,6 +1,6 @@
 {
   "name": "wechat-obsidian-publisher",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Obsidian 内的微信公众号排版、模块编排与草稿发布工作台。",
   "main": "main.js",
   "type": "module",

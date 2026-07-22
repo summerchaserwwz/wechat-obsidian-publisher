@@ -58,9 +58,14 @@ function applyTemplate(root: HTMLElement, template: PublisherTemplate): void {
       applyDeclarations(root, declarations);
       continue;
     }
-    root.querySelectorAll<HTMLElement>(selector).forEach((element) => applyDeclarations(element, declarations));
+    try {
+      root.querySelectorAll<HTMLElement>(selector).forEach((element) => applyDeclarations(element, declarations));
+    } catch {
+      continue;
+    }
   }
   root.dataset.template = template.id;
+  root.dataset.themeGroup = template.group;
 }
 
 function enhanceStructure(root: HTMLElement, resolvePreviewImage?: (source: string) => string | null): string[] {

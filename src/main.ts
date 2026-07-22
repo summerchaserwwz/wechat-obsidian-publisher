@@ -1,13 +1,13 @@
 import { chmod } from "node:fs/promises";
 import { join } from "node:path";
-import { FileSystemAdapter, Notice, Plugin, TFile, normalizePath } from "obsidian";
-import { DEFAULT_SETTINGS, VIEW_TYPE_PUBLISHER } from "./defaults";
+import { FileSystemAdapter, Notice, Plugin, TFile, normalizePath, requestUrl } from "obsidian";
+import { DEFAULT_MODULES, DEFAULT_SETTINGS, VIEW_TYPE_PUBLISHER } from "./defaults";
 import { RenderEngine } from "./core/renderer";
-import { BUILT_IN_TEMPLATES } from "./core/templates";
+import { BUILT_IN_TEMPLATES, validateTemplate } from "./core/templates";
 import { CredentialVault } from "./publish/credential-vault";
 import { WechatClient } from "./publish/wechat-client";
 import { PublisherSettingTab } from "./settings-tab";
-import type { ImageAsset, PluginSettings, PublisherTemplate, RenderedArticle } from "./types";
+import type { ContentModule, ImageAsset, ModuleKind, PluginSettings, PublisherTemplate, RenderedArticle } from "./types";
 import { ConfirmPublishModal } from "./ui/modals";
 import { PublisherView } from "./ui/publisher-view";
 
@@ -23,7 +23,7 @@ const MIME_BY_EXTENSION: Record<string, string> = {
 export default class WechatObsidianPublisherPlugin extends Plugin {
   settings: PluginSettings = structuredClone(DEFAULT_SETTINGS);
   readonly renderer = new RenderEngine();
-  readonly credentials = new CredentialVault();
+  readonly credentials = new CredentialVault(() => this.app.secretStorage);
   readonly wechat = new WechatClient();
   private refreshTimer = 0;
 
@@ -56,14 +56,39 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
 
   async loadSettings(): Promise<void> {
     const loaded = await this.loadData() as Partial<PluginSettings> | null;
+    const modules = this.migrateModules(loaded?.modules ?? []);
+    const customTemplates = (loaded?.customTemplates ?? []).flatMap((template) => {
+      try { return [validateTemplate(template)]; } catch { return []; }
+    });
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...(loaded ?? {}),
+      version: 2,
+      activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
       accounts: loaded?.accounts ?? [],
-      modules: loaded?.modules ?? structuredClone(DEFAULT_SETTINGS.modules),
-      customTemplates: loaded?.customTemplates ?? [],
+      connectionDiagnostics: loaded?.connectionDiagnostics ?? {},
+      modules,
+      customTemplates,
       lastDraftByFile: loaded?.lastDraftByFile ?? {}
     };
+  }
+
+  private migrateModules(loaded: ContentModule[]): ContentModule[] {
+    if (!loaded.length) return structuredClone(DEFAULT_MODULES);
+    const legacyKinds: Record<string, ModuleKind> = {
+      "series-intro": "intro",
+      "follow-card": "follow",
+      copyright: "copyright"
+    };
+    const migrated: ContentModule[] = loaded.map((module) => ({
+      ...module,
+      kind: module.kind ?? legacyKinds[module.id]
+    }));
+    const presentKinds = new Set(migrated.flatMap((module) => module.kind ? [module.kind] : []));
+    for (const module of DEFAULT_MODULES) {
+      if (module.kind && !presentKinds.has(module.kind)) migrated.push(structuredClone(module));
+    }
+    return migrated;
   }
 
   async saveSettings(): Promise<void> {
@@ -132,7 +157,7 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
       const progress = new Notice(existingMediaId ? "正在更新并回读微信草稿…" : "正在创建并回读微信草稿…", 0);
       const receipt = await this.wechat.publish({
         account,
-        secret: this.credentials.decrypt(account.encryptedSecret),
+        secret: this.credentials.read(account.encryptedSecret),
         article,
         sourcePath: file.path,
         existingMediaId,
@@ -173,15 +198,25 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
   }
 
   private async resolveImageAsset(source: string, sourcePath: string): Promise<ImageAsset> {
-    if (/^(https?:|data:)/i.test(source)) {
+    if (/^data:/i.test(source)) {
       const response = await fetch(source);
       if (!response.ok) throw new Error(`无法读取图片：HTTP ${response.status}`);
-      const pathname = source.startsWith("data:") ? "image.png" : new URL(source).pathname;
-      const filename = decodeURIComponent(pathname.split("/").pop() || "image.png");
       return {
         source,
         bytes: await response.arrayBuffer(),
         mimeType: response.headers.get("content-type")?.split(";")[0] || "image/png",
+        filename: "image.png"
+      };
+    }
+    if (/^https?:/i.test(source)) {
+      const response = await requestUrl({ url: source, throw: false });
+      if (response.status < 200 || response.status >= 300) throw new Error(`无法读取图片：HTTP ${response.status}`);
+      const pathname = new URL(source).pathname;
+      const filename = decodeURIComponent(pathname.split("/").pop() || "image.png");
+      return {
+        source,
+        bytes: response.arrayBuffer,
+        mimeType: (response.headers["content-type"] ?? response.headers["Content-Type"] ?? "image/png").split(";")[0],
         filename
       };
     }

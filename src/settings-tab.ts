@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { Notice, PluginSettingTab, Setting } from "obsidian";
 import type WechatObsidianPublisherPlugin from "./main";
 import type { WechatAccount } from "./types";
+import { WechatApiError } from "./publish/wechat-client";
 
 function parseEnv(content: string): Record<string, string> {
   const values: Record<string, string> = {};
@@ -33,7 +34,7 @@ export class PublisherSettingTab extends PluginSettingTab {
     containerEl.addClass("wop-settings");
     containerEl.createEl("h2", { text: "WeChat Obsidian Publisher" });
     containerEl.createEl("p", {
-      text: "AppSecret 使用 macOS 系统加密服务保存，不会写入明文配置。发布前仍会显示确认窗口。",
+      text: "AppSecret 保存到 Obsidian 专用密钥存储，插件配置只保留引用，不写入明文。发布前仍会显示确认窗口。",
       cls: "setting-item-description"
     });
 
@@ -68,7 +69,7 @@ export class PublisherSettingTab extends PluginSettingTab {
 
     const importSetting = new Setting(containerEl)
       .setName("导入现有 Wenyan 账号")
-      .setDesc("读取本机 Wenyan 发布配置并立即用系统加密服务重新保存");
+      .setDesc("读取本机 Wenyan 发布配置并立即转存到 Obsidian 专用密钥存储");
     importSetting.addButton((button) => button.setButtonText("安全导入").onClick(async () => {
       try {
         const envPath = join(homedir(), "Library", "Application Support", "wechat-official-account-publisher", ".env");
@@ -78,14 +79,15 @@ export class PublisherSettingTab extends PluginSettingTab {
         if (!appId || !secret) throw new Error("Wenyan 配置中缺少 WECHAT_APP_ID 或 WECHAT_APP_SECRET。");
         const existing = this.host.settings.accounts.find((item) => item.appId === appId);
         if (existing) {
-          existing.encryptedSecret = this.host.credentials.encrypt(secret);
+          existing.encryptedSecret = this.host.credentials.store(existing.id, secret);
           this.host.settings.defaultAccountId = existing.id;
         } else {
+          const accountId = `account-${Date.now().toString(36)}`;
           const account: WechatAccount = {
-            id: `account-${Date.now().toString(36)}`,
+            id: accountId,
             name: "Wenyan 账号",
             appId,
-            encryptedSecret: this.host.credentials.encrypt(secret)
+            encryptedSecret: this.host.credentials.store(accountId, secret)
           };
           this.host.settings.accounts.push(account);
           this.host.settings.defaultAccountId = account.id;
@@ -128,7 +130,7 @@ export class PublisherSettingTab extends PluginSettingTab {
           new Notice("请输入新的 AppSecret。");
           return;
         }
-        account.encryptedSecret = this.host.credentials.encrypt(replacementSecret);
+        account.encryptedSecret = this.host.credentials.store(account.id, replacementSecret);
         await this.host.saveSettings();
         replacementSecret = "";
         new Notice("AppSecret 已加密更新。");
@@ -140,22 +142,63 @@ export class PublisherSettingTab extends PluginSettingTab {
       .addButton((button) => button.setButtonText("测试连接").onClick(async () => {
         button.setDisabled(true).setButtonText("检查中");
         try {
-          await this.host.wechat.testConnection(account.appId, this.host.credentials.decrypt(account.encryptedSecret));
+          await this.host.wechat.testConnection(account.appId, this.host.credentials.read(account.encryptedSecret));
+          this.host.settings.connectionDiagnostics[account.id] = {
+            status: "ok",
+            message: "账号凭据可用，当前 IP 已通过微信接口检查。",
+            rejectedIp: "",
+            checkedAt: Date.now()
+          };
+          await this.host.saveSettings();
           new Notice("连接成功，账号凭据可用。");
         } catch (error) {
+          const blocked = error instanceof WechatApiError && error.code === 40164;
+          this.host.settings.connectionDiagnostics[account.id] = {
+            status: blocked ? "ip-blocked" : "error",
+            message: error instanceof Error ? error.message : "连接失败。",
+            rejectedIp: blocked ? error.rejectedIp : "",
+            checkedAt: Date.now()
+          };
+          await this.host.saveSettings();
           new Notice(error instanceof Error ? error.message : "连接失败。");
         } finally {
           button.setDisabled(false).setButtonText("测试连接");
+          this.display();
         }
       }))
       .addButton((button) => button.setButtonText("删除").setWarning().onClick(async () => {
+        this.host.credentials.clear(account.encryptedSecret);
         this.host.settings.accounts = this.host.settings.accounts.filter((item) => item.id !== account.id);
+        delete this.host.settings.connectionDiagnostics[account.id];
         if (this.host.settings.defaultAccountId === account.id) {
           this.host.settings.defaultAccountId = this.host.settings.accounts[0]?.id ?? "";
         }
         await this.host.saveSettings();
         this.display();
       }));
+    this.renderConnectionDiagnostic(card, account);
+  }
+
+  private renderConnectionDiagnostic(container: HTMLElement, account: WechatAccount): void {
+    const diagnostic = this.host.settings.connectionDiagnostics[account.id];
+    if (!diagnostic) return;
+    const panel = container.createDiv({ cls: `wop-connection-diagnostic is-${diagnostic.status}` });
+    const copy = panel.createDiv({ cls: "wop-connection-copy" });
+    copy.createEl("strong", { text: diagnostic.status === "ok" ? "连接正常" : diagnostic.status === "ip-blocked" ? "IP 白名单未通过" : "连接检查失败" });
+    copy.createEl("span", { text: diagnostic.status === "ip-blocked" && diagnostic.rejectedIp ? `微信拒绝的 IP：${diagnostic.rejectedIp}` : diagnostic.message });
+    if (diagnostic.status === "ip-blocked") {
+      copy.createEl("span", { text: "复制后前往：设置与开发 → 基本配置 → IP 白名单。" });
+    }
+    const actions = panel.createDiv({ cls: "wop-connection-actions" });
+    if (diagnostic.rejectedIp) {
+      const copyIp = actions.createEl("button", { text: "复制 IP" });
+      copyIp.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(diagnostic.rejectedIp);
+        new Notice(`已复制 IP：${diagnostic.rejectedIp}`);
+      });
+    }
+    const openPlatform = actions.createEl("button", { text: "打开公众号后台", cls: "mod-cta" });
+    openPlatform.addEventListener("click", () => window.open("https://mp.weixin.qq.com/", "_blank", "noopener,noreferrer"));
   }
 
   private renderAddAccount(container: HTMLElement): void {
@@ -174,11 +217,12 @@ export class PublisherSettingTab extends PluginSettingTab {
         new Notice("请填写账号名称、AppID 和 AppSecret。");
         return;
       }
+      const accountId = `account-${Date.now().toString(36)}`;
       const account: WechatAccount = {
-        id: `account-${Date.now().toString(36)}`,
+        id: accountId,
         name: name.trim(),
         appId: appId.trim(),
-        encryptedSecret: this.host.credentials.encrypt(secret)
+        encryptedSecret: this.host.credentials.store(accountId, secret)
       };
       this.host.settings.accounts.push(account);
       if (!this.host.settings.defaultAccountId) this.host.settings.defaultAccountId = account.id;
