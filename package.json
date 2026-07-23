@@ -1,6 +1,6 @@
 {
   "name": "wechat-obsidian-publisher",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Obsidian 内的微信公众号排版、模块编排与草稿发布工作台。",
   "main": "main.js",
   "type": "module",
@@ -8,7 +8,10 @@
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "test": "vitest run",
-    "check": "npm run test && npm run build"
+    "check": "npm run test && npm run build",
+    "sync:wenyan-themes": "node scripts/sync-wenyan-themes.mjs",
+    "sync:external-source-themes": "node scripts/sync-external-source-themes.mjs",
+    "gallery:styles": "node scripts/generate-style-galleries.mjs"
   },
   "keywords": [
     "obsidian",
@@ -20,19 +23,22 @@
   "author": "summerchaserwwz",
   "license": "MIT",
   "dependencies": {
+    "canvg": "^4.0.3",
+    "css-tree": "^3.2.1",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.22",
     "marked": "^16.1.2",
     "mermaid": "^11.9.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@types/css-tree": "^2.3.11",
     "@types/katex": "^0.16.7",
+    "@types/node": "^24.0.0",
     "builtin-modules": "^4.0.0",
     "esbuild": "^0.25.0",
+    "happy-dom": "^20.11.0",
     "obsidian": "latest",
     "typescript": "^5.8.0",
-    "vitest": "^3.2.0",
-    "happy-dom": "^20.11.0"
+    "vitest": "^3.2.0"
   }
 }

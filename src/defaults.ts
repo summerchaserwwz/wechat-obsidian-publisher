@@ -79,7 +79,7 @@ export const DEFAULT_MODULES: ContentModule[] = [
 
 export const DEFAULT_SETTINGS: PluginSettings = {
   version: 2,
-  activeTemplateId: "mdnice-forest",
+  activeTemplateId: "curated-modern-editorial-left",
   previewDevice: "desktop",
   activeTab: "preview",
   defaultAccountId: "",

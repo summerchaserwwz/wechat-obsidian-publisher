@@ -1,17 +1,34 @@
 import type { PublisherTemplate, TemplateTokens } from "../types";
+import { EXTERNAL_SOURCE_TEMPLATE_GROUPS, EXTERNAL_SOURCE_TEMPLATES } from "./external-source-template-compiler";
 import { MD2_THEME_DEFINITIONS } from "./md2-theme-catalog";
+import { CURATED_LEFT_TEMPLATES, CURATED_TEMPLATE_GROUPS } from "./curated-left-templates";
 import { compileTheme } from "./theme-compiler";
 
-export const BUILT_IN_TEMPLATES: PublisherTemplate[] = MD2_THEME_DEFINITIONS.map(compileTheme);
+const catalogTemplates = MD2_THEME_DEFINITIONS.map(compileTheme);
+const sourceThemeIds = new Set(EXTERNAL_SOURCE_TEMPLATES.map((template) => template.id));
+
+// Source themes intentionally replace same-ID token approximations from the
+// MD2 catalog. This keeps the picker free of visually duplicated templates.
+export const BUILT_IN_TEMPLATES: PublisherTemplate[] = [
+  ...EXTERNAL_SOURCE_TEMPLATES,
+  ...catalogTemplates.filter((template) => !sourceThemeIds.has(template.id))
+];
+export const ALL_TEMPLATES: PublisherTemplate[] = [...CURATED_LEFT_TEMPLATES, ...BUILT_IN_TEMPLATES];
+export const ALL_TEMPLATE_GROUPS = [
+  ...CURATED_TEMPLATE_GROUPS,
+  "Wenyan 原版",
+  ...EXTERNAL_SOURCE_TEMPLATE_GROUPS,
+  ...new Set(BUILT_IN_TEMPLATES.map((template) => template.group))
+].filter((group, index, groups) => groups.indexOf(group) === index);
 
 const ALLOWED_STYLE_PROPERTIES = new Set([
   "color", "background", "backgroundColor", "backgroundImage", "fontFamily", "fontSize", "fontWeight",
-  "fontStyle", "lineHeight", "letterSpacing", "textAlign", "textDecoration", "textIndent", "textTransform",
+  "fontStyle", "lineHeight", "letterSpacing", "wordSpacing", "textAlign", "textDecoration", "textIndent", "textTransform",
   "margin", "marginTop", "marginRight", "marginBottom", "marginLeft", "padding", "paddingTop", "paddingRight",
   "paddingBottom", "paddingLeft", "border", "borderTop", "borderRight", "borderBottom", "borderLeft",
   "borderColor", "borderStyle", "borderWidth", "borderRadius", "boxSizing", "boxShadow", "display", "width",
   "minWidth", "maxWidth", "height", "minHeight", "maxHeight", "overflow", "overflowX", "whiteSpace",
-  "wordBreak", "overflowWrap", "verticalAlign", "opacity", "borderCollapse", "listStyleType"
+  "wordBreak", "overflowWrap", "verticalAlign", "opacity", "borderCollapse", "tableLayout", "listStyleType"
 ]);
 
 const SAFE_SELECTOR = /^(body|[a-z][a-z0-9]*(?:\s+[a-z][a-z0-9]*)?(?:,\s*[a-z][a-z0-9]*(?:\s+[a-z][a-z0-9]*)?)*)$/i;
@@ -47,8 +64,26 @@ function sanitizeTokens(value: unknown, accent: string, canvas: string): Templat
   };
 }
 
+function sanitizeRawCss(value: unknown): string | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  if (typeof value !== "string") throw new Error("模板原始 CSS 必须是文本。");
+  const css = value.trim();
+  if (css.length > 48_000) throw new Error("模板原始 CSS 不能超过 48KB。");
+  if (/@import\b|(?:expression|javascript|behavior)\s*\(/i.test(css)) {
+    throw new Error("模板原始 CSS 不能包含外部资源或脚本表达式。");
+  }
+  const urls = [...css.matchAll(/url\(\s*(?:(["'])([\s\S]*?)\1|([^\s)]+))\s*\)/gi)];
+  if (urls.some((match) => {
+    const source = (match[2] ?? match[3] ?? "").trim();
+    return !/^data:image\/(?:svg\+xml|png|jpe?g|gif|webp)(?:;[^,]*)?,/i.test(source);
+  })) {
+    throw new Error("模板原始 CSS 不能包含外部资源或脚本表达式。");
+  }
+  return css || undefined;
+}
+
 export function findTemplate(id: string, customTemplates: PublisherTemplate[]): PublisherTemplate {
-  return [...customTemplates, ...BUILT_IN_TEMPLATES].find((template) => template.id === id) ?? BUILT_IN_TEMPLATES[0];
+  return [...customTemplates, ...ALL_TEMPLATES].find((template) => template.id === id) ?? ALL_TEMPLATES[0];
 }
 
 export function cloneTemplate(template: PublisherTemplate, name?: string): PublisherTemplate {
@@ -72,6 +107,7 @@ export function validateTemplate(candidate: unknown): PublisherTemplate {
   }
   const accent = safeColor(value.accent, "#356348");
   const canvas = safeColor(value.canvas, "#f3f0e9");
+  const rawCss = sanitizeRawCss(value.rawCss);
   const sanitizedStyles: PublisherTemplate["styles"] = {};
   for (const [selector, declarations] of Object.entries(value.styles)) {
     if (!SAFE_SELECTOR.test(selector) || !declarations || typeof declarations !== "object") continue;
@@ -96,7 +132,12 @@ export function validateTemplate(candidate: unknown): PublisherTemplate {
     accent,
     canvas,
     tokens: sanitizeTokens(value.tokens, accent, canvas),
-    styles: sanitizedStyles
+    styles: sanitizedStyles,
+    rawCss,
+    alignment: value.alignment === "source" ? "source" : "left",
+    structureAdapter: value.structureAdapter === "publication" || value.structureAdapter === "wenyan"
+      ? value.structureAdapter
+      : "none"
   };
 }
 

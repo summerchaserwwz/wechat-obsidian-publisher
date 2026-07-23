@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { Notice, PluginSettingTab, Setting } from "obsidian";
+import { Notice, PluginSettingTab, Setting, setIcon } from "obsidian";
 import type WechatObsidianPublisherPlugin from "./main";
 import type { WechatAccount } from "./types";
 import { WechatApiError } from "./publish/wechat-client";
@@ -32,13 +32,21 @@ export class PublisherSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("wop-settings");
-    containerEl.createEl("h2", { text: "WeChat Obsidian Publisher" });
-    containerEl.createEl("p", {
-      text: "AppSecret 保存到 Obsidian 专用密钥存储，插件配置只保留引用，不写入明文。发布前仍会显示确认窗口。",
-      cls: "setting-item-description"
-    });
+    const hero = containerEl.createDiv({ cls: "wop-settings-hero" });
+    const heroIcon = hero.createDiv({ cls: "wop-settings-hero-icon" });
+    setIcon(heroIcon, "send");
+    const heroCopy = hero.createDiv();
+    heroCopy.createEl("h2", { text: "微信发布" });
+    heroCopy.createEl("p", { text: "先完成文章默认值和公众号连接，其他设置可以以后再改。" });
 
-    new Setting(containerEl)
+    const safety = containerEl.createDiv({ cls: "wop-settings-safety" });
+    setIcon(safety.createSpan(), "shield-check");
+    safety.createEl("p", { text: "AppSecret 由 Obsidian SecretStorage 管理，系统钥匙串可用时由操作系统加密。插件配置只记录引用。" });
+
+    const defaults = containerEl.createDiv({ cls: "wop-settings-section" });
+    this.renderSectionHeader(defaults, "文章默认值", "只在文章 frontmatter 没有填写时使用");
+
+    new Setting(defaults)
       .setName("默认作者")
       .setDesc("文章 frontmatter 未填写 author 时使用")
       .addText((text) => text
@@ -49,7 +57,7 @@ export class PublisherSettingTab extends PluginSettingTab {
           await this.host.saveSettings();
         }));
 
-    new Setting(containerEl)
+    new Setting(defaults)
       .setName("默认封面路径")
       .setDesc("支持库内相对路径。frontmatter 的 cover 优先级更高")
       .addText((text) => text
@@ -60,17 +68,24 @@ export class PublisherSettingTab extends PluginSettingTab {
           await this.host.saveSettings();
         }));
 
-    containerEl.createEl("h3", { text: "公众号账号" });
-    const accounts = containerEl.createDiv({ cls: "wop-account-settings" });
+    const accountSection = containerEl.createDiv({ cls: "wop-settings-section" });
+    this.renderSectionHeader(accountSection, "公众号账号", "发布时使用默认账号，也可以在工作台顶部临时切换");
+    const accounts = accountSection.createDiv({ cls: "wop-account-settings" });
     if (this.host.settings.accounts.length === 0) {
       accounts.createEl("p", { text: "还没有配置账号。可从现有 Wenyan 配置导入，或手动添加。", cls: "wop-empty" });
     }
     for (const account of this.host.settings.accounts) this.renderAccount(accounts, account);
 
-    const importSetting = new Setting(containerEl)
-      .setName("导入现有 Wenyan 账号")
-      .setDesc("读取本机 Wenyan 发布配置并立即转存到 Obsidian 专用密钥存储");
-    importSetting.addButton((button) => button.setButtonText("安全导入").onClick(async () => {
+    const importCard = accountSection.createDiv({ cls: "wop-import-card" });
+    const importIcon = importCard.createDiv({ cls: "wop-import-icon" });
+    setIcon(importIcon, "import");
+    const importCopy = importCard.createDiv({ cls: "wop-import-copy" });
+    importCopy.createEl("strong", { text: "已经用过 Wenyan？" });
+    importCopy.createEl("span", { text: "一键读取本机账号并转存到 Obsidian 密钥存储。" });
+    const importButton = importCard.createEl("button", { text: "安全导入", cls: "mod-cta" });
+    importButton.addEventListener("click", async () => {
+      importButton.disabled = true;
+      importButton.setText("导入中");
       try {
         const envPath = join(homedir(), "Library", "Application Support", "wechat-official-account-publisher", ".env");
         const values = parseEnv(await readFile(envPath, "utf8"));
@@ -93,21 +108,29 @@ export class PublisherSettingTab extends PluginSettingTab {
           this.host.settings.defaultAccountId = account.id;
         }
         await this.host.saveSettings();
-        new Notice("账号已安全导入，AppSecret 未以明文保存。");
+        new Notice("账号已导入，AppSecret 已转存到 Obsidian SecretStorage。");
         this.display();
       } catch (error) {
         new Notice(error instanceof Error ? error.message : "导入失败。");
+      } finally {
+        importButton.disabled = false;
+        importButton.setText("安全导入");
       }
-    }));
+    });
 
-    this.renderAddAccount(containerEl);
+    this.renderAddAccount(accountSection);
   }
 
   private renderAccount(container: HTMLElement, account: WechatAccount): void {
     const card = container.createDiv({ cls: "wop-settings-card" });
     const header = card.createDiv({ cls: "wop-settings-card-header" });
-    header.createEl("strong", { text: account.name });
-    header.createEl("span", { text: account.appId.replace(/^(.{4}).*(.{4})$/, "$1••••$2") });
+    const identity = header.createDiv({ cls: "wop-account-identity" });
+    const mark = identity.createDiv({ cls: "wop-account-mark" });
+    setIcon(mark, "badge-check");
+    const copy = identity.createDiv();
+    copy.createEl("strong", { text: account.name });
+    copy.createEl("span", { text: account.appId.replace(/^(.{4}).*(.{4})$/, "$1••••$2") });
+    if (this.host.settings.defaultAccountId === account.id) header.createEl("span", { text: "默认账号", cls: "wop-status-badge" });
     new Setting(card)
       .setName("设为默认")
       .addToggle((toggle) => toggle
@@ -133,7 +156,7 @@ export class PublisherSettingTab extends PluginSettingTab {
         account.encryptedSecret = this.host.credentials.store(account.id, replacementSecret);
         await this.host.saveSettings();
         replacementSecret = "";
-        new Notice("AppSecret 已加密更新。");
+        new Notice("AppSecret 已更新到 Obsidian SecretStorage。");
         this.display();
       }));
     new Setting(card)
@@ -167,6 +190,7 @@ export class PublisherSettingTab extends PluginSettingTab {
         }
       }))
       .addButton((button) => button.setButtonText("删除").setWarning().onClick(async () => {
+        if (!window.confirm(`确定删除账号“${account.name}”吗？已保存的 AppSecret 也会从密钥存储中移除。`)) return;
         this.host.credentials.clear(account.encryptedSecret);
         this.host.settings.accounts = this.host.settings.accounts.filter((item) => item.id !== account.id);
         delete this.host.settings.connectionDiagnostics[account.id];
@@ -187,7 +211,7 @@ export class PublisherSettingTab extends PluginSettingTab {
     copy.createEl("strong", { text: diagnostic.status === "ok" ? "连接正常" : diagnostic.status === "ip-blocked" ? "IP 白名单未通过" : "连接检查失败" });
     copy.createEl("span", { text: diagnostic.status === "ip-blocked" && diagnostic.rejectedIp ? `微信拒绝的 IP：${diagnostic.rejectedIp}` : diagnostic.message });
     if (diagnostic.status === "ip-blocked") {
-      copy.createEl("span", { text: "复制后前往：设置与开发 → 基本配置 → IP 白名单。" });
+      copy.createEl("span", { text: "复制后前往：微信开发者平台 → 公众号 → 开发配置 → IP 白名单。" });
     }
     const actions = panel.createDiv({ cls: "wop-connection-actions" });
     if (diagnostic.rejectedIp) {
@@ -197,22 +221,27 @@ export class PublisherSettingTab extends PluginSettingTab {
         new Notice(`已复制 IP：${diagnostic.rejectedIp}`);
       });
     }
-    const openPlatform = actions.createEl("button", { text: "打开公众号后台", cls: "mod-cta" });
-    openPlatform.addEventListener("click", () => window.open("https://mp.weixin.qq.com/", "_blank", "noopener,noreferrer"));
+    const openPlatform = actions.createEl("button", { text: "打开开发者平台", cls: "mod-cta" });
+    openPlatform.addEventListener("click", () => window.open("https://developers.weixin.qq.com/platform", "_blank", "noopener,noreferrer"));
   }
 
   private renderAddAccount(container: HTMLElement): void {
-    container.createEl("h3", { text: "手动添加账号" });
+    const details = container.createEl("details", { cls: "wop-add-account" });
+    const summary = details.createEl("summary");
+    const icon = summary.createSpan();
+    setIcon(icon, "plus");
+    summary.createSpan({ text: "手动添加其他账号" });
+    const form = details.createDiv({ cls: "wop-add-account-form" });
     let name = "我的公众号";
     let appId = "";
     let secret = "";
-    new Setting(container).setName("账号名称").addText((text) => text.setValue(name).onChange((value) => { name = value; }));
-    new Setting(container).setName("AppID").addText((text) => text.setPlaceholder("wx...").onChange((value) => { appId = value; }));
-    new Setting(container).setName("AppSecret").addText((text) => {
+    new Setting(form).setName("账号名称").setDesc("仅用于在 Obsidian 中区分账号").addText((text) => text.setValue(name).onChange((value) => { name = value; }));
+    new Setting(form).setName("AppID").addText((text) => text.setPlaceholder("wx...").onChange((value) => { appId = value; }));
+    new Setting(form).setName("AppSecret").setDesc("由 Obsidian SecretStorage 管理").addText((text) => {
       text.inputEl.type = "password";
-      text.setPlaceholder("仅在本机加密保存").onChange((value) => { secret = value; });
+      text.setPlaceholder("不会写入插件配置").onChange((value) => { secret = value; });
     });
-    new Setting(container).addButton((button) => button.setButtonText("添加账号").setCta().onClick(async () => {
+    new Setting(form).addButton((button) => button.setButtonText("添加账号").setCta().onClick(async () => {
       if (!name.trim() || !appId.trim() || !secret.trim()) {
         new Notice("请填写账号名称、AppID 和 AppSecret。");
         return;
@@ -230,5 +259,11 @@ export class PublisherSettingTab extends PluginSettingTab {
       new Notice("账号已添加。");
       this.display();
     }));
+  }
+
+  private renderSectionHeader(parent: HTMLElement, title: string, description: string): void {
+    const header = parent.createDiv({ cls: "wop-settings-section-header" });
+    header.createEl("h3", { text: title });
+    header.createEl("p", { text: description });
   }
 }

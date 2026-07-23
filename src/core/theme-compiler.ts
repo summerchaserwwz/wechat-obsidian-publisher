@@ -1,5 +1,6 @@
 import type { PublisherTemplate } from "../types";
 import type { Md2ThemeDefinition } from "./md2-theme-catalog";
+import { WENYAN_THEME_CSS, isWenyanThemeVariant } from "./wenyan-theme-css";
 
 type StyleMap = PublisherTemplate["styles"];
 
@@ -8,19 +9,20 @@ const baseStyles: StyleMap = {
     color: "#2d3338",
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif",
     fontSize: "16px",
-    lineHeight: "1.85",
-    letterSpacing: "0.02em",
-    padding: "32px 36px 56px",
+    lineHeight: "1.78",
+    letterSpacing: "0",
+    wordSpacing: "0",
+    padding: "28px 24px 48px",
     backgroundColor: "#ffffff",
     boxSizing: "border-box"
   },
-  p: { margin: "1.15em 0", textAlign: "justify" },
-  h1: { fontSize: "28px", lineHeight: "1.35", margin: "0 0 1.55em", fontWeight: "750" },
-  h2: { fontSize: "22px", lineHeight: "1.45", margin: "2.25em 0 1em", fontWeight: "750" },
-  h3: { fontSize: "18px", lineHeight: "1.5", margin: "1.8em 0 0.8em", fontWeight: "700" },
-  h4: { fontSize: "16px", lineHeight: "1.5", margin: "1.5em 0 0.7em", fontWeight: "700" },
-  blockquote: { margin: "1.4em 0", padding: "0.9em 1.1em", borderRadius: "8px" },
-  "blockquote p": { margin: "0.45em 0" },
+  p: { margin: "0 0 1em", textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
+  h1: { fontSize: "27px", lineHeight: "1.4", margin: "0 0 1.3em", fontWeight: "750", textAlign: "left" },
+  h2: { fontSize: "21px", lineHeight: "1.45", margin: "1.9em 0 0.72em", fontWeight: "750", textAlign: "left" },
+  h3: { fontSize: "18px", lineHeight: "1.5", margin: "1.5em 0 0.58em", fontWeight: "700", textAlign: "left" },
+  h4: { fontSize: "16px", lineHeight: "1.5", margin: "1.3em 0 0.45em", fontWeight: "700", textAlign: "left" },
+  blockquote: { margin: "1.25em 0", padding: "0.8em 1em", borderRadius: "6px", textAlign: "left" },
+  "blockquote p": { margin: "0.35em 0", textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
   strong: { fontWeight: "750" },
   a: { textDecoration: "none" },
   img: { display: "block", maxWidth: "100%", height: "auto", margin: "1.5em auto", borderRadius: "8px" },
@@ -29,12 +31,24 @@ const baseStyles: StyleMap = {
   pre: { margin: "1.4em 0", padding: "18px", borderRadius: "8px", overflowX: "auto", lineHeight: "1.65" },
   code: { fontFamily: "'SFMono-Regular', Consolas, monospace", fontSize: "0.88em" },
   "p code, li code": { padding: "0.18em 0.38em", borderRadius: "4px" },
-  ul: { paddingLeft: "1.35em", margin: "1.1em 0" },
-  ol: { paddingLeft: "1.35em", margin: "1.1em 0" },
-  li: { margin: "0.48em 0" },
-  hr: { border: "none", margin: "2.2em auto", width: "64px" },
+  ul: { paddingLeft: "1.35em", margin: "1em 0" },
+  ol: { paddingLeft: "1.35em", margin: "1em 0" },
+  li: { margin: "0.42em 0", textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
+  hr: { border: "none", margin: "2em 0", width: "64px" },
   table: { width: "100%", borderCollapse: "collapse", margin: "1.5em 0", fontSize: "14px" },
   "th, td": { padding: "9px 10px", textAlign: "left" }
+};
+
+const leftReadingStyles: StyleMap = {
+  p: { textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
+  h1: { textAlign: "left" },
+  h2: { textAlign: "left" },
+  h3: { textAlign: "left" },
+  h4: { textAlign: "left" },
+  blockquote: { textAlign: "left" },
+  "blockquote p": { textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
+  li: { textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
+  "th, td": { textAlign: "left" }
 };
 
 function mergeStyles(...maps: StyleMap[]): StyleMap {
@@ -223,8 +237,23 @@ function signatureStyles(theme: Md2ThemeDefinition): StyleMap {
   };
 }
 
+function wenyanSourceChrome(theme: Md2ThemeDefinition): StyleMap {
+  return {
+    body: {
+      color: theme.tokens.body,
+      fontFamily: baseStyles.body.fontFamily,
+      backgroundColor: "#ffffff",
+      padding: "28px 24px 48px",
+      boxSizing: "border-box"
+    }
+  };
+}
+
 export function compileTheme(theme: Md2ThemeDefinition): PublisherTemplate {
-  const variantStyles = theme.tokens.variant === "md2wechat-api"
+  const sourceWenyan = isWenyanThemeVariant(theme.tokens.variant);
+  const variantStyles = sourceWenyan
+    ? wenyanSourceChrome(theme)
+    : theme.tokens.variant === "md2wechat-api"
     ? md2CatalogStyles(theme)
     : theme.tokens.variant === "signature"
       ? signatureStyles(theme)
@@ -244,6 +273,13 @@ export function compileTheme(theme: Md2ThemeDefinition): PublisherTemplate {
     accent: theme.tokens.accent,
     canvas: theme.tokens.tint,
     tokens: structuredClone(theme.tokens),
-    styles: mergeStyles(baseStyles, genericStyles(theme), variantStyles)
+    rawCss: isWenyanThemeVariant(theme.tokens.variant)
+      ? WENYAN_THEME_CSS[theme.tokens.variant]
+      : undefined,
+    alignment: "left",
+    structureAdapter: sourceWenyan ? "wenyan" : "none",
+    styles: sourceWenyan
+      ? variantStyles
+      : mergeStyles(baseStyles, genericStyles(theme), variantStyles, leftReadingStyles)
   };
 }

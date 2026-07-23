@@ -29,7 +29,9 @@ export interface ContentModule {
   markdown: string;
 }
 
-export type TemplateSource = "md2-catalog" | "custom";
+export type TemplateSource = "md2-catalog" | "source-theme" | "curated" | "custom";
+export type TemplateAlignment = "left" | "source";
+export type TemplateStructureAdapter = "none" | "publication" | "wenyan";
 
 export interface TemplateTokens {
   variant: string;
@@ -63,6 +65,14 @@ export interface PublisherTemplate {
   canvas: string;
   tokens: TemplateTokens;
   styles: Record<string, Record<string, string>>;
+  /**
+   * Source-backed CSS is parsed into inline declarations before publishing.
+   * It lets a template keep the small structural details that a token palette
+   * cannot represent, such as Pie's heading marks and quote glyph.
+   */
+  rawCss?: string;
+  alignment?: TemplateAlignment;
+  structureAdapter?: TemplateStructureAdapter;
 }
 
 export interface WechatAccount {

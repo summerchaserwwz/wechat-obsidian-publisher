@@ -1,4 +1,5 @@
 import { requestUrl, type RequestUrlResponse } from "obsidian";
+import { Canvg } from "canvg";
 import type { ImageAsset, PublishInput, PublishReceipt } from "../types";
 
 const API = "https://api.weixin.qq.com/cgi-bin";
@@ -106,37 +107,68 @@ function stripEditorAttributes(html: string): string {
   return wrapper.innerHTML;
 }
 
+export function serializeSvgForCanvas(svg: SVGSVGElement): string {
+  const namespace = "http://www.w3.org/2000/svg";
+  const clone = svg.cloneNode(true) as SVGSVGElement;
+
+  clone.querySelectorAll<SVGElement>("foreignObject").forEach((foreign) => {
+    const text = document.createElementNS(namespace, "text");
+    text.textContent = (foreign.textContent ?? "").replace(/\s+/g, " ").trim();
+    text.setAttribute("x", foreign.getAttribute("x") ?? "0");
+    text.setAttribute("y", foreign.getAttribute("y") ?? "0");
+    text.setAttribute("dominant-baseline", "middle");
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("font-size", "16");
+    text.setAttribute("fill", "#1f2937");
+    foreign.replaceWith(text);
+  });
+
+  clone.querySelectorAll<SVGElement>("image").forEach((image) => {
+    const source = image.getAttribute("href") ?? image.getAttribute("xlink:href") ?? "";
+    if (/^(?:https?:)?\/\//i.test(source)) image.remove();
+  });
+
+  clone.querySelectorAll<SVGStyleElement>("style").forEach((style) => {
+    style.textContent = (style.textContent ?? "")
+      .replace(/@import\s+(?:url\()?['\"]?(?:https?:)?\/\/[^;]+;?/gi, "")
+      .replace(/url\(\s*['\"]?(?:https?:)?\/\/[^)]+\)/gi, "none");
+  });
+
+  return new XMLSerializer().serializeToString(clone);
+}
+
 async function svgToPngAsset(svg: SVGSVGElement, index: number): Promise<ImageAsset> {
-  const serialized = new XMLSerializer().serializeToString(svg);
-  const blob = new Blob([serialized], { type: "image/svg+xml" });
-  const url = URL.createObjectURL(blob);
-  try {
-    const image = new Image();
-    image.src = url;
-    await image.decode();
-    const width = Math.max(320, Math.ceil(svg.viewBox.baseVal.width || image.naturalWidth || 677));
-    const height = Math.max(120, Math.ceil(svg.viewBox.baseVal.height || image.naturalHeight || 360));
-    const scale = Math.min(2, 1354 / width);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.ceil(width * scale);
-    canvas.height = Math.ceil(height * scale);
-    const context = canvas.getContext("2d");
-    if (!context) throw new Error("无法创建图表画布。");
-    context.fillStyle = "#ffffff";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const pngBlob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((value) => value ? resolve(value) : reject(new Error("图表转换失败。")), "image/png", 0.94);
-    });
-    return {
-      source: `mermaid-${index}`,
-      bytes: await pngBlob.arrayBuffer(),
-      mimeType: "image/png",
-      filename: `mermaid-${index}.png`
-    };
-  } finally {
-    URL.revokeObjectURL(url);
-  }
+  const serialized = serializeSvgForCanvas(svg);
+  const width = Math.max(320, Math.ceil(svg.viewBox.baseVal.width || svg.clientWidth || 677));
+  const height = Math.max(120, Math.ceil(svg.viewBox.baseVal.height || svg.clientHeight || 360));
+  const scale = Math.min(2, 1354 / width);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.ceil(width * scale);
+  canvas.height = Math.ceil(height * scale);
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("无法创建图表画布。");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  // 直接解析 SVG 图元并绘制，避免 Electron 将 SVG 图片源标记为跨域后污染 Canvas。
+  const renderer = Canvg.fromString(context, serialized, {
+    ignoreAnimation: true,
+    ignoreMouse: true
+  });
+  renderer.resize(canvas.width, canvas.height, "xMidYMid meet");
+  await renderer.render({
+    ignoreAnimation: true,
+    ignoreMouse: true,
+    ignoreClear: true
+  });
+  const pngBlob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((value) => value ? resolve(value) : reject(new Error("图表转换失败。")), "image/png", 0.94);
+  });
+  return {
+    source: `mermaid-${index}`,
+    bytes: await pngBlob.arrayBuffer(),
+    mimeType: "image/png",
+    filename: `mermaid-${index}.png`
+  };
 }
 
 export class WechatClient {

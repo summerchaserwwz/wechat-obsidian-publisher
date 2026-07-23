@@ -5,6 +5,7 @@ import mermaid from "mermaid";
 import type { ContentModule, PublisherTemplate, RenderedArticle } from "../types";
 import { parseDocument } from "./frontmatter";
 import { composeMarkdown } from "./modules";
+import { applyTemplateStyles } from "./template-style-engine";
 
 export interface RenderInput {
   markdown: string;
@@ -42,28 +43,8 @@ function renderMath(markdown: string, warnings: string[]): string {
   return next;
 }
 
-function toCssProperty(property: string): string {
-  return property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-}
-
-function applyDeclarations(element: HTMLElement, declarations: Record<string, string>): void {
-  for (const [property, value] of Object.entries(declarations)) {
-    element.style.setProperty(toCssProperty(property), value);
-  }
-}
-
 function applyTemplate(root: HTMLElement, template: PublisherTemplate): void {
-  for (const [selector, declarations] of Object.entries(template.styles)) {
-    if (selector === "body") {
-      applyDeclarations(root, declarations);
-      continue;
-    }
-    try {
-      root.querySelectorAll<HTMLElement>(selector).forEach((element) => applyDeclarations(element, declarations));
-    } catch {
-      continue;
-    }
-  }
+  applyTemplateStyles(root, template);
   root.dataset.template = template.id;
   root.dataset.themeGroup = template.group;
 }
@@ -108,7 +89,12 @@ function enhanceStructure(root: HTMLElement, resolvePreviewImage?: (source: stri
 let mermaidInitialized = false;
 async function renderMermaid(root: HTMLElement, warnings: string[]): Promise<void> {
   if (!mermaidInitialized) {
-    mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "neutral" });
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "neutral",
+      flowchart: { htmlLabels: false }
+    });
     mermaidInitialized = true;
   }
   const blocks = [...root.querySelectorAll<HTMLElement>("code.language-mermaid")];

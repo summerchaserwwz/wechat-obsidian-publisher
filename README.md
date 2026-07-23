@@ -1,22 +1,32 @@
 # WeChat Obsidian Publisher
 
+[简体中文](README.md) | [English](README_EN.md)
+
 在 Obsidian 内完成微信公众号文章预览、前后模块编排、模板定制和草稿发布。
 
-![预览工作台](docs/screenshots/preview-workbench.jpeg)
+![预览工作台](docs/screenshots/preview-workbench-v021.jpeg)
+
+![工作台操作演示](docs/demo/workbench-v021.gif)
+
+[查看 MP4 演示](docs/demo/workbench-v021.mp4)
 
 <details>
 <summary>查看模板与前后模块面板</summary>
 
-![模板面板](docs/screenshots/template-panel-v020.png)
+![模板面板](docs/screenshots/template-panel-v021.jpeg)
 
-![内容模块面板](docs/screenshots/module-panel-v020.png)
+![内容模块面板](docs/screenshots/module-panel-v021.jpeg)
+
+![可视化模板编辑器](docs/screenshots/template-editor-v021.jpeg)
 
 </details>
 
 ## 现在能做什么
 
 - 在右侧工作台实时预览当前 Markdown 笔记，支持手机和桌面宽度。
-- 完整接入 md2wechat-publisher 的 100 套主题，包含 MD2 全量目录、Wenyan 兼容、WeMD、Doocs、Mdnice、NeuraPress 和编辑精选等分组。
+- 模板库内置 129 个可选模板：保留 md2wechat-publisher 的 100 套目录，并接入 40 套可追溯的来源原版。与旧目录重名的 17 套已由原 CSS 或原始样式对象替换，不会出现两份近似换色版。
+- Wenyan 12 套全部使用原始 CSS，保留 Pie、麦穗、薄荷、头条等标题装饰和内嵌 SVG；正文、列表、引用和表格统一左读。
+- 40 套来源原版按“墨排原版、WeMD 原版、NeuraPress 原版、Doocs 原版”分组，暗底和强视觉样式会标为短内容用途，不影响长文默认选择。
 - 模板选择采用左侧紧凑浮窗，主题以单色条呈现，切换时文章预览始终保留在右侧。
 - 支持开头、表格前、表格后、结尾、往期推荐、作者介绍、关注卡片、版权声明和自定义模块共 9 类内容模块。
 - 内容模块支持新增、编辑、启用、删除和分组排序，表格模块会围绕正文首个表格精确插入。
@@ -24,7 +34,7 @@
 - 解析代码块、KaTeX 公式、Mermaid 图表、表格和 Obsidian 本地图片。
 - 将正文图片上传到微信，将封面上传为永久素材，再创建或更新草稿。
 - 发布后自动调用 `draft/get` 回读标题与正文，回读一致才提示成功。
-- 从现有 Wenyan 发布配置导入账号，AppSecret 会立即转存到 Obsidian 专用密钥存储，插件配置只保留引用。
+- 从现有 Wenyan 发布配置导入账号，AppSecret 会立即转存到 Obsidian SecretStorage，插件配置只保留引用；实际加密能力取决于系统钥匙串是否可用。
 
 ## 与 Wenyan Core 的关系
 
@@ -34,9 +44,11 @@
 Markdown 解析 → 结构增强 → 模板令牌编译 → 图片改写 → 微信草稿
 ```
 
-模板中的“Wenyan 兼容”表示主题目录和视觉语言兼容，不表示调用 Wenyan Core。相关归因见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+“Wenyan 原版”表示插件内置了 Wenyan Core 的原始主题 CSS，但不调用 Wenyan Core 运行时。相关归因见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 安装
+
+当前版本仍以 GitHub 源码和 Release 安装为主，尚未进入 Obsidian 社区插件市场。
 
 ### 从源码构建
 
@@ -63,7 +75,7 @@ styles.css
 4. 设置默认作者和默认封面，也可以在文章 frontmatter 中逐篇覆盖。
 5. 点击左侧功能区的发送图标，打开右侧工作台。
 
-连接检查通过 Obsidian 的无跨域限制网络通道获取 access token，不会创建或修改草稿。微信返回 `40164` 时，设置页会提取被拒绝的 IP，提供复制按钮、白名单菜单路径和公众号后台入口。
+连接检查通过 Obsidian 的无跨域限制网络通道获取 access token，不会创建或修改草稿。微信返回 `40164` 时，设置页会提取被拒绝的 IPv4，提供复制按钮、白名单菜单路径和微信开发者平台入口；发布过程中遇到同一错误，也会自动打开这张处理卡片。
 
 ## 文章元数据
 
@@ -81,7 +93,7 @@ source_url: https://example.com/original
 
 ## 自定义模板
 
-内置模板不会被直接改写。进入“模板”面板，点击复制图标生成用户模板，编辑器会立即打开。可以修改令牌和最终内联样式：
+内置模板不会被直接改写。进入“模板”面板，点击复制图标生成用户模板，编辑器会立即打开。常用的颜色、字号、行距和字体可以可视化调整；需要精确控制时，再展开高级 JSON：
 
 ```json
 {
@@ -133,6 +145,13 @@ source_url: https://example.com/original
 - 每次真实发布前都有确认窗口。
 - 不会调用群发接口，只写入微信草稿箱。
 - 未通过 `draft/get` 回读时不会报告发布成功。
+
+## 已知边界
+
+- 当前仅支持桌面端 Obsidian。
+- 插件只创建或更新微信草稿，不调用群发接口。
+- 视频、投票、小程序卡片等微信原生组件仍需在公众平台后台补充。
+- `SecretStorage` 是否使用系统级加密取决于当前系统钥匙串是否可用；插件会显示实际状态。
 
 ## 开发
 

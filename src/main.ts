@@ -3,11 +3,11 @@ import { join } from "node:path";
 import { FileSystemAdapter, Notice, Plugin, TFile, normalizePath, requestUrl } from "obsidian";
 import { DEFAULT_MODULES, DEFAULT_SETTINGS, VIEW_TYPE_PUBLISHER } from "./defaults";
 import { RenderEngine } from "./core/renderer";
-import { BUILT_IN_TEMPLATES, validateTemplate } from "./core/templates";
+import { ALL_TEMPLATES, validateTemplate } from "./core/templates";
 import { CredentialVault } from "./publish/credential-vault";
-import { WechatClient } from "./publish/wechat-client";
+import { WechatApiError, WechatClient, extractRejectedIp } from "./publish/wechat-client";
 import { PublisherSettingTab } from "./settings-tab";
-import type { ContentModule, ImageAsset, ModuleKind, PluginSettings, PublisherTemplate, RenderedArticle } from "./types";
+import type { ContentModule, ImageAsset, ModuleKind, PluginSettings, PublisherTemplate, RenderedArticle, WechatAccount } from "./types";
 import { ConfirmPublishModal } from "./ui/modals";
 import { PublisherView } from "./ui/publisher-view";
 
@@ -137,15 +137,16 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
   }
 
   getActiveTemplate(): PublisherTemplate {
-    const all = [...this.settings.customTemplates, ...BUILT_IN_TEMPLATES];
+    const all = [...this.settings.customTemplates, ...ALL_TEMPLATES];
     return all.find((template) => template.id === this.settings.activeTemplateId) ?? all[0];
   }
 
   async publishCurrent(articleOverride?: RenderedArticle): Promise<void> {
+    let account: WechatAccount | undefined;
     try {
       const file = this.app.workspace.getActiveFile();
       if (!(file instanceof TFile)) throw new Error("请先打开一篇 Markdown 笔记。");
-      const account = this.settings.accounts.find((item) => item.id === this.settings.defaultAccountId);
+      account = this.settings.accounts.find((item) => item.id === this.settings.defaultAccountId);
       if (!account) {
         this.openSettings();
         throw new Error("请先配置公众号账号。");
@@ -167,7 +168,28 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
       await this.saveSettings();
       new Notice(`${receipt.operation === "update" ? "草稿已更新" : "草稿已创建"}并通过回读校验：${receipt.title}`, 8000);
     } catch (error) {
-      new Notice(error instanceof Error ? error.message : "发布失败。", 10000);
+      const errorMessage = error instanceof Error ? error.message : "发布失败。";
+      const rejectedIp = error instanceof WechatApiError ? error.rejectedIp : extractRejectedIp(errorMessage);
+      const isWhitelistRejection = (error instanceof WechatApiError && error.code === 40164)
+        || /(?:invalid\s+ip|not\s+in\s+whitelist|40164)/i.test(errorMessage);
+      if (isWhitelistRejection && account) {
+        this.settings.connectionDiagnostics[account.id] = {
+          status: "ip-blocked",
+          message: errorMessage,
+          rejectedIp,
+          checkedAt: Date.now()
+        };
+        await this.saveSettings();
+        this.openSettings();
+        new Notice(
+          rejectedIp
+            ? `微信拒绝当前 IP：${rejectedIp}。已打开白名单配置指引。`
+            : "微信拒绝当前网络 IP。已打开白名单配置指引。",
+          12000
+        );
+        return;
+      }
+      new Notice(errorMessage, 10000);
     }
   }
 
