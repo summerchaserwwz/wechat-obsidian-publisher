@@ -1,54 +1,48 @@
 # WeChat Obsidian Publisher
 
-[简体中文](README.md) | [English](README_EN.md)
+[English](README_EN.md)
 
-在 Obsidian 内完成微信公众号文章预览、前后模块编排、模板定制和草稿发布。
+在 Obsidian 里完成微信公众号文章的排版、预览和草稿发布。`0.2.6` 重新设计了模板工作台和手机阅读控制，并让工作台预览与提交到微信草稿箱的 HTML 使用同一条处理链路。
 
-![预览工作台](docs/screenshots/preview-workbench-v021.jpeg)
+![v0.2.6 模板工作台](docs/screenshots/template-workbench-v026.jpeg)
 
-![工作台操作演示](docs/demo/workbench-v021.gif)
+![v0.2.6 微信文章预览](docs/screenshots/wechat-preview-v026.jpeg)
 
-[查看 MP4 演示](docs/demo/workbench-v021.mp4)
+## 能做什么
 
-<details>
-<summary>查看模板与前后模块面板</summary>
+- 打开当前 Markdown 笔记，在右侧工作台实时预览手机、微信文章或桌面宽度。
+- 使用 129 套内置模板，包括 MD2 目录、12 套 Wenyan 原始主题和可追溯的开源主题；正文、列表、引用、表格均以左对齐阅读为基线。
+- 在半透明的左侧模板导轨中搜索、筛选、收藏、导入或导出模板，收藏自动置顶，文章预览始终可见。
+- 每个模板条目保留模板名称、来源、主配色色点和 HEX，不再只显示难以辨认的颜色缩略图。
+- 复制内置模板为用户模板，直接修改颜色、字体、字号、行高，或导入、导出完整 JSON。
+- 使用 9 类前后内容模块：开头、表格前、表格后、结尾、往期推荐、作者介绍、关注卡片、版权声明和自定义模块。
+- 新增、编辑、启用、删除和排序内容模块。表格前后模块会围绕正文的第一个 Markdown 表格插入。
+- 渲染表格、代码高亮、KaTeX、Mermaid、Obsidian 本地图片和普通 Markdown 图片。
+- 上传正文图片与封面，创建或更新微信草稿。重复图片只上传一次，正文图片采用受限并发上传以缩短等待时间。
+- 发布后调用 `draft/get` 回读草稿。标题、结构或内联样式与预览不一致时，不会报告成功。
 
-![模板面板](docs/screenshots/template-panel-v021.jpeg)
+## 手机阅读和草稿一致性
 
-![内容模块面板](docs/screenshots/module-panel-v021.jpeg)
+未单独配置的模板使用“手机阅读”预设：`16px` 正文、`1.78` 行高、`16px` 段距、`28px` 标题留白和四周 `10px` 内边距。它不会依赖 Obsidian 的预览 CSS，而是作为公众号 HTML 的内联样式写入预览和草稿。
 
-![可视化模板编辑器](docs/screenshots/template-editor-v021.jpeg)
+不再打开单独的排版弹窗。当前模板的排版可以直接在预览上调整：
 
-</details>
+- 右上角切换原版、手机、标准或舒展阅读模式
+- 右上角切换手机、微信或桌面外框
+- 右下角直接减小、查看或增大正文字号
+- 右下角直接减小、查看或增大四周 Padding
 
-## 现在能做什么
+“原模板”会保留来源主题的排版规则，适合需要还原网页主题的情况，也可能带回较大的边距。
 
-- 在右侧工作台实时预览当前 Markdown 笔记，支持手机和桌面宽度。
-- 模板库内置 129 个可选模板：保留 md2wechat-publisher 的 100 套目录，并接入 40 套可追溯的来源原版。与旧目录重名的 17 套已由原 CSS 或原始样式对象替换，不会出现两份近似换色版。
-- Wenyan 12 套全部使用原始 CSS，保留 Pie、麦穗、薄荷、头条等标题装饰和内嵌 SVG；正文、列表、引用和表格统一左读。
-- 40 套来源原版按“墨排原版、WeMD 原版、NeuraPress 原版、Doocs 原版”分组，暗底和强视觉样式会标为短内容用途，不影响长文默认选择。
-- 模板选择采用左侧紧凑浮窗，主题以单色条呈现，切换时文章预览始终保留在右侧。
-- 支持开头、表格前、表格后、结尾、往期推荐、作者介绍、关注卡片、版权声明和自定义模块共 9 类内容模块。
-- 内容模块支持新增、编辑、启用、删除和分组排序，表格模块会围绕正文首个表格精确插入。
-- 内置模板可复制为用户模板并立即编辑，支持单模板或模板包 JSON 文件导入，支持导出当前模板和全部用户模板。
-- 解析代码块、KaTeX 公式、Mermaid 图表、表格和 Obsidian 本地图片。
-- 将正文图片上传到微信，将封面上传为永久素材，再创建或更新草稿。
-- 发布后自动调用 `draft/get` 回读标题与正文，回读一致才提示成功。
-- 从现有 Wenyan 发布配置导入账号，AppSecret 会立即转存到 Obsidian SecretStorage，插件配置只保留引用；实际加密能力取决于系统钥匙串是否可用。
+手机、微信和桌面外框只负责模拟阅读环境，不会混进发布内容。外框内部加载的就是准备提交给微信的完整 HTML；创建草稿后，插件还会通过 `draft/get` 回读并比较标题、结构和内联样式。
 
 ## 与 Wenyan Core 的关系
 
-本插件没有运行时或构建时的 `@wenyan-md/core` 依赖。渲染器参考了 Wenyan Core 的阶段化设计思想，自行实现：
-
-```text
-Markdown 解析 → 结构增强 → 模板令牌编译 → 图片改写 → 微信草稿
-```
-
-“Wenyan 原版”表示插件内置了 Wenyan Core 的原始主题 CSS，但不调用 Wenyan Core 运行时。相关归因见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+插件不依赖、也不运行 `@wenyan-md/core`。渲染器独立实现 Markdown 解析、结构增强、模板编译、图片处理和微信草稿发布。"Wenyan 原版"仅表示内置了对应主题的原始 CSS，用于保留 Pie 等主题的标题装饰和细节。归因见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 安装
 
-当前版本仍以 GitHub 源码和 Release 安装为主，尚未进入 Obsidian 社区插件市场。
+当前通过 GitHub 源码或 Release 安装，尚未进入 Obsidian 社区插件市场。
 
 ### 从源码构建
 
@@ -57,7 +51,7 @@ npm install
 npm run check
 ```
 
-把以下文件复制到 Vault 的 `.obsidian/plugins/wechat-obsidian-publisher/`：
+将以下文件复制到 Vault 的 `.obsidian/plugins/wechat-obsidian-publisher/`：
 
 ```text
 main.js
@@ -65,17 +59,17 @@ manifest.json
 styles.css
 ```
 
-然后在 Obsidian 的第三方插件中启用 `WeChat Obsidian Publisher`。
+然后在 Obsidian 的社区插件设置中启用 `WeChat Obsidian Publisher`。
 
-## 快速配置
+## 快速开始
 
-1. 打开插件设置。
-2. 如果已经使用 `wechat-wenyan-publish`，点击“安全导入”。
-3. 或手动填写公众号 AppID 和 AppSecret。
-4. 设置默认作者和默认封面，也可以在文章 frontmatter 中逐篇覆盖。
-5. 点击左侧功能区的发送图标，打开右侧工作台。
+1. 在插件设置中添加公众号账号，或从 `wechat-wenyan-publish` 安全导入。
+2. 填写默认作者和默认封面，也可以在每篇文章的 frontmatter 中覆盖。
+3. 点击左侧功能区的发送图标，打开“微信发布工作台”。
+4. 在模板导轨选择模板；右上角切换阅读模式或设备外框，右下角直接调整字号和四周 Padding。
+5. 在“检查”页确认账号、封面、图片和草稿一致预览均通过，再创建或更新草稿。
 
-连接检查通过 Obsidian 的无跨域限制网络通道获取 access token，不会创建或修改草稿。微信返回 `40164` 时，设置页会提取被拒绝的 IPv4，提供复制按钮、白名单菜单路径和微信开发者平台入口；发布过程中遇到同一错误，也会自动打开这张处理卡片。
+连接检查只请求 access token，不会创建或修改草稿。微信返回 `40164` 时，设置页会提取被拒绝的 IPv4，并提供复制按钮、白名单菜单路径和微信开发者平台入口。
 
 ## 文章元数据
 
@@ -89,17 +83,19 @@ source_url: https://example.com/original
 ---
 ```
 
-如果没有填写 `cover`，发布时使用正文第一张图片。首次发布会创建草稿；同一路径再次发布会更新已关联草稿。
+未填写 `cover` 时，发布会使用正文第一张图片。首次发布创建草稿，同一篇笔记再次发布会更新已关联草稿。
 
-## 自定义模板
+## 用户模板
 
-内置模板不会被直接改写。进入“模板”面板，点击复制图标生成用户模板，编辑器会立即打开。常用的颜色、字号、行距和字体可以可视化调整；需要精确控制时，再展开高级 JSON：
+内置模板不可直接修改。进入“模板”面板后，点击“复制并编辑”创建用户模板。常用字体和颜色可以在可视化编辑器中改动；需要精确控制时，展开高级 JSON。
+
+导入支持单个模板、模板数组和插件导出的模板包。保存和导入时会过滤不适合微信内联 HTML 的选择器、样式属性和外部资源。用户模板保存在当前 Vault 的插件配置中，收藏状态和模板专属排版设置会随模板保存。
 
 ```json
 {
   "id": "custom-example",
   "name": "我的模板",
-  "description": "自定义样式",
+  "description": "适合长文阅读的自定义模板",
   "source": "custom",
   "group": "用户模板",
   "sourceLabel": "用户模板",
@@ -118,40 +114,19 @@ source_url: https://example.com/original
     "strong": "#356348"
   },
   "styles": {
-    "body": {
-      "fontSize": "16px",
-      "lineHeight": "1.85"
-    },
-    "h2": {
-      "color": "#ffffff",
-      "backgroundColor": "#356348"
-    }
+    "body": { "fontSize": "16px", "lineHeight": "1.75" },
+    "h2": { "color": "#ffffff", "backgroundColor": "#356348" }
   }
 }
 ```
 
-保存或导入时会过滤不适合公众号内联 HTML 的选择器、样式属性和外部资源。用户模板保存在当前 Vault 的插件配置中，也可以导出 JSON 文件带到其他设备。导入支持单个模板、模板数组和插件导出的模板包。
+## 安全和边界
 
-## 内容模块
-
-四个插入位置分别是正文前、首个表格前、首个表格后和正文后。模块使用 Markdown 编写，与正文一起进入同一套渲染流程，所以标题、引用、列表、链接和图片都会继承当前主题。
-
-升级旧版本时会保留已有模块和启用状态，并补齐缺少的 MD2 模块。用户模板也会迁移到新版结构。
-
-## 安全边界
-
-- AppSecret 不写入仓库，也不出现在通知或错误日志中。
-- 使用 Obsidian `SecretStorage` 保存 AppSecret，插件 `data.json` 只保留 `obsidian-secret:` 引用并设为 `0600` 权限。
-- 每次真实发布前都有确认窗口。
-- 不会调用群发接口，只写入微信草稿箱。
-- 未通过 `draft/get` 回读时不会报告发布成功。
-
-## 已知边界
-
-- 当前仅支持桌面端 Obsidian。
-- 插件只创建或更新微信草稿，不调用群发接口。
-- 视频、投票、小程序卡片等微信原生组件仍需在公众平台后台补充。
-- `SecretStorage` 是否使用系统级加密取决于当前系统钥匙串是否可用；插件会显示实际状态。
+- AppSecret 使用 Obsidian `SecretStorage` 保存，`data.json` 只保留引用并设为 `0600` 权限。写入后会立即回读确认。
+- 插件不会把 AppSecret 写入仓库、通知或错误日志。
+- 每次真实提交草稿前都会再次确认。
+- 只调用草稿接口，不调用群发接口。
+- 当前只支持桌面端 Obsidian。视频、投票和小程序卡片等微信原生能力仍需在公众平台后台补充。
 
 ## 开发
 
@@ -159,6 +134,7 @@ source_url: https://example.com/original
 npm run dev
 npm run test
 npm run build
+npm run check
 ```
 
-许可证：MIT。
+许可证：[MIT](LICENSE)。

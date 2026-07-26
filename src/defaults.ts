@@ -80,7 +80,7 @@ export const DEFAULT_MODULES: ContentModule[] = [
 export const DEFAULT_SETTINGS: PluginSettings = {
   version: 2,
   activeTemplateId: "curated-modern-editorial-left",
-  previewDevice: "desktop",
+  previewDevice: "wechat",
   activeTab: "preview",
   defaultAccountId: "",
   defaultAuthor: "",
@@ -89,5 +89,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
   connectionDiagnostics: {},
   modules: DEFAULT_MODULES,
   customTemplates: [],
+  favoriteTemplateIds: [],
+  layoutByTemplate: {},
+  sourceLayoutTemplateIds: [],
   lastDraftByFile: {}
 };

@@ -12,7 +12,7 @@ const baseStyles: StyleMap = {
     lineHeight: "1.78",
     letterSpacing: "0",
     wordSpacing: "0",
-    padding: "28px 24px 48px",
+    padding: "0 8px",
     backgroundColor: "#ffffff",
     boxSizing: "border-box"
   },
@@ -243,7 +243,7 @@ function wenyanSourceChrome(theme: Md2ThemeDefinition): StyleMap {
       color: theme.tokens.body,
       fontFamily: baseStyles.body.fontFamily,
       backgroundColor: "#ffffff",
-      padding: "28px 24px 48px",
+      padding: "0 8px",
       boxSizing: "border-box"
     }
   };

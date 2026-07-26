@@ -20,7 +20,7 @@ const leftReadingBase: StyleMap = {
     lineHeight: "1.78",
     letterSpacing: "0",
     wordSpacing: "0",
-    padding: "28px 24px 48px"
+    padding: "0 8px"
   },
   p: { margin: "0 0 1em", textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
   h1: { margin: "0 0 1.3em", fontSize: "27px", fontWeight: "750", lineHeight: "1.4", textAlign: "left" },
@@ -50,7 +50,7 @@ function withBase(overrides: StyleMap): StyleMap {
 }
 
 const pieChrome: StyleMap = {
-  body: { ...leftReadingBase.body, color: "#262626", padding: "28px 24px 48px" }
+  body: { ...leftReadingBase.body, color: "#262626", padding: "0 8px" }
 };
 
 export const CURATED_LEFT_TEMPLATES: PublisherTemplate[] = [
@@ -149,7 +149,7 @@ export const CURATED_LEFT_TEMPLATES: PublisherTemplate[] = [
     alignment: "left",
     structureAdapter: "none",
     styles: withBase({
-      body: { color: "#1f2328", lineHeight: "1.7", padding: "28px 24px 48px" },
+      body: { color: "#1f2328", lineHeight: "1.7", padding: "0 8px" },
       h1: { color: "#1f2328", borderBottom: "1px solid #d1d9e0", paddingBottom: "0.42em" },
       h2: { color: "#1f2328", borderBottom: "1px solid #d1d9e0", paddingBottom: "0.35em" },
       h3: { color: "#1f2328" },

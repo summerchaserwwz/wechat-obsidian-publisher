@@ -1,7 +1,21 @@
 import { ItemView, Menu, Notice, WorkspaceLeaf, setIcon } from "obsidian";
 import type WechatObsidianPublisherPlugin from "../main";
-import type { ContentModule, ModulePlacement, PublisherTab, PublisherTemplate, RenderedArticle } from "../types";
+import type {
+  ArticleLayoutTuning,
+  ContentModule,
+  ModulePlacement,
+  PreviewDevice,
+  PublisherTab,
+  PublisherTemplate,
+  RenderedArticle
+} from "../types";
 import { VIEW_TYPE_PUBLISHER } from "../defaults";
+import {
+  DEFAULT_MOBILE_LAYOUT_TUNING,
+  LAYOUT_PRESETS,
+  layoutPresetId,
+  type LayoutPresetId
+} from "../core/layout-tuning";
 import {
   ALL_TEMPLATE_GROUPS,
   ALL_TEMPLATES,
@@ -12,6 +26,7 @@ import {
   serializeTemplateBundle
 } from "../core/templates";
 import { ModuleEditorModal, TemplateEditorModal } from "./modals";
+import { mountWechatPreview } from "./wechat-preview";
 
 function iconButton(parent: HTMLElement, icon: string, label: string, action: (event: MouseEvent) => void | Promise<void>): HTMLButtonElement {
   const button = parent.createEl("button", { cls: "wop-icon-button", attr: { "aria-label": label } });
@@ -29,6 +44,10 @@ function textButton(parent: HTMLElement, text: string, action: () => void | Prom
   }
   button.addEventListener("click", () => void action());
   return button;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 export class PublisherView extends ItemView {
@@ -88,10 +107,11 @@ export class PublisherView extends ItemView {
     this.renderAccountSelect(controls);
     this.renderTemplateSelect(controls);
     iconButton(controls, "refresh-cw", "刷新预览", () => this.refresh());
-    const publish = textButton(controls, "检查发布", async () => {
+    const publish = textButton(controls, "检查", async () => {
       this.host.settings.activeTab = "publish";
       await this.host.saveSettings();
-    }, true, "send");
+    }, false, "list-checks");
+    publish.addClass("wop-toolbar-check");
     publish.disabled = !article;
     iconButton(controls, "settings", "打开设置", () => this.host.openSettings());
 
@@ -168,36 +188,31 @@ export class PublisherView extends ItemView {
   }
 
   private renderPreview(panel: HTMLElement, path: string, article: RenderedArticle): void {
+    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
     const meta = panel.createDiv({ cls: "wop-preview-meta" });
     const summary = meta.createDiv({ cls: "wop-preview-summary" });
-    this.renderMetaItem(summary, "palette", findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates).name);
+    this.renderMetaItem(summary, "palette", template.name);
     this.renderMetaItem(summary, "images", `${article.imageSources.length} 张图片`);
     this.renderMetaItem(summary, "file-text", path, true);
     const actions = meta.createDiv({ cls: "wop-preview-actions" });
-    const devices = actions.createDiv({ cls: "wop-segmented" });
-    for (const device of ["phone", "desktop"] as const) {
-      const button = devices.createEl("button", { text: device === "phone" ? "手机" : "桌面", cls: this.host.settings.previewDevice === device ? "is-active" : "" });
-      button.addEventListener("click", async () => {
-        this.host.settings.previewDevice = device;
-        await this.host.saveSettings();
-      });
-    }
+    this.renderLayoutPresetControls(actions, template);
+    this.renderDeviceControls(actions);
     const copy = iconButton(actions, "copy", "复制公众号 HTML", async () => {
-      await navigator.clipboard.writeText(article.html);
+      if (!article.previewHtml) {
+        new Notice("当前文章无法生成草稿一致预览，请先处理渲染提示。");
+        return;
+      }
+      await navigator.clipboard.writeText(article.previewHtml);
       new Notice("公众号 HTML 已复制，可以直接粘贴到其他编辑器。");
     });
     copy.addClass("wop-meta-action");
+    copy.disabled = !article.previewHtml;
     if (article.warnings.length) {
       const warning = panel.createDiv({ cls: "wop-warning" });
       setIcon(warning.createSpan(), "triangle-alert");
       warning.createSpan({ text: article.warnings.join(" ") });
     }
-    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-    const stage = panel.createDiv({ cls: "wop-preview-stage" });
-    stage.dataset.device = this.host.settings.previewDevice;
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    const paper = stage.createDiv({ cls: "wop-paper" });
-    paper.innerHTML = article.html;
+    this.renderPreviewStage(panel, template, article);
   }
 
   private renderModules(panel: HTMLElement): void {
@@ -300,26 +315,31 @@ export class PublisherView extends ItemView {
     copy.createEl("strong", { text: "模板库" });
     copy.createEl("span", { text: `${ALL_TEMPLATES.length} 内置` });
     const actions = header.createDiv({ cls: "wop-template-drawer-actions" });
-    iconButton(actions, "download", "导出当前模板", () => {
-      const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-      this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
-      new Notice("当前模板已导出为 JSON。");
-    });
-    iconButton(actions, "archive", "导出全部用户模板", () => {
-      if (!this.host.settings.customTemplates.length) {
-        new Notice("还没有用户模板可导出。");
-        return;
-      }
-      this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
-      new Notice(`已导出 ${this.host.settings.customTemplates.length} 个用户模板。`);
-    });
     const importInput = actions.createEl("input", {
       type: "file",
       cls: "wop-hidden-input",
       attr: { accept: ".json,application/json", "aria-label": "选择模板 JSON 文件" }
     });
     importInput.addEventListener("change", () => void this.importTemplateFiles(importInput.files));
-    iconButton(actions, "upload", "导入模板 JSON", () => importInput.click());
+    const importButton = textButton(actions, "导入", () => importInput.click(), false, "upload");
+    importButton.addClass("wop-template-import-button");
+    iconButton(actions, "download", "导出模板", (event) => {
+      const menu = new Menu();
+      menu.addItem((item) => item.setTitle("导出当前模板").setIcon("download").onClick(() => {
+        const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
+        this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
+        new Notice("当前模板已导出为 JSON。");
+      }));
+      menu.addItem((item) => item.setTitle("导出全部用户模板").setIcon("archive").onClick(() => {
+        if (!this.host.settings.customTemplates.length) {
+          new Notice("还没有用户模板可导出。");
+          return;
+        }
+        this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
+        new Notice(`已导出 ${this.host.settings.customTemplates.length} 个用户模板。`);
+      }));
+      menu.showAtMouseEvent(event);
+    });
 
     const filters = drawerBody.createDiv({ cls: "wop-template-filters" });
     const searchWrap = filters.createDiv({ cls: "wop-template-search" });
@@ -351,21 +371,21 @@ export class PublisherView extends ItemView {
       new TemplateEditorModal(this.app, target, (saved) => void this.saveCustomTemplate(saved, template.source === "custom" ? template.id : undefined)).open();
     }, false, "pencil");
     editTemplate.addClass("wop-button-quiet");
-    const stage = preview.createDiv({ cls: "wop-preview-stage", attr: { "data-device": this.host.settings.previewDevice } });
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    const paper = stage.createDiv({ cls: "wop-paper" });
-    paper.innerHTML = article.html;
+    this.renderLayoutPresetControls(previewActions, template);
+    this.renderDeviceControls(previewActions);
+    this.renderPreviewStage(preview, template, article);
 
   }
 
   private renderTemplateResults(parent: HTMLElement): void {
     parent.empty();
     const query = this.templateQuery.toLocaleLowerCase("zh-CN");
+    const favoriteIds = new Set(this.host.settings.favoriteTemplateIds);
     const templates = [...ALL_TEMPLATES, ...this.host.settings.customTemplates].filter((template) => {
       const groupMatches = this.templateGroup === "全部" || template.group === this.templateGroup;
       const haystack = [template.name, template.description, template.group, template.sourceLabel, ...template.tags].join(" ").toLocaleLowerCase("zh-CN");
       return groupMatches && (!query || haystack.includes(query));
-    });
+    }).sort((left, right) => Number(favoriteIds.has(right.id)) - Number(favoriteIds.has(left.id)));
     const summary = parent.createDiv({ cls: "wop-template-summary" });
     summary.createEl("span", { text: `${templates.length} 个模板 · ${this.templateGroup === "全部" ? "全部来源" : this.templateGroup}` });
     if (!templates.length) {
@@ -373,22 +393,76 @@ export class PublisherView extends ItemView {
       return;
     }
     const list = parent.createDiv({ cls: "wop-template-strip-list" });
-    for (const template of templates) this.renderTemplateStrip(list, template);
+    const favoriteCount = templates.filter((template) => favoriteIds.has(template.id)).length;
+    if (favoriteCount) list.createDiv({ cls: "wop-template-section-label", text: `收藏 ${favoriteCount}` });
+    let renderedFavorites = 0;
+    let listedAll = false;
+    for (const template of templates) {
+      if (favoriteIds.has(template.id)) renderedFavorites += 1;
+      if (!listedAll && favoriteCount && renderedFavorites === favoriteCount && templates.length > favoriteCount) {
+        this.renderTemplateStrip(list, template);
+        list.createDiv({ cls: "wop-template-section-label is-all", text: `全部模板 ${templates.length - favoriteCount}` });
+        listedAll = true;
+        continue;
+      }
+      this.renderTemplateStrip(list, template);
+    }
   }
 
   private renderTemplateStrip(parent: HTMLElement, template: PublisherTemplate): void {
     const active = template.id === this.host.settings.activeTemplateId;
+    const favorite = this.host.settings.favoriteTemplateIds.includes(template.id);
     const row = parent.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
-    row.style.setProperty("--wop-accent", template.accent);
-    row.createDiv({ cls: "wop-template-color" });
+    row.setAttribute("role", "button");
+    row.tabIndex = 0;
+    row.style.setProperty("--wop-template-accent", template.tokens.accent || template.accent);
+    row.style.setProperty("--wop-template-tint", template.tokens.tint || template.canvas);
+    row.style.setProperty("--wop-template-heading", template.tokens.heading);
+    row.style.setProperty("--wop-template-body", template.tokens.body);
+    const sample = row.createDiv({ cls: "wop-template-sample", attr: { "aria-hidden": "true" } });
+    sample.createDiv({ cls: "wop-template-sample-title" });
+    sample.createDiv({ cls: "wop-template-sample-line is-short" });
+    sample.createDiv({ cls: "wop-template-sample-line" });
     const info = row.createDiv({ cls: "wop-template-strip-copy" });
     info.createEl("strong", { text: template.name });
-    info.createEl("span", { text: template.source === "custom" ? "用户模板" : template.group });
+    const details = info.createDiv({ cls: "wop-template-strip-details" });
+    details.createEl("span", {
+      cls: "wop-template-source",
+      text: template.source === "custom" ? "用户模板" : template.group
+    });
+    const palette = details.createDiv({
+      cls: "wop-template-palette",
+      attr: { "aria-label": `主色 ${template.tokens.accent || template.accent}` }
+    });
+    for (const [name, color] of [
+      ["主色", template.tokens.accent || template.accent],
+      ["浅色", template.tokens.tint || template.canvas],
+      ["正文", template.tokens.body]
+    ] as const) {
+      const swatch = palette.createSpan({ attr: { title: `${name} ${color}` } });
+      swatch.style.backgroundColor = color;
+    }
+    details.createEl("code", {
+      text: (template.tokens.accent || template.accent).toUpperCase()
+    });
     if (template.upstream) row.title = `来源：${template.upstream}`;
-    row.addEventListener("click", async () => {
+    const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
+    };
+    row.addEventListener("click", () => void selectTemplate());
+    row.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        void selectTemplate();
+      }
     });
+    const favoriteButton = iconButton(row, "star", favorite ? `取消收藏${template.name}` : `收藏${template.name}`, async () => {
+      await this.toggleFavorite(template.id);
+    });
+    favoriteButton.addClass("wop-template-favorite");
+    favoriteButton.toggleClass("is-favorite", favorite);
+    favoriteButton.addEventListener("click", (event) => event.stopPropagation());
     const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "复制为用户模板", () => {
       const cloned = cloneTemplate(template);
@@ -404,6 +478,9 @@ export class PublisherView extends ItemView {
         menu.addSeparator();
         menu.addItem((item) => item.setTitle("删除模板").setIcon("trash-2").onClick(async () => {
           this.host.settings.customTemplates = this.host.settings.customTemplates.filter((item) => item.id !== template.id);
+          this.host.settings.favoriteTemplateIds = this.host.settings.favoriteTemplateIds.filter((id) => id !== template.id);
+          this.host.settings.sourceLayoutTemplateIds = this.host.settings.sourceLayoutTemplateIds.filter((id) => id !== template.id);
+          delete this.host.settings.layoutByTemplate[template.id];
           if (active) this.host.settings.activeTemplateId = ALL_TEMPLATES[0].id;
           await this.host.saveSettings();
         }));
@@ -422,7 +499,24 @@ export class PublisherView extends ItemView {
     const index = replaceId ? this.host.settings.customTemplates.findIndex((item) => item.id === replaceId) : -1;
     if (index >= 0) this.host.settings.customTemplates[index] = saved;
     else this.host.settings.customTemplates.push(saved);
+    if (replaceId && replaceId !== saved.id) {
+      this.host.settings.favoriteTemplateIds = this.host.settings.favoriteTemplateIds.map((id) => id === replaceId ? saved.id : id);
+      this.host.settings.sourceLayoutTemplateIds = this.host.settings.sourceLayoutTemplateIds.map((id) => id === replaceId ? saved.id : id);
+      const previousTuning = this.host.settings.layoutByTemplate[replaceId];
+      if (previousTuning) {
+        delete this.host.settings.layoutByTemplate[replaceId];
+        this.host.settings.layoutByTemplate[saved.id] = previousTuning;
+      }
+    }
     this.host.settings.activeTemplateId = saved.id;
+    await this.host.saveSettings();
+  }
+
+  private async toggleFavorite(templateId: string): Promise<void> {
+    const favorites = this.host.settings.favoriteTemplateIds;
+    this.host.settings.favoriteTemplateIds = favorites.includes(templateId)
+      ? favorites.filter((id) => id !== templateId)
+      : [...favorites, templateId];
     await this.host.saveSettings();
   }
 
@@ -459,6 +553,7 @@ export class PublisherView extends ItemView {
       Boolean(account),
       Boolean(article.meta.title),
       Boolean(article.meta.author),
+      Boolean(article.previewHtml),
       true,
       Boolean(article.meta.cover || article.imageSources[0]),
       true,
@@ -476,6 +571,7 @@ export class PublisherView extends ItemView {
     this.renderCheck(list, "公众号账号", account?.name ?? "未配置", Boolean(account));
     this.renderCheck(list, "文章标题", article.meta.title, Boolean(article.meta.title));
     this.renderCheck(list, "作者", article.meta.author || "未填写", Boolean(article.meta.author));
+    this.renderCheck(list, "草稿一致预览", article.previewHtml ? "已使用发布前处理链路" : "生成失败，请先处理渲染提示", Boolean(article.previewHtml));
     this.renderCheck(list, "正文图片", `${article.imageSources.length} 张`, true);
     this.renderCheck(list, "封面", article.meta.cover || article.imageSources[0] || "未设置", Boolean(article.meta.cover || article.imageSources[0]));
     this.renderCheck(list, "草稿操作", this.host.settings.lastDraftByFile[path] ? "更新已关联草稿" : "创建新草稿", true);
@@ -484,8 +580,12 @@ export class PublisherView extends ItemView {
     const safety = footer.createDiv({ cls: "wop-publish-safety" });
     setIcon(safety.createSpan(), "shield-check");
     safety.createEl("p", { text: "下一步会再次确认，并在提交后回读草稿。AppSecret 不会显示在界面或日志中。" });
-    const button = textButton(footer, this.host.settings.lastDraftByFile[path] ? "确认更新草稿" : "确认发布草稿", () => this.host.publishCurrent(article), true, "send");
-    button.disabled = !account || !article.meta.title || !Boolean(article.meta.cover || article.imageSources[0]);
+    const button = textButton(footer, this.host.settings.lastDraftByFile[path] ? "确认更新草稿" : "确认发布草稿", () => this.host.publishCurrent(), true, "send");
+    button.disabled = !account
+      || !article.meta.title
+      || !Boolean(article.meta.cover || article.imageSources[0])
+      || !article.previewHtml
+      || article.warnings.length > 0;
   }
 
   private renderCheck(parent: HTMLElement, label: string, value: string, ok: boolean): void {
@@ -495,6 +595,179 @@ export class PublisherView extends ItemView {
     const copy = row.createDiv();
     copy.createEl("strong", { text: label });
     copy.createEl("span", { text: value });
+  }
+
+  private mountArticlePreview(paper: HTMLElement, article: RenderedArticle): void {
+    if (!article.previewHtml) {
+      const unavailable = paper.createDiv({ cls: "wop-preview-unavailable" });
+      setIcon(unavailable.createSpan(), "triangle-alert");
+      unavailable.createEl("p", { text: "无法生成与微信草稿一致的预览。请先处理上方渲染提示。" });
+      return;
+    }
+    mountWechatPreview(paper, article.previewHtml);
+  }
+
+  private renderLayoutPresetControls(parent: HTMLElement, template: PublisherTemplate): void {
+    const current = this.host.getLayoutTuning(template.id);
+    const activePreset = current === undefined ? "mobile" : layoutPresetId(current);
+    const group = parent.createDiv({
+      cls: "wop-segmented wop-layout-presets",
+      attr: { "aria-label": "阅读模式" }
+    });
+    const options: Array<["source" | LayoutPresetId, string]> = [
+      ["source", "原版"],
+      ["mobile", "手机"],
+      ["balanced", "标准"],
+      ["relaxed", "舒展"]
+    ];
+    for (const [id, label] of options) {
+      const button = group.createEl("button", {
+        text: label,
+        cls: activePreset === id ? "is-active" : "",
+        attr: { title: id === "source" ? "使用模板原始排版" : LAYOUT_PRESETS[id].name }
+      });
+      button.addEventListener("click", () => {
+        const tuning = id === "source" ? null : structuredClone(LAYOUT_PRESETS[id].tuning);
+        void this.host.setLayoutTuning(template.id, tuning);
+      });
+    }
+  }
+
+  private renderDeviceControls(parent: HTMLElement): void {
+    const group = parent.createDiv({
+      cls: "wop-segmented wop-device-switcher",
+      attr: { "aria-label": "预览设备" }
+    });
+    const devices: Array<[PreviewDevice, string, string]> = [
+      ["phone", "手机", "smartphone"],
+      ["wechat", "微信", "message-circle"],
+      ["desktop", "桌面", "monitor"]
+    ];
+    for (const [device, label, icon] of devices) {
+      const button = group.createEl("button", {
+        cls: this.host.settings.previewDevice === device ? "is-active" : "",
+        attr: { "aria-label": `${label}预览`, title: `${label}预览` }
+      });
+      const mark = button.createSpan({ cls: "wop-segmented-icon" });
+      setIcon(mark, icon);
+      button.createSpan({ text: label });
+      button.addEventListener("click", async () => {
+        this.host.settings.previewDevice = device;
+        await this.host.saveSettings();
+      });
+    }
+  }
+
+  private renderPreviewStage(parent: HTMLElement, template: PublisherTemplate, article: RenderedArticle): void {
+    const device = this.host.settings.previewDevice;
+    const stage = parent.createDiv({
+      cls: "wop-preview-stage",
+      attr: { "data-device": device }
+    });
+    stage.style.setProperty("--wop-template-canvas", template.canvas);
+    this.renderQuickLayoutControls(stage, template);
+
+    const frame = stage.createDiv({ cls: `wop-device-frame is-${device}` });
+    const chrome = frame.createDiv({ cls: "wop-device-chrome" });
+    if (device === "desktop") {
+      const windowControls = chrome.createDiv({ cls: "wop-desktop-window-controls", attr: { "aria-hidden": "true" } });
+      windowControls.createSpan();
+      windowControls.createSpan();
+      windowControls.createSpan();
+      const title = chrome.createDiv({ cls: "wop-device-title" });
+      setIcon(title.createSpan(), "monitor");
+      title.createSpan({ text: "公众号预览" });
+      chrome.createSpan({ cls: "wop-device-chrome-spacer" });
+    } else if (device === "wechat") {
+      const back = chrome.createSpan({ cls: "wop-device-chrome-icon", attr: { "aria-hidden": "true" } });
+      setIcon(back, "chevron-left");
+      chrome.createSpan({ cls: "wop-device-title", text: "公众号文章" });
+      const more = chrome.createSpan({ cls: "wop-device-chrome-icon", attr: { "aria-hidden": "true" } });
+      setIcon(more, "ellipsis");
+    } else {
+      chrome.createSpan({ text: "9:41", cls: "wop-phone-time" });
+      chrome.createSpan({ cls: "wop-phone-notch", attr: { "aria-hidden": "true" } });
+      const signal = chrome.createSpan({ cls: "wop-phone-signal", attr: { "aria-hidden": "true" } });
+      setIcon(signal, "wifi");
+    }
+
+    const viewport = frame.createDiv({ cls: "wop-device-viewport" });
+    const paper = viewport.createDiv({ cls: "wop-paper" });
+    this.mountArticlePreview(paper, article);
+    if (device !== "desktop") frame.createDiv({ cls: "wop-device-home-indicator", attr: { "aria-hidden": "true" } });
+  }
+
+  private renderQuickLayoutControls(parent: HTMLElement, template: PublisherTemplate): void {
+    const tuning = this.effectiveLayoutTuning(template.id);
+    const padding = tuning.verticalPadding === tuning.contentPadding
+      ? `${tuning.contentPadding}px`
+      : `${tuning.verticalPadding}/${tuning.contentPadding}px`;
+    const dock = parent.createDiv({
+      cls: "wop-preview-dock",
+      attr: { "aria-label": "文章排版快速调整" }
+    });
+    const panel = dock.createDiv({ cls: "wop-preview-dock-panel" });
+    this.renderStepper(panel, "字号", `${tuning.fontSize}px`, "type", () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        fontSize: clamp(current.fontSize - 1, 12, 22)
+      });
+    }, () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        fontSize: clamp(current.fontSize + 1, 12, 22)
+      });
+    });
+    this.renderStepper(panel, "Padding", padding, "square-dashed", () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      const value = clamp(Math.round((current.verticalPadding + current.contentPadding) / 2) - 2, 0, 32);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        verticalPadding: value,
+        contentPadding: value
+      });
+    }, () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      const value = clamp(Math.round((current.verticalPadding + current.contentPadding) / 2) + 2, 0, 32);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        verticalPadding: value,
+        contentPadding: value
+      });
+    });
+  }
+
+  private renderStepper(
+    parent: HTMLElement,
+    label: string,
+    value: string,
+    icon: string,
+    decrement: () => Promise<void>,
+    increment: () => Promise<void>
+  ): void {
+    const group = parent.createDiv({ cls: "wop-preview-stepper" });
+    const name = group.createDiv({ cls: "wop-preview-stepper-label" });
+    setIcon(name.createSpan(), icon);
+    name.createSpan({ text: label });
+    const controls = group.createDiv({ cls: "wop-preview-stepper-controls" });
+    const minus = controls.createEl("button", {
+      text: "−",
+      attr: { "aria-label": `减小${label}`, title: `减小${label}` }
+    });
+    minus.addEventListener("click", () => void decrement());
+    controls.createEl("output", { text: value, attr: { "aria-label": `${label} ${value}` } });
+    const plus = controls.createEl("button", {
+      text: "+",
+      attr: { "aria-label": `增大${label}`, title: `增大${label}` }
+    });
+    plus.addEventListener("click", () => void increment());
+  }
+
+  private effectiveLayoutTuning(templateId: string): ArticleLayoutTuning {
+    const tuning = this.host.getLayoutTuning(templateId);
+    return structuredClone(tuning ?? DEFAULT_MOBILE_LAYOUT_TUNING);
   }
 
   private renderMetaItem(parent: HTMLElement, icon: string, text: string, grow = false): void {

@@ -42698,19 +42698,19 @@ function copy(source, target) {
   return target.domain(source.domain()).range(source.range()).interpolate(source.interpolate()).clamp(source.clamp()).unknown(source.unknown());
 }
 function transformer() {
-  var domain = unit, range3 = unit, interpolate = value_default, transform8, untransform, unknown, clamp2 = identity2, piecewise, output2, input;
+  var domain = unit, range3 = unit, interpolate = value_default, transform8, untransform, unknown, clamp3 = identity2, piecewise, output2, input;
   function rescale() {
     var n3 = Math.min(domain.length, range3.length);
-    if (clamp2 !== identity2) clamp2 = clamper(domain[0], domain[n3 - 1]);
+    if (clamp3 !== identity2) clamp3 = clamper(domain[0], domain[n3 - 1]);
     piecewise = n3 > 2 ? polymap : bimap;
     output2 = input = null;
     return scale3;
   }
   function scale3(x6) {
-    return x6 == null || isNaN(x6 = +x6) ? unknown : (output2 || (output2 = piecewise(domain.map(transform8), range3, interpolate)))(transform8(clamp2(x6)));
+    return x6 == null || isNaN(x6 = +x6) ? unknown : (output2 || (output2 = piecewise(domain.map(transform8), range3, interpolate)))(transform8(clamp3(x6)));
   }
   scale3.invert = function(y7) {
-    return clamp2(untransform((input || (input = piecewise(range3, domain.map(transform8), number_default)))(y7)));
+    return clamp3(untransform((input || (input = piecewise(range3, domain.map(transform8), number_default)))(y7)));
   };
   scale3.domain = function(_4) {
     return arguments.length ? (domain = Array.from(_4, number3), rescale()) : domain.slice();
@@ -42722,7 +42722,7 @@ function transformer() {
     return range3 = Array.from(_4), interpolate = round_default, rescale();
   };
   scale3.clamp = function(_4) {
-    return arguments.length ? (clamp2 = _4 ? true : identity2, rescale()) : clamp2 !== identity2;
+    return arguments.length ? (clamp3 = _4 ? true : identity2, rescale()) : clamp3 !== identity2;
   };
   scale3.interpolate = function(_4) {
     return arguments.length ? (interpolate = _4, rescale()) : interpolate;
@@ -55800,7 +55800,7 @@ async function bang(parent4, node2) {
   const effectiveHeight = Math.max(h3, minHeight);
   label.attr("transform", `translate(${-bbox.width / 2}, ${-bbox.height / 2})`);
   let bangElem;
-  const path4 = `M0 0
+  const path4 = `M0 0 
     a${r3},${r3} 1 0,0 ${effectiveWidth * 0.25},${-1 * effectiveHeight * 0.1}
     a${r3},${r3} 1 0,0 ${effectiveWidth * 0.25},${0}
     a${r3},${r3} 1 0,0 ${effectiveWidth * 0.25},${0}
@@ -55855,7 +55855,7 @@ async function cloud(parent4, node2) {
   const r4 = 0.2 * w4;
   const { cssStyles } = node2;
   let cloudElem;
-  const path4 = `M0 0
+  const path4 = `M0 0 
     a${r1},${r1} 0 0,1 ${w4 * 0.25},${-1 * w4 * 0.1}
     a${r3},${r3} 1 0,1 ${w4 * 0.4},${-1 * w4 * 0.1}
     a${r22},${r22} 1 0,1 ${w4 * 0.35},${w4 * 0.2}
@@ -63566,10 +63566,10 @@ var init_graph = __esm({
          * Creates new graph with nodes filtered via `filter`.
          * Edges incident to rejected node
          * are also removed.
-         *
+         * 
          * In case of compound graph, if parent is rejected by `filter`,
          * than all its children are rejected too.
-
+      
          * @param {(v: NodeID) => boolean} filter - Function that returns `true` for nodes to keep.
          * @returns {Graph<GraphLabel, NodeLabel, EdgeLabel>} A new graph containing only the nodes for which `filter` returns `true`.
          * @remarks Average-case complexity: O(|E|+|V|).
@@ -71804,7 +71804,7 @@ function anchorLabelsToPolyline(edges3, nodeByIdMap) {
         midY: a3.y + (b3.y - a3.y) * t5
       };
     }, "anchorAtT");
-    const clamp2 = /* @__PURE__ */ __name((value2, min10, max10) => Math.min(max10, Math.max(min10, value2)), "clamp");
+    const clamp3 = /* @__PURE__ */ __name((value2, min10, max10) => Math.min(max10, Math.max(min10, value2)), "clamp");
     const pointInsideRectInclusive = /* @__PURE__ */ __name((point8, rect3) => point8.midX >= rect3.left - EPS5 && point8.midX <= rect3.right + EPS5 && point8.midY >= rect3.top - EPS5 && point8.midY <= rect3.bottom + EPS5, "pointInsideRectInclusive");
     const placementForAnchor = /* @__PURE__ */ __name((anchor2) => {
       const centeredRect = rectFromCenterSize(anchor2.midX, anchor2.midY, lw, lh);
@@ -71824,8 +71824,8 @@ function anchorLabelsToPolyline(edges3, nodeByIdMap) {
         return void 0;
       }
       const clampedAnchor = {
-        midX: clamp2(anchor2.midX, minX, maxX),
-        midY: clamp2(anchor2.midY, minY, maxY)
+        midX: clamp3(anchor2.midX, minX, maxX),
+        midY: clamp3(anchor2.midY, minY, maxY)
       };
       const clampedRect = rectFromCenterSize(clampedAnchor.midX, clampedAnchor.midY, lw, lh);
       return pointInsideRectInclusive(anchor2, clampedRect) ? { laneId: containingLane.id, anchor: clampedAnchor, rect: clampedRect } : void 0;
@@ -94500,7 +94500,7 @@ var init_cytoscape_esm = __esm({
       transform: function transform3(node2, position5) {
         return position5;
       }
-      // transform a given node position. Useful for changing flow direction in discrete layouts
+      // transform a given node position. Useful for changing flow direction in discrete layouts 
     };
     CircleLayout.prototype.run = function() {
       var params = this.options;
@@ -95518,7 +95518,7 @@ var init_cytoscape_esm = __esm({
       transform: function transform5(node2, position5) {
         return position5;
       }
-      // transform a given node position. Useful for changing flow direction in discrete layouts
+      // transform a given node position. Useful for changing flow direction in discrete layouts 
     };
     GridLayout.prototype.run = function() {
       var params = this.options;
@@ -95802,7 +95802,7 @@ var init_cytoscape_esm = __esm({
       transform: function transform7(node2, position5) {
         return position5;
       }
-      // transform a given node position. Useful for changing flow direction in discrete layouts
+      // transform a given node position. Useful for changing flow direction in discrete layouts 
     };
     RandomLayout.prototype.run = function() {
       var options2 = this.options;
@@ -99332,7 +99332,7 @@ var init_cytoscape_esm = __esm({
         return true;
       };
       var wheelHandler = function wheelHandler2(e4) {
-        var clamp2 = false;
+        var clamp3 = false;
         var delta = e4.deltaY;
         if (delta == null) {
           if (e4.wheelDeltaY != null) {
@@ -99359,7 +99359,7 @@ var init_cytoscape_esm = __esm({
             }
           } else {
             wheelDeltas.push(delta);
-            clamp2 = true;
+            clamp3 = true;
           }
         } else if (inaccurateScrollDevice) {
           inaccurateScrollFactor = Math.min(Math.abs(delta), inaccurateScrollFactor);
@@ -99386,7 +99386,7 @@ var init_cytoscape_esm = __esm({
             r3.redraw();
           }, 150);
           var diff2;
-          if (clamp2 && Math.abs(delta) > 5) {
+          if (clamp3 && Math.abs(delta) > 5) {
             delta = signum(delta) * 5;
           }
           diff2 = delta / -250;
@@ -110488,9 +110488,9 @@ var require_cytoscape_cose_bilkent = __commonJS({
               // Called on `layoutstop`
               stop: function stop5() {
               },
-              // 'draft', 'default' or 'proof"
-              // - 'draft' fast cooling rate
-              // - 'default' moderate cooling rate
+              // 'draft', 'default' or 'proof" 
+              // - 'draft' fast cooling rate 
+              // - 'default' moderate cooling rate 
               // - "proof" slow cooling rate
               quality: "default",
               // include labels in node dimensions
@@ -113864,7 +113864,7 @@ var init_chunk_5VM5RSS4 = __esm({
     overflow: visible;
     vertical-align: -0.125em;
   }
-
+  
   .node .label-icon path {
     fill: currentColor;
     stroke: revert;
@@ -129801,7 +129801,7 @@ ${header}`);
             }
             if (responseMessage.id === null) {
               if (responseMessage.error) {
-                logger.error(`Received response message without id: Error is:
+                logger.error(`Received response message without id: Error is: 
 ${JSON.stringify(responseMessage.error, void 0, 4)}`);
               } else {
                 logger.error(`Received response message without id. No further error information provided.`);
@@ -137257,8 +137257,8 @@ ${nextValidSequenceItems.join("\n")}`;
         const extraArgument = getExtraProductionArgument2(duplicateProd);
         const hasExplicitIndex = index > 0;
         let msg = `->${dslName}${hasExplicitIndex ? index : ""}<- ${extraArgument ? `with argument: ->${extraArgument}<-` : ""}
-                  appears more than once (${duplicateProds.length} times) in the top level rule: ->${topLevelName}<-.
-                  For further details see: https://chevrotain.io/docs/FAQ.html#NUMERICAL_SUFFIXES
+                  appears more than once (${duplicateProds.length} times) in the top level rule: ->${topLevelName}<-.                  
+                  For further details see: https://chevrotain.io/docs/FAQ.html#NUMERICAL_SUFFIXES 
                   `;
         msg = msg.replace(/[ \t]+/g, " ");
         msg = msg.replace(/\s\s+/g, "\n");
@@ -137331,7 +137331,7 @@ Only the last alternative may be an empty alternative.`;
         const leftRecursivePath = `${ruleName} --> ${pathNames.concat([ruleName]).join(" --> ")}`;
         const errMsg = `Left Recursion found in grammar.
 rule: <${ruleName}> can be invoked from itself (directly or indirectly)
-without consuming any Tokens. The grammar path that causes this is:
+without consuming any Tokens. The grammar path that causes this is: 
  ${leftRecursivePath}
  To fix this refactor your grammar to remove the left recursion.
 see: https://en.wikipedia.org/wiki/LL_parser#Left_factoring.`;
@@ -138286,7 +138286,7 @@ see: https://en.wikipedia.org/wiki/LL_parser#Left_factoring.`;
       }
       /**
            *  @see setInitialNodeLocationOnlyOffsetRegular for explanation why this work
-
+      
            * @param cstNode
            */
       setInitialNodeLocationFullRegular(cstNode) {
@@ -151096,7 +151096,7 @@ var init_gitGraphDiagram_IHSO6WYX = __esm({
           rect3.attr("class", "tag-label-bkg").attr(
             "points",
             `
-      ${pos - maxTagBboxWidth / 2 - PX / 2},${ly + PY}
+      ${pos - maxTagBboxWidth / 2 - PX / 2},${ly + PY}  
       ${pos - maxTagBboxWidth / 2 - PX / 2},${ly - PY}
       ${commitPosition.posWithOffset - maxTagBboxWidth / 2 - PX},${ly - h22 - PY}
       ${commitPosition.posWithOffset + maxTagBboxWidth / 2 + PX},${ly - h22 - PY}
@@ -152020,7 +152020,7 @@ var init_gitGraphDiagram_IHSO6WYX = __esm({
     font-family: 'trebuchet ms', verdana, arial, sans-serif;
     font-family: var(--mermaid-font-family);
   }
-
+  
   ${useNeoColorGen ? genColor2(options2) : normalTheme(options2)}
 
   .branch {
@@ -159625,7 +159625,7 @@ var init_requirementDiagram_TGXJPOKE = __esm({
     stroke: ${options2.requirementBorderColor};
     stroke-width: ${options2.requirementBorderSize};
   }
-
+  
   .reqTitle, .reqLabel{
     fill:  ${options2.requirementTextColor};
   }
@@ -187598,10 +187598,10 @@ var require_cytoscape_fcose = __commonJS({
                 var _require = __webpack_require__2(657), spectralLayout = _require.spectralLayout;
                 var _require2 = __webpack_require__2(816), coseLayout = _require2.coseLayout;
                 var defaults5 = Object.freeze({
-                  // 'draft', 'default' or 'proof'
-                  // - 'draft' only applies spectral layout
+                  // 'draft', 'default' or 'proof' 
+                  // - 'draft' only applies spectral layout 
                   // - 'default' improves the quality with subsequent CoSE layout (fast cooling rate)
-                  // - 'proof' improves the quality with subsequent CoSE layout (slow cooling rate)
+                  // - 'proof' improves the quality with subsequent CoSE layout (slow cooling rate) 
                   quality: "default",
                   // Use random node positions at beginning of layout
                   // if this is set to false, then quality option must be "proof"
@@ -187667,7 +187667,7 @@ var require_cytoscape_fcose = __commonJS({
                   gravityCompound: 1,
                   // Gravity range (constant)
                   gravityRange: 3.8,
-                  // Initial cooling factor for incremental layout
+                  // Initial cooling factor for incremental layout  
                   initialEnergyOnIncremental: 0.3,
                   /* constraint options */
                   // Fix required nodes to predefined positions
@@ -187676,7 +187676,7 @@ var require_cytoscape_fcose = __commonJS({
                   // Align required nodes in vertical/horizontal direction
                   // {vertical: [['n1', 'n2')], ['n3', 'n4']], horizontal: ['n2', 'n4']}
                   alignmentConstraint: void 0,
-                  // Place two nodes relatively in vertical/horizontal direction
+                  // Place two nodes relatively in vertical/horizontal direction 
                   // [{top: 'n1', bottom: 'n2', gap: 100}, {left: 'n3', right: 'n4', gap: 75}]
                   relativePlacementConstraint: void 0,
                   /* layout event callbacks */
@@ -189288,10 +189288,10 @@ var init_architectureDiagram_ZJ3FMSHR = __esm({
     stroke-dasharray: 8;
   }
   .node-icon-text {
-    display: flex;
+    display: flex; 
     align-items: center;
   }
-
+  
   .node-icon-text > div {
     color: #fff;
     margin: 1px;
@@ -198559,7 +198559,7 @@ var DEFAULT_MODULES = [
 var DEFAULT_SETTINGS = {
   version: 2,
   activeTemplateId: "curated-modern-editorial-left",
-  previewDevice: "desktop",
+  previewDevice: "wechat",
   activeTab: "preview",
   defaultAccountId: "",
   defaultAuthor: "",
@@ -198568,8 +198568,99 @@ var DEFAULT_SETTINGS = {
   connectionDiagnostics: {},
   modules: DEFAULT_MODULES,
   customTemplates: [],
+  favoriteTemplateIds: [],
+  layoutByTemplate: {},
+  sourceLayoutTemplateIds: [],
   lastDraftByFile: {}
 };
+
+// src/core/layout-tuning.ts
+var LAYOUT_PRESETS = {
+  mobile: {
+    name: "\u624B\u673A\u9605\u8BFB",
+    tuning: { fontSize: 16, lineHeight: 1.78, paragraphSpacing: 16, headingSpacing: 28, verticalPadding: 10, contentPadding: 10 }
+  },
+  balanced: {
+    name: "\u5FAE\u4FE1\u6807\u51C6",
+    tuning: { fontSize: 16, lineHeight: 1.85, paragraphSpacing: 20, headingSpacing: 32, verticalPadding: 14, contentPadding: 14 }
+  },
+  relaxed: {
+    name: "\u8212\u5C55",
+    tuning: { fontSize: 17, lineHeight: 1.95, paragraphSpacing: 26, headingSpacing: 40, verticalPadding: 18, contentPadding: 18 }
+  }
+};
+var DEFAULT_MOBILE_LAYOUT_TUNING = LAYOUT_PRESETS.mobile.tuning;
+function numberInRange(value2, fallback, min10, max10, step3 = 1) {
+  const parsed = typeof value2 === "number" && Number.isFinite(value2) ? value2 : fallback;
+  const bounded = Math.min(max10, Math.max(min10, parsed));
+  return Math.round(bounded / step3) * step3;
+}
+function normalizeLayoutTuning(value2) {
+  if (!value2 || typeof value2 !== "object") return null;
+  const candidate = value2;
+  return {
+    fontSize: numberInRange(candidate.fontSize, LAYOUT_PRESETS.balanced.tuning.fontSize, 12, 22),
+    lineHeight: numberInRange(candidate.lineHeight, LAYOUT_PRESETS.balanced.tuning.lineHeight, 1.5, 2.1, 0.05),
+    paragraphSpacing: numberInRange(candidate.paragraphSpacing, LAYOUT_PRESETS.balanced.tuning.paragraphSpacing, 8, 32),
+    headingSpacing: numberInRange(candidate.headingSpacing, LAYOUT_PRESETS.balanced.tuning.headingSpacing, 14, 56),
+    verticalPadding: numberInRange(candidate.verticalPadding, LAYOUT_PRESETS.balanced.tuning.verticalPadding, 0, 32),
+    contentPadding: numberInRange(candidate.contentPadding, LAYOUT_PRESETS.balanced.tuning.contentPadding, 0, 32)
+  };
+}
+function normalizeLayoutMap(value2) {
+  if (!value2 || typeof value2 !== "object") return {};
+  const result = {};
+  for (const [templateId, tuning] of Object.entries(value2)) {
+    const normalized = normalizeLayoutTuning(tuning);
+    if (normalized && /^[a-z0-9_-]{1,120}$/i.test(templateId)) result[templateId] = normalized;
+  }
+  return result;
+}
+function layoutPresetId(tuning) {
+  if (!tuning) return "source";
+  for (const [id39, preset] of Object.entries(LAYOUT_PRESETS)) {
+    if (Object.entries(preset.tuning).every(([key, value2]) => tuning[key] === value2)) return id39;
+  }
+  return "custom";
+}
+function setLayoutStyle(element3, property4, value2) {
+  element3.style.setProperty(property4, value2, "important");
+}
+function applyLayoutTuning(root4, tuning) {
+  setLayoutStyle(root4, "box-sizing", "border-box");
+  setLayoutStyle(root4, "font-size", `${tuning.fontSize}px`);
+  setLayoutStyle(root4, "line-height", String(tuning.lineHeight));
+  setLayoutStyle(root4, "padding", `${tuning.verticalPadding}px ${tuning.contentPadding}px`);
+  setLayoutStyle(root4, "margin", "0");
+  setLayoutStyle(root4, "max-width", "none");
+  const applyBlockSpacing = (selector2, bottom2) => {
+    root4.querySelectorAll(selector2).forEach((element3) => {
+      setLayoutStyle(element3, "margin", `0 0 ${bottom2}px`);
+    });
+  };
+  applyBlockSpacing("p", tuning.paragraphSpacing);
+  root4.querySelectorAll("blockquote p, li > p").forEach((paragraph) => {
+    setLayoutStyle(paragraph, "margin", "0");
+  });
+  applyBlockSpacing("blockquote, ul, ol, figure, pre, table, hr", tuning.paragraphSpacing);
+  root4.querySelectorAll("p, li, blockquote, figcaption, table, th, td").forEach((element3) => {
+    setLayoutStyle(element3, "font-size", `${tuning.fontSize}px`);
+    setLayoutStyle(element3, "line-height", String(tuning.lineHeight));
+  });
+  const listItemSpacing = Math.max(4, Math.round(tuning.paragraphSpacing * 0.5));
+  root4.querySelectorAll("li").forEach((item) => {
+    setLayoutStyle(item, "margin", `0 0 ${listItemSpacing}px`);
+  });
+  const headingBottom = Math.max(8, Math.round(tuning.headingSpacing * 0.45));
+  root4.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading) => {
+    setLayoutStyle(heading, "margin", `${tuning.headingSpacing}px 0 ${headingBottom}px`);
+  });
+  root4.querySelectorAll(":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6").forEach((heading) => {
+    if (!heading.previousElementSibling) setLayoutStyle(heading, "margin-top", "0");
+  });
+  const lastChild = root4.lastElementChild;
+  if (lastChild instanceof HTMLElement) setLayoutStyle(lastChild, "margin-bottom", "0");
+}
 
 // node_modules/highlight.js/es/common.js
 var import_common = __toESM(require_common(), 1);
@@ -211104,6 +211195,7 @@ function enhanceStructure(root4, resolvePreviewImage) {
     const text5 = code2.textContent ?? "";
     try {
       code2.innerHTML = language && common_default.getLanguage(language) ? common_default.highlight(text5, { language }).value : common_default.highlightAuto(text5).value;
+      code2.classList.add("hljs");
     } catch {
       code2.textContent = text5;
     }
@@ -211170,6 +211262,8 @@ var RenderEngine = class {
     const imageSources = enhanceStructure(root4, input.resolvePreviewImage);
     await renderMermaid(root4, warnings3);
     applyTemplate(root4, input.template);
+    const layoutTuning = input.layoutTuning === void 0 ? DEFAULT_MOBILE_LAYOUT_TUNING : input.layoutTuning;
+    if (layoutTuning) applyLayoutTuning(root4, layoutTuning);
     return { html: root4.outerHTML, meta: parsed.meta, imageSources, warnings: warnings3 };
   }
 };
@@ -215544,7 +215638,7 @@ var leftReadingBase = {
     lineHeight: "1.78",
     letterSpacing: "0",
     wordSpacing: "0",
-    padding: "28px 24px 48px"
+    padding: "0 8px"
   },
   p: { margin: "0 0 1em", textAlign: "left", letterSpacing: "0", wordSpacing: "0" },
   h1: { margin: "0 0 1.3em", fontSize: "27px", fontWeight: "750", lineHeight: "1.4", textAlign: "left" },
@@ -215572,7 +215666,7 @@ function withBase(overrides) {
   ]));
 }
 var pieChrome = {
-  body: { ...leftReadingBase.body, color: "#262626", padding: "28px 24px 48px" }
+  body: { ...leftReadingBase.body, color: "#262626", padding: "0 8px" }
 };
 var CURATED_LEFT_TEMPLATES = [
   {
@@ -215670,7 +215764,7 @@ var CURATED_LEFT_TEMPLATES = [
     alignment: "left",
     structureAdapter: "none",
     styles: withBase({
-      body: { color: "#1f2328", lineHeight: "1.7", padding: "28px 24px 48px" },
+      body: { color: "#1f2328", lineHeight: "1.7", padding: "0 8px" },
       h1: { color: "#1f2328", borderBottom: "1px solid #d1d9e0", paddingBottom: "0.42em" },
       h2: { color: "#1f2328", borderBottom: "1px solid #d1d9e0", paddingBottom: "0.35em" },
       h3: { color: "#1f2328" },
@@ -216040,7 +216134,7 @@ var baseStyles = {
     lineHeight: "1.78",
     letterSpacing: "0",
     wordSpacing: "0",
-    padding: "28px 24px 48px",
+    padding: "0 8px",
     backgroundColor: "#ffffff",
     boxSizing: "border-box"
   },
@@ -216263,7 +216357,7 @@ function wenyanSourceChrome(theme) {
       color: theme.tokens.body,
       fontFamily: baseStyles.body.fontFamily,
       backgroundColor: "#ffffff",
-      padding: "28px 24px 48px",
+      padding: "0 8px",
       boxSizing: "border-box"
     }
   };
@@ -216521,7 +216615,11 @@ var CredentialVault = class {
     const normalizedSecret = secret.trim();
     if (!normalizedSecret) throw new Error("AppSecret \u4E0D\u80FD\u4E3A\u7A7A\u3002");
     const secretId = normalizeSecretId(accountId);
-    this.getSecretStorage().setSecret(secretId, normalizedSecret);
+    const storage = this.getSecretStorage();
+    storage.setSecret(secretId, normalizedSecret);
+    if (storage.getSecret(secretId) !== normalizedSecret) {
+      throw new Error("\u7CFB\u7EDF\u5BC6\u94A5\u5B58\u50A8\u672A\u80FD\u786E\u8BA4 AppSecret \u5DF2\u4FDD\u5B58\uFF0C\u8BF7\u68C0\u67E5 Obsidian \u7684\u7CFB\u7EDF\u5BC6\u94A5\u5B58\u50A8\u540E\u91CD\u8BD5\u3002");
+    }
     return `${SECRET_REFERENCE_PREFIX}${secretId}`;
   }
   read(secretReference) {
@@ -216533,6 +216631,13 @@ var CredentialVault = class {
     const secret = this.getSecretStorage().getSecret(secretId);
     if (!secret) throw new Error("\u7CFB\u7EDF\u5BC6\u94A5\u5B58\u50A8\u4E2D\u627E\u4E0D\u5230 AppSecret\uFF0C\u8BF7\u91CD\u65B0\u5BFC\u5165\u6216\u66F4\u65B0\u3002");
     return secret;
+  }
+  isAvailable(secretReference) {
+    try {
+      return Boolean(this.read(secretReference));
+    } catch {
+      return false;
+    }
   }
   clear(secretReference) {
     if (!secretReference.startsWith(SECRET_REFERENCE_PREFIX)) return;
@@ -222094,17 +222199,137 @@ async function uploadAsset(endpoint, token2, asset, action, extraQuery = {}) {
   });
   return parseResponse(response, action);
 }
-function stripEditorAttributes(html2) {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = html2;
+var BODY_IMAGE_UPLOAD_CONCURRENCY = 3;
+var HIGHLIGHT_STYLES = {
+  "hljs-doctag": { color: "#ff7b72" },
+  "hljs-keyword": { color: "#ff7b72" },
+  "hljs-template-tag": { color: "#ff7b72" },
+  "hljs-template-variable": { color: "#ff7b72" },
+  "hljs-type": { color: "#ff7b72" },
+  "hljs-variable": { color: "#79c0ff" },
+  "language_": { color: "#ff7b72" },
+  "hljs-title": { color: "#d2a8ff" },
+  "hljs-attr": { color: "#79c0ff" },
+  "hljs-attribute": { color: "#79c0ff" },
+  "hljs-literal": { color: "#79c0ff" },
+  "hljs-meta": { color: "#79c0ff" },
+  "hljs-number": { color: "#79c0ff" },
+  "hljs-operator": { color: "#79c0ff" },
+  "hljs-selector-attr": { color: "#79c0ff" },
+  "hljs-selector-class": { color: "#79c0ff" },
+  "hljs-selector-id": { color: "#79c0ff" },
+  "hljs-regexp": { color: "#a5d6ff" },
+  "hljs-string": { color: "#a5d6ff" },
+  "hljs-built_in": { color: "#ffa657" },
+  "hljs-symbol": { color: "#ffa657" },
+  "hljs-comment": { color: "#8b949e" },
+  "hljs-code": { color: "#8b949e" },
+  "hljs-formula": { color: "#8b949e" },
+  "hljs-name": { color: "#7ee787" },
+  "hljs-quote": { color: "#7ee787" },
+  "hljs-selector-tag": { color: "#7ee787" },
+  "hljs-selector-pseudo": { color: "#7ee787" },
+  "hljs-subst": { color: "#c9d1d9" },
+  "hljs-section": { color: "#1f6feb", "font-weight": "bold" },
+  "hljs-bullet": { color: "#f2cc60" },
+  "hljs-emphasis": { color: "#c9d1d9", "font-style": "italic" },
+  "hljs-strong": { color: "#c9d1d9", "font-weight": "bold" },
+  "hljs-addition": { color: "#aff5b4", "background-color": "#033a16" },
+  "hljs-deletion": { color: "#ffdcd7", "background-color": "#67060c" }
+};
+function setStyleIfMissing(element3, property4, value2) {
+  if (!element3.style.getPropertyValue(property4)) element3.style.setProperty(property4, value2);
+}
+function inlineHighlightStyles(wrapper) {
+  wrapper.querySelectorAll("code.hljs").forEach((code2) => {
+    setStyleIfMissing(code2, "display", "block");
+    setStyleIfMissing(code2, "overflow-x", "auto");
+    setStyleIfMissing(code2, "padding", "1em");
+    setStyleIfMissing(code2, "color", "#c9d1d9");
+    setStyleIfMissing(code2, "background", "transparent");
+  });
+  wrapper.querySelectorAll(".hljs").forEach((element3) => {
+    for (const className of element3.classList) {
+      const declarations = HIGHLIGHT_STYLES[className];
+      if (!declarations) continue;
+      for (const [property4, value2] of Object.entries(declarations)) setStyleIfMissing(element3, property4, value2);
+    }
+  });
+}
+function inlineWechatBaseline(wrapper) {
+  const article = wrapper.querySelector(".wop-article");
+  if (article) {
+    setStyleIfMissing(article, "width", "100%");
+    setStyleIfMissing(article, "overflow-wrap", "anywhere");
+  }
+  wrapper.querySelectorAll("p").forEach((paragraph) => {
+    setStyleIfMissing(paragraph, "margin", "1em 0");
+  });
+  wrapper.querySelectorAll("a[href]").forEach((link2) => {
+    setStyleIfMissing(link2, "color", "#576b95");
+    setStyleIfMissing(link2, "text-decoration", "none");
+  });
+  wrapper.querySelectorAll("blockquote").forEach((quote) => {
+    setStyleIfMissing(quote, "margin", "1.2em 0");
+  });
+  wrapper.querySelectorAll("pre").forEach((pre) => {
+    setStyleIfMissing(pre, "margin", "1em 0");
+    setStyleIfMissing(pre, "overflow-x", "auto");
+  });
+  wrapper.querySelectorAll("table").forEach((table) => {
+    setStyleIfMissing(table, "max-width", "100%");
+  });
+  wrapper.querySelectorAll("img").forEach((image) => {
+    setStyleIfMissing(image, "max-width", "100%");
+    setStyleIfMissing(image, "height", "auto");
+  });
+  wrapper.querySelectorAll("svg").forEach((svg2) => {
+    if (!svg2.style.getPropertyValue("max-width")) svg2.style.setProperty("max-width", "100%");
+    if (!svg2.style.getPropertyValue("height")) svg2.style.setProperty("height", "auto");
+  });
+}
+function stripPublisherAttributes(wrapper) {
   wrapper.querySelectorAll("*").forEach((element3) => {
     for (const attribute of [...element3.attributes]) {
-      if (attribute.name.startsWith("data-wop") || attribute.name === "contenteditable") {
+      if (attribute.name.startsWith("data-wop") || attribute.name === "data-source" || attribute.name === "contenteditable") {
         element3.removeAttribute(attribute.name);
       }
     }
   });
-  return wrapper.innerHTML;
+}
+function styleSignature(element3) {
+  const declarations = [];
+  for (let index = 0; index < element3.style.length; index += 1) {
+    const property4 = element3.style.item(index);
+    const value2 = element3.style.getPropertyValue(property4).trim();
+    const priority3 = element3.style.getPropertyPriority(property4);
+    declarations.push(`${property4}:${value2}${priority3 ? "!important" : ""}`);
+  }
+  return declarations.sort().join(";");
+}
+function visualHtmlSignature(html2) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html2;
+  wrapper.querySelectorAll("*").forEach((element3) => {
+    const attributes = [...element3.attributes].filter((attribute) => {
+      const name50 = attribute.name.toLowerCase();
+      return name50 !== "style" && name50 !== "class" && name50 !== "id" && name50 !== "src" && name50 !== "srcset" && name50 !== "contenteditable" && !name50.startsWith("data-") && !name50.startsWith("aria-");
+    }).map((attribute) => [attribute.name, attribute.value]).sort(([left3], [right3]) => left3.localeCompare(right3));
+    const style3 = styleSignature(element3);
+    for (const attribute of [...element3.attributes]) element3.removeAttribute(attribute.name);
+    for (const [name50, value2] of attributes) element3.setAttribute(name50, value2);
+    if (style3) element3.setAttribute("style", style3);
+  });
+  return wrapper.innerHTML.replace(/\r\n/g, "\n").trim();
+}
+function compareWechatVisualHtml(expected, actual) {
+  const expectedSignature = visualHtmlSignature(expected);
+  const actualSignature = visualHtmlSignature(actual);
+  return {
+    matches: expectedSignature === actualSignature,
+    expected: expectedSignature,
+    actual: actualSignature
+  };
 }
 function serializeSvgForCanvas(svg2) {
   const namespace = "http://www.w3.org/2000/svg";
@@ -222161,6 +222386,78 @@ async function svgToPngAsset(svg2, index) {
     filename: `mermaid-${index}.png`
   };
 }
+function imageDataUrl(asset) {
+  const bytes = new Uint8Array(asset.bytes);
+  let binary2 = "";
+  const chunkSize = 32768;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary2 += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+  return `data:${asset.mimeType};base64,${btoa(binary2)}`;
+}
+function createWechatImage(source, alt = "\u56FE\u8868") {
+  const image = document.createElement("img");
+  image.src = source;
+  image.alt = alt;
+  image.style.maxWidth = "100%";
+  image.style.height = "auto";
+  image.style.display = "block";
+  image.style.margin = "1.5em auto";
+  return image;
+}
+async function materializeBodyImages(images, replaceImage) {
+  const uniqueSources = [];
+  const seenSources = /* @__PURE__ */ new Set();
+  for (const image of images) {
+    const source = image.dataset.source;
+    if (!source || seenSources.has(source)) continue;
+    seenSources.add(source);
+    uniqueSources.push(source);
+  }
+  const replacements = /* @__PURE__ */ new Map();
+  let nextIndex = 0;
+  const worker = async () => {
+    while (nextIndex < uniqueSources.length) {
+      const source = uniqueSources[nextIndex];
+      nextIndex += 1;
+      const replacement = Promise.resolve().then(() => replaceImage(source));
+      replacements.set(source, replacement);
+      await replacement;
+    }
+  };
+  const workerCount = Math.min(BODY_IMAGE_UPLOAD_CONCURRENCY, uniqueSources.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return replacements;
+}
+async function prepareWechatHtml(html2, materializer = {}) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html2;
+  const mermaidBlocks = [...wrapper.querySelectorAll("[data-wop-mermaid]")];
+  for (const [index, block2] of mermaidBlocks.entries()) {
+    const svg2 = block2.querySelector("svg");
+    if (!svg2 || !materializer.replaceMermaid) continue;
+    const asset = await (materializer.rasterizeMermaid ?? svgToPngAsset)(svg2, index);
+    block2.replaceWith(createWechatImage(await materializer.replaceMermaid(asset, index)));
+  }
+  const bodyImages = [...wrapper.querySelectorAll("img[data-source]")];
+  if (materializer.replaceImage) {
+    const replacements = await materializeBodyImages(bodyImages, materializer.replaceImage);
+    for (const image of bodyImages) {
+      const source = image.dataset.source;
+      const replacement = source ? replacements.get(source) : void 0;
+      if (replacement) image.src = await replacement;
+    }
+  }
+  inlineWechatBaseline(wrapper);
+  inlineHighlightStyles(wrapper);
+  stripPublisherAttributes(wrapper);
+  return wrapper.innerHTML;
+}
+async function prepareWechatPreviewHtml(html2) {
+  return prepareWechatHtml(html2, {
+    replaceMermaid: async (asset) => imageDataUrl(asset)
+  });
+}
 var WechatClient = class {
   async accessToken(appId, secret) {
     const query = new URLSearchParams({ grant_type: "client_credential", appid: appId, secret });
@@ -222180,31 +222477,13 @@ var WechatClient = class {
     return payload.media_id;
   }
   async prepareContent(input, token2) {
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = input.article.html;
-    const mermaidBlocks = [...wrapper.querySelectorAll("[data-wop-mermaid]")];
-    for (const [index, block2] of mermaidBlocks.entries()) {
-      const svg2 = block2.querySelector("svg");
-      if (!svg2) continue;
-      const asset = await svgToPngAsset(svg2, index);
-      const url = await this.uploadBodyImage(token2, asset);
-      const image = document.createElement("img");
-      image.src = url;
-      image.alt = "\u56FE\u8868";
-      image.style.maxWidth = "100%";
-      image.style.height = "auto";
-      image.style.display = "block";
-      image.style.margin = "1.5em auto";
-      block2.replaceWith(image);
-    }
-    for (const image of [...wrapper.querySelectorAll("img[data-source]")]) {
-      const source = image.dataset.source;
-      if (!source) continue;
-      const asset = await input.resolveImage(source);
-      image.src = await this.uploadBodyImage(token2, asset);
-      image.removeAttribute("data-source");
-    }
-    return stripEditorAttributes(wrapper.innerHTML);
+    return prepareWechatHtml(input.article.html, {
+      replaceMermaid: async (asset) => this.uploadBodyImage(token2, asset),
+      replaceImage: async (source) => this.uploadBodyImage(token2, await input.resolveImage(source))
+    });
+  }
+  async preparePreviewContent(html2) {
+    return prepareWechatPreviewHtml(html2);
   }
   async testConnection(appId, secret) {
     await this.accessToken(appId, secret);
@@ -222249,6 +222528,10 @@ var WechatClient = class {
     const saved = verified.news_item?.[0];
     if (!saved?.content || saved.title !== article.title) {
       throw new Error("\u8349\u7A3F\u5DF2\u63D0\u4EA4\uFF0C\u4F46\u56DE\u8BFB\u5185\u5BB9\u4E0E\u5F53\u524D\u6587\u7AE0\u4E0D\u4E00\u81F4\uFF0C\u8BF7\u5230\u5FAE\u4FE1\u540E\u53F0\u68C0\u67E5\u3002");
+    }
+    const parity = compareWechatVisualHtml(content, saved.content);
+    if (!parity.matches) {
+      throw new Error("\u8349\u7A3F\u5DF2\u63D0\u4EA4\uFF0C\u4F46\u5FAE\u4FE1\u56DE\u8BFB\u7684\u7ED3\u6784\u6216\u5185\u8054\u6837\u5F0F\u4E0E\u9884\u89C8\u4E0D\u4E00\u81F4\uFF0C\u8BF7\u68C0\u67E5\u8349\u7A3F\u540E\u518D\u7EE7\u7EED\u53D1\u5E03\u3002");
     }
     return {
       mediaId,
@@ -222366,8 +222649,13 @@ var PublisherSettingTab = class extends import_obsidian3.PluginSettingTab {
     const mark = identity8.createDiv({ cls: "wop-account-mark" });
     (0, import_obsidian3.setIcon)(mark, "badge-check");
     const copy5 = identity8.createDiv();
+    const hasSecret = this.host.credentials.isAvailable(account.encryptedSecret);
     copy5.createEl("strong", { text: account.name });
     copy5.createEl("span", { text: account.appId.replace(/^(.{4}).*(.{4})$/, "$1\u2022\u2022\u2022\u2022$2") });
+    copy5.createEl("span", {
+      text: hasSecret ? "\u5BC6\u94A5\u5DF2\u5B89\u5168\u4FDD\u5B58" : "\u5BC6\u94A5\u9700\u8981\u91CD\u65B0\u5BFC\u5165",
+      cls: hasSecret ? "wop-account-secret-status is-ready" : "wop-account-secret-status is-missing"
+    });
     if (this.host.settings.defaultAccountId === account.id) header.createEl("span", { text: "\u9ED8\u8BA4\u8D26\u53F7", cls: "wop-status-badge" });
     new import_obsidian3.Setting(card2).setName("\u8BBE\u4E3A\u9ED8\u8BA4").addToggle((toggle) => toggle.setValue(this.host.settings.defaultAccountId === account.id).onChange(async (value2) => {
       if (value2) this.host.settings.defaultAccountId = account.id;
@@ -222774,6 +223062,52 @@ var ConfirmPublishModal = class _ConfirmPublishModal extends import_obsidian4.Mo
 
 // src/ui/publisher-view.ts
 var import_obsidian5 = require("obsidian");
+
+// src/ui/wechat-preview.ts
+var PREVIEW_DOCUMENT_STYLE = `
+  html, body { width: 100%; margin: 0; padding: 0; background: #ffffff; }
+  body { -webkit-text-size-adjust: 100%; }
+`;
+function createWechatPreviewDocument(html2) {
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>${PREVIEW_DOCUMENT_STYLE}</style>
+</head>
+<body>${html2}</body>
+</html>`;
+}
+function mountWechatPreview(parent4, html2) {
+  const frame2 = parent4.createEl("iframe", {
+    cls: "wop-wechat-frame",
+    attr: {
+      title: "\u516C\u4F17\u53F7\u8349\u7A3F\u9884\u89C8",
+      sandbox: "allow-same-origin"
+    }
+  });
+  frame2.srcdoc = createWechatPreviewDocument(html2);
+  const resize2 = () => {
+    const documentElement = frame2.contentDocument?.documentElement;
+    const body = frame2.contentDocument?.body;
+    if (!documentElement || !body) return;
+    const height2 = Math.max(800, documentElement.scrollHeight, body.scrollHeight);
+    frame2.style.height = `${height2}px`;
+  };
+  frame2.addEventListener("load", () => {
+    resize2();
+    const content = frame2.contentDocument;
+    content?.querySelectorAll("img").forEach((image) => {
+      image.addEventListener("load", resize2, { once: true });
+      image.addEventListener("error", resize2, { once: true });
+    });
+    window.setTimeout(resize2, 0);
+  });
+  return frame2;
+}
+
+// src/ui/publisher-view.ts
 function iconButton(parent4, icon2, label, action) {
   const button = parent4.createEl("button", { cls: "wop-icon-button", attr: { "aria-label": label } });
   (0, import_obsidian5.setIcon)(button, icon2);
@@ -222789,6 +223123,9 @@ function textButton(parent4, text5, action, cta = false, icon2) {
   }
   button.addEventListener("click", () => void action());
   return button;
+}
+function clamp2(value2, min10, max10) {
+  return Math.min(max10, Math.max(min10, value2));
 }
 var PublisherView = class extends import_obsidian5.ItemView {
   constructor(leaf, host) {
@@ -222840,10 +223177,11 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderAccountSelect(controls);
     this.renderTemplateSelect(controls);
     iconButton(controls, "refresh-cw", "\u5237\u65B0\u9884\u89C8", () => this.refresh());
-    const publish = textButton(controls, "\u68C0\u67E5\u53D1\u5E03", async () => {
+    const publish = textButton(controls, "\u68C0\u67E5", async () => {
       this.host.settings.activeTab = "publish";
       await this.host.saveSettings();
-    }, true, "send");
+    }, false, "list-checks");
+    publish.addClass("wop-toolbar-check");
     publish.disabled = !article;
     iconButton(controls, "settings", "\u6253\u5F00\u8BBE\u7F6E", () => this.host.openSettings());
     const tabs = this.contentEl.createDiv({ cls: "wop-tabs", attr: { role: "tablist" } });
@@ -222913,36 +223251,31 @@ var PublisherView = class extends import_obsidian5.ItemView {
     });
   }
   renderPreview(panel, path4, article) {
+    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
     const meta3 = panel.createDiv({ cls: "wop-preview-meta" });
     const summary = meta3.createDiv({ cls: "wop-preview-summary" });
-    this.renderMetaItem(summary, "palette", findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates).name);
+    this.renderMetaItem(summary, "palette", template.name);
     this.renderMetaItem(summary, "images", `${article.imageSources.length} \u5F20\u56FE\u7247`);
     this.renderMetaItem(summary, "file-text", path4, true);
     const actions = meta3.createDiv({ cls: "wop-preview-actions" });
-    const devices = actions.createDiv({ cls: "wop-segmented" });
-    for (const device of ["phone", "desktop"]) {
-      const button = devices.createEl("button", { text: device === "phone" ? "\u624B\u673A" : "\u684C\u9762", cls: this.host.settings.previewDevice === device ? "is-active" : "" });
-      button.addEventListener("click", async () => {
-        this.host.settings.previewDevice = device;
-        await this.host.saveSettings();
-      });
-    }
+    this.renderLayoutPresetControls(actions, template);
+    this.renderDeviceControls(actions);
     const copy5 = iconButton(actions, "copy", "\u590D\u5236\u516C\u4F17\u53F7 HTML", async () => {
-      await navigator.clipboard.writeText(article.html);
+      if (!article.previewHtml) {
+        new import_obsidian5.Notice("\u5F53\u524D\u6587\u7AE0\u65E0\u6CD5\u751F\u6210\u8349\u7A3F\u4E00\u81F4\u9884\u89C8\uFF0C\u8BF7\u5148\u5904\u7406\u6E32\u67D3\u63D0\u793A\u3002");
+        return;
+      }
+      await navigator.clipboard.writeText(article.previewHtml);
       new import_obsidian5.Notice("\u516C\u4F17\u53F7 HTML \u5DF2\u590D\u5236\uFF0C\u53EF\u4EE5\u76F4\u63A5\u7C98\u8D34\u5230\u5176\u4ED6\u7F16\u8F91\u5668\u3002");
     });
     copy5.addClass("wop-meta-action");
+    copy5.disabled = !article.previewHtml;
     if (article.warnings.length) {
       const warning = panel.createDiv({ cls: "wop-warning" });
       (0, import_obsidian5.setIcon)(warning.createSpan(), "triangle-alert");
       warning.createSpan({ text: article.warnings.join(" ") });
     }
-    const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-    const stage = panel.createDiv({ cls: "wop-preview-stage" });
-    stage.dataset.device = this.host.settings.previewDevice;
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    const paper = stage.createDiv({ cls: "wop-paper" });
-    paper.innerHTML = article.html;
+    this.renderPreviewStage(panel, template, article);
   }
   renderModules(panel) {
     const header = panel.createDiv({ cls: "wop-panel-header" });
@@ -223039,26 +223372,31 @@ var PublisherView = class extends import_obsidian5.ItemView {
     copy5.createEl("strong", { text: "\u6A21\u677F\u5E93" });
     copy5.createEl("span", { text: `${ALL_TEMPLATES.length} \u5185\u7F6E` });
     const actions = header.createDiv({ cls: "wop-template-drawer-actions" });
-    iconButton(actions, "download", "\u5BFC\u51FA\u5F53\u524D\u6A21\u677F", () => {
-      const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
-      this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
-      new import_obsidian5.Notice("\u5F53\u524D\u6A21\u677F\u5DF2\u5BFC\u51FA\u4E3A JSON\u3002");
-    });
-    iconButton(actions, "archive", "\u5BFC\u51FA\u5168\u90E8\u7528\u6237\u6A21\u677F", () => {
-      if (!this.host.settings.customTemplates.length) {
-        new import_obsidian5.Notice("\u8FD8\u6CA1\u6709\u7528\u6237\u6A21\u677F\u53EF\u5BFC\u51FA\u3002");
-        return;
-      }
-      this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
-      new import_obsidian5.Notice(`\u5DF2\u5BFC\u51FA ${this.host.settings.customTemplates.length} \u4E2A\u7528\u6237\u6A21\u677F\u3002`);
-    });
     const importInput = actions.createEl("input", {
       type: "file",
       cls: "wop-hidden-input",
       attr: { accept: ".json,application/json", "aria-label": "\u9009\u62E9\u6A21\u677F JSON \u6587\u4EF6" }
     });
     importInput.addEventListener("change", () => void this.importTemplateFiles(importInput.files));
-    iconButton(actions, "upload", "\u5BFC\u5165\u6A21\u677F JSON", () => importInput.click());
+    const importButton = textButton(actions, "\u5BFC\u5165", () => importInput.click(), false, "upload");
+    importButton.addClass("wop-template-import-button");
+    iconButton(actions, "download", "\u5BFC\u51FA\u6A21\u677F", (event3) => {
+      const menu = new import_obsidian5.Menu();
+      menu.addItem((item) => item.setTitle("\u5BFC\u51FA\u5F53\u524D\u6A21\u677F").setIcon("download").onClick(() => {
+        const active = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
+        this.downloadJson(`${active.id}.json`, JSON.stringify(active, null, 2));
+        new import_obsidian5.Notice("\u5F53\u524D\u6A21\u677F\u5DF2\u5BFC\u51FA\u4E3A JSON\u3002");
+      }));
+      menu.addItem((item) => item.setTitle("\u5BFC\u51FA\u5168\u90E8\u7528\u6237\u6A21\u677F").setIcon("archive").onClick(() => {
+        if (!this.host.settings.customTemplates.length) {
+          new import_obsidian5.Notice("\u8FD8\u6CA1\u6709\u7528\u6237\u6A21\u677F\u53EF\u5BFC\u51FA\u3002");
+          return;
+        }
+        this.downloadJson("wechat-publisher-templates.json", serializeTemplateBundle(this.host.settings.customTemplates));
+        new import_obsidian5.Notice(`\u5DF2\u5BFC\u51FA ${this.host.settings.customTemplates.length} \u4E2A\u7528\u6237\u6A21\u677F\u3002`);
+      }));
+      menu.showAtMouseEvent(event3);
+    });
     const filters = drawerBody.createDiv({ cls: "wop-template-filters" });
     const searchWrap = filters.createDiv({ cls: "wop-template-search" });
     (0, import_obsidian5.setIcon)(searchWrap.createSpan(), "search");
@@ -223088,19 +223426,19 @@ var PublisherView = class extends import_obsidian5.ItemView {
       new TemplateEditorModal(this.app, target, (saved) => void this.saveCustomTemplate(saved, template.source === "custom" ? template.id : void 0)).open();
     }, false, "pencil");
     editTemplate.addClass("wop-button-quiet");
-    const stage = preview.createDiv({ cls: "wop-preview-stage", attr: { "data-device": this.host.settings.previewDevice } });
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    const paper = stage.createDiv({ cls: "wop-paper" });
-    paper.innerHTML = article.html;
+    this.renderLayoutPresetControls(previewActions, template);
+    this.renderDeviceControls(previewActions);
+    this.renderPreviewStage(preview, template, article);
   }
   renderTemplateResults(parent4) {
     parent4.empty();
     const query = this.templateQuery.toLocaleLowerCase("zh-CN");
+    const favoriteIds = new Set(this.host.settings.favoriteTemplateIds);
     const templates = [...ALL_TEMPLATES, ...this.host.settings.customTemplates].filter((template) => {
       const groupMatches = this.templateGroup === "\u5168\u90E8" || template.group === this.templateGroup;
       const haystack = [template.name, template.description, template.group, template.sourceLabel, ...template.tags].join(" ").toLocaleLowerCase("zh-CN");
       return groupMatches && (!query || haystack.includes(query));
-    });
+    }).sort((left3, right3) => Number(favoriteIds.has(right3.id)) - Number(favoriteIds.has(left3.id)));
     const summary = parent4.createDiv({ cls: "wop-template-summary" });
     summary.createEl("span", { text: `${templates.length} \u4E2A\u6A21\u677F \xB7 ${this.templateGroup === "\u5168\u90E8" ? "\u5168\u90E8\u6765\u6E90" : this.templateGroup}` });
     if (!templates.length) {
@@ -223108,21 +223446,75 @@ var PublisherView = class extends import_obsidian5.ItemView {
       return;
     }
     const list = parent4.createDiv({ cls: "wop-template-strip-list" });
-    for (const template of templates) this.renderTemplateStrip(list, template);
+    const favoriteCount = templates.filter((template) => favoriteIds.has(template.id)).length;
+    if (favoriteCount) list.createDiv({ cls: "wop-template-section-label", text: `\u6536\u85CF ${favoriteCount}` });
+    let renderedFavorites = 0;
+    let listedAll = false;
+    for (const template of templates) {
+      if (favoriteIds.has(template.id)) renderedFavorites += 1;
+      if (!listedAll && favoriteCount && renderedFavorites === favoriteCount && templates.length > favoriteCount) {
+        this.renderTemplateStrip(list, template);
+        list.createDiv({ cls: "wop-template-section-label is-all", text: `\u5168\u90E8\u6A21\u677F ${templates.length - favoriteCount}` });
+        listedAll = true;
+        continue;
+      }
+      this.renderTemplateStrip(list, template);
+    }
   }
   renderTemplateStrip(parent4, template) {
     const active = template.id === this.host.settings.activeTemplateId;
+    const favorite = this.host.settings.favoriteTemplateIds.includes(template.id);
     const row = parent4.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
-    row.style.setProperty("--wop-accent", template.accent);
-    row.createDiv({ cls: "wop-template-color" });
+    row.setAttribute("role", "button");
+    row.tabIndex = 0;
+    row.style.setProperty("--wop-template-accent", template.tokens.accent || template.accent);
+    row.style.setProperty("--wop-template-tint", template.tokens.tint || template.canvas);
+    row.style.setProperty("--wop-template-heading", template.tokens.heading);
+    row.style.setProperty("--wop-template-body", template.tokens.body);
+    const sample = row.createDiv({ cls: "wop-template-sample", attr: { "aria-hidden": "true" } });
+    sample.createDiv({ cls: "wop-template-sample-title" });
+    sample.createDiv({ cls: "wop-template-sample-line is-short" });
+    sample.createDiv({ cls: "wop-template-sample-line" });
     const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
     info2.createEl("strong", { text: template.name });
-    info2.createEl("span", { text: template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group });
+    const details = info2.createDiv({ cls: "wop-template-strip-details" });
+    details.createEl("span", {
+      cls: "wop-template-source",
+      text: template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group
+    });
+    const palette2 = details.createDiv({
+      cls: "wop-template-palette",
+      attr: { "aria-label": `\u4E3B\u8272 ${template.tokens.accent || template.accent}` }
+    });
+    for (const [name50, color2] of [
+      ["\u4E3B\u8272", template.tokens.accent || template.accent],
+      ["\u6D45\u8272", template.tokens.tint || template.canvas],
+      ["\u6B63\u6587", template.tokens.body]
+    ]) {
+      const swatch = palette2.createSpan({ attr: { title: `${name50} ${color2}` } });
+      swatch.style.backgroundColor = color2;
+    }
+    details.createEl("code", {
+      text: (template.tokens.accent || template.accent).toUpperCase()
+    });
     if (template.upstream) row.title = `\u6765\u6E90\uFF1A${template.upstream}`;
-    row.addEventListener("click", async () => {
+    const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
+    };
+    row.addEventListener("click", () => void selectTemplate());
+    row.addEventListener("keydown", (event3) => {
+      if (event3.key === "Enter" || event3.key === " ") {
+        event3.preventDefault();
+        void selectTemplate();
+      }
     });
+    const favoriteButton = iconButton(row, "star", favorite ? `\u53D6\u6D88\u6536\u85CF${template.name}` : `\u6536\u85CF${template.name}`, async () => {
+      await this.toggleFavorite(template.id);
+    });
+    favoriteButton.addClass("wop-template-favorite");
+    favoriteButton.toggleClass("is-favorite", favorite);
+    favoriteButton.addEventListener("click", (event3) => event3.stopPropagation());
     const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "\u590D\u5236\u4E3A\u7528\u6237\u6A21\u677F", () => {
       const cloned = cloneTemplate(template);
@@ -223138,6 +223530,9 @@ var PublisherView = class extends import_obsidian5.ItemView {
         menu.addSeparator();
         menu.addItem((item) => item.setTitle("\u5220\u9664\u6A21\u677F").setIcon("trash-2").onClick(async () => {
           this.host.settings.customTemplates = this.host.settings.customTemplates.filter((item2) => item2.id !== template.id);
+          this.host.settings.favoriteTemplateIds = this.host.settings.favoriteTemplateIds.filter((id39) => id39 !== template.id);
+          this.host.settings.sourceLayoutTemplateIds = this.host.settings.sourceLayoutTemplateIds.filter((id39) => id39 !== template.id);
+          delete this.host.settings.layoutByTemplate[template.id];
           if (active) this.host.settings.activeTemplateId = ALL_TEMPLATES[0].id;
           await this.host.saveSettings();
         }));
@@ -223155,7 +223550,21 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const index = replaceId ? this.host.settings.customTemplates.findIndex((item) => item.id === replaceId) : -1;
     if (index >= 0) this.host.settings.customTemplates[index] = saved;
     else this.host.settings.customTemplates.push(saved);
+    if (replaceId && replaceId !== saved.id) {
+      this.host.settings.favoriteTemplateIds = this.host.settings.favoriteTemplateIds.map((id39) => id39 === replaceId ? saved.id : id39);
+      this.host.settings.sourceLayoutTemplateIds = this.host.settings.sourceLayoutTemplateIds.map((id39) => id39 === replaceId ? saved.id : id39);
+      const previousTuning = this.host.settings.layoutByTemplate[replaceId];
+      if (previousTuning) {
+        delete this.host.settings.layoutByTemplate[replaceId];
+        this.host.settings.layoutByTemplate[saved.id] = previousTuning;
+      }
+    }
     this.host.settings.activeTemplateId = saved.id;
+    await this.host.saveSettings();
+  }
+  async toggleFavorite(templateId) {
+    const favorites = this.host.settings.favoriteTemplateIds;
+    this.host.settings.favoriteTemplateIds = favorites.includes(templateId) ? favorites.filter((id39) => id39 !== templateId) : [...favorites, templateId];
     await this.host.saveSettings();
   }
   async importTemplateFiles(files) {
@@ -223189,6 +223598,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
       Boolean(account),
       Boolean(article.meta.title),
       Boolean(article.meta.author),
+      Boolean(article.previewHtml),
       true,
       Boolean(article.meta.cover || article.imageSources[0]),
       true,
@@ -223206,6 +223616,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderCheck(list, "\u516C\u4F17\u53F7\u8D26\u53F7", account?.name ?? "\u672A\u914D\u7F6E", Boolean(account));
     this.renderCheck(list, "\u6587\u7AE0\u6807\u9898", article.meta.title, Boolean(article.meta.title));
     this.renderCheck(list, "\u4F5C\u8005", article.meta.author || "\u672A\u586B\u5199", Boolean(article.meta.author));
+    this.renderCheck(list, "\u8349\u7A3F\u4E00\u81F4\u9884\u89C8", article.previewHtml ? "\u5DF2\u4F7F\u7528\u53D1\u5E03\u524D\u5904\u7406\u94FE\u8DEF" : "\u751F\u6210\u5931\u8D25\uFF0C\u8BF7\u5148\u5904\u7406\u6E32\u67D3\u63D0\u793A", Boolean(article.previewHtml));
     this.renderCheck(list, "\u6B63\u6587\u56FE\u7247", `${article.imageSources.length} \u5F20`, true);
     this.renderCheck(list, "\u5C01\u9762", article.meta.cover || article.imageSources[0] || "\u672A\u8BBE\u7F6E", Boolean(article.meta.cover || article.imageSources[0]));
     this.renderCheck(list, "\u8349\u7A3F\u64CD\u4F5C", this.host.settings.lastDraftByFile[path4] ? "\u66F4\u65B0\u5DF2\u5173\u8054\u8349\u7A3F" : "\u521B\u5EFA\u65B0\u8349\u7A3F", true);
@@ -223214,8 +223625,8 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const safety = footer.createDiv({ cls: "wop-publish-safety" });
     (0, import_obsidian5.setIcon)(safety.createSpan(), "shield-check");
     safety.createEl("p", { text: "\u4E0B\u4E00\u6B65\u4F1A\u518D\u6B21\u786E\u8BA4\uFF0C\u5E76\u5728\u63D0\u4EA4\u540E\u56DE\u8BFB\u8349\u7A3F\u3002AppSecret \u4E0D\u4F1A\u663E\u793A\u5728\u754C\u9762\u6216\u65E5\u5FD7\u4E2D\u3002" });
-    const button = textButton(footer, this.host.settings.lastDraftByFile[path4] ? "\u786E\u8BA4\u66F4\u65B0\u8349\u7A3F" : "\u786E\u8BA4\u53D1\u5E03\u8349\u7A3F", () => this.host.publishCurrent(article), true, "send");
-    button.disabled = !account || !article.meta.title || !Boolean(article.meta.cover || article.imageSources[0]);
+    const button = textButton(footer, this.host.settings.lastDraftByFile[path4] ? "\u786E\u8BA4\u66F4\u65B0\u8349\u7A3F" : "\u786E\u8BA4\u53D1\u5E03\u8349\u7A3F", () => this.host.publishCurrent(), true, "send");
+    button.disabled = !account || !article.meta.title || !Boolean(article.meta.cover || article.imageSources[0]) || !article.previewHtml || article.warnings.length > 0;
   }
   renderCheck(parent4, label, value2, ok) {
     const row = parent4.createDiv({ cls: `wop-check-row ${ok ? "is-ok" : "is-warning"}` });
@@ -223224,6 +223635,161 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const copy5 = row.createDiv();
     copy5.createEl("strong", { text: label });
     copy5.createEl("span", { text: value2 });
+  }
+  mountArticlePreview(paper, article) {
+    if (!article.previewHtml) {
+      const unavailable = paper.createDiv({ cls: "wop-preview-unavailable" });
+      (0, import_obsidian5.setIcon)(unavailable.createSpan(), "triangle-alert");
+      unavailable.createEl("p", { text: "\u65E0\u6CD5\u751F\u6210\u4E0E\u5FAE\u4FE1\u8349\u7A3F\u4E00\u81F4\u7684\u9884\u89C8\u3002\u8BF7\u5148\u5904\u7406\u4E0A\u65B9\u6E32\u67D3\u63D0\u793A\u3002" });
+      return;
+    }
+    mountWechatPreview(paper, article.previewHtml);
+  }
+  renderLayoutPresetControls(parent4, template) {
+    const current = this.host.getLayoutTuning(template.id);
+    const activePreset = current === void 0 ? "mobile" : layoutPresetId(current);
+    const group2 = parent4.createDiv({
+      cls: "wop-segmented wop-layout-presets",
+      attr: { "aria-label": "\u9605\u8BFB\u6A21\u5F0F" }
+    });
+    const options2 = [
+      ["source", "\u539F\u7248"],
+      ["mobile", "\u624B\u673A"],
+      ["balanced", "\u6807\u51C6"],
+      ["relaxed", "\u8212\u5C55"]
+    ];
+    for (const [id39, label] of options2) {
+      const button = group2.createEl("button", {
+        text: label,
+        cls: activePreset === id39 ? "is-active" : "",
+        attr: { title: id39 === "source" ? "\u4F7F\u7528\u6A21\u677F\u539F\u59CB\u6392\u7248" : LAYOUT_PRESETS[id39].name }
+      });
+      button.addEventListener("click", () => {
+        const tuning = id39 === "source" ? null : structuredClone(LAYOUT_PRESETS[id39].tuning);
+        void this.host.setLayoutTuning(template.id, tuning);
+      });
+    }
+  }
+  renderDeviceControls(parent4) {
+    const group2 = parent4.createDiv({
+      cls: "wop-segmented wop-device-switcher",
+      attr: { "aria-label": "\u9884\u89C8\u8BBE\u5907" }
+    });
+    const devices = [
+      ["phone", "\u624B\u673A", "smartphone"],
+      ["wechat", "\u5FAE\u4FE1", "message-circle"],
+      ["desktop", "\u684C\u9762", "monitor"]
+    ];
+    for (const [device, label, icon2] of devices) {
+      const button = group2.createEl("button", {
+        cls: this.host.settings.previewDevice === device ? "is-active" : "",
+        attr: { "aria-label": `${label}\u9884\u89C8`, title: `${label}\u9884\u89C8` }
+      });
+      const mark = button.createSpan({ cls: "wop-segmented-icon" });
+      (0, import_obsidian5.setIcon)(mark, icon2);
+      button.createSpan({ text: label });
+      button.addEventListener("click", async () => {
+        this.host.settings.previewDevice = device;
+        await this.host.saveSettings();
+      });
+    }
+  }
+  renderPreviewStage(parent4, template, article) {
+    const device = this.host.settings.previewDevice;
+    const stage = parent4.createDiv({
+      cls: "wop-preview-stage",
+      attr: { "data-device": device }
+    });
+    stage.style.setProperty("--wop-template-canvas", template.canvas);
+    this.renderQuickLayoutControls(stage, template);
+    const frame2 = stage.createDiv({ cls: `wop-device-frame is-${device}` });
+    const chrome = frame2.createDiv({ cls: "wop-device-chrome" });
+    if (device === "desktop") {
+      const windowControls = chrome.createDiv({ cls: "wop-desktop-window-controls", attr: { "aria-hidden": "true" } });
+      windowControls.createSpan();
+      windowControls.createSpan();
+      windowControls.createSpan();
+      const title2 = chrome.createDiv({ cls: "wop-device-title" });
+      (0, import_obsidian5.setIcon)(title2.createSpan(), "monitor");
+      title2.createSpan({ text: "\u516C\u4F17\u53F7\u9884\u89C8" });
+      chrome.createSpan({ cls: "wop-device-chrome-spacer" });
+    } else if (device === "wechat") {
+      const back = chrome.createSpan({ cls: "wop-device-chrome-icon", attr: { "aria-hidden": "true" } });
+      (0, import_obsidian5.setIcon)(back, "chevron-left");
+      chrome.createSpan({ cls: "wop-device-title", text: "\u516C\u4F17\u53F7\u6587\u7AE0" });
+      const more = chrome.createSpan({ cls: "wop-device-chrome-icon", attr: { "aria-hidden": "true" } });
+      (0, import_obsidian5.setIcon)(more, "ellipsis");
+    } else {
+      chrome.createSpan({ text: "9:41", cls: "wop-phone-time" });
+      chrome.createSpan({ cls: "wop-phone-notch", attr: { "aria-hidden": "true" } });
+      const signal = chrome.createSpan({ cls: "wop-phone-signal", attr: { "aria-hidden": "true" } });
+      (0, import_obsidian5.setIcon)(signal, "wifi");
+    }
+    const viewport2 = frame2.createDiv({ cls: "wop-device-viewport" });
+    const paper = viewport2.createDiv({ cls: "wop-paper" });
+    this.mountArticlePreview(paper, article);
+    if (device !== "desktop") frame2.createDiv({ cls: "wop-device-home-indicator", attr: { "aria-hidden": "true" } });
+  }
+  renderQuickLayoutControls(parent4, template) {
+    const tuning = this.effectiveLayoutTuning(template.id);
+    const padding = tuning.verticalPadding === tuning.contentPadding ? `${tuning.contentPadding}px` : `${tuning.verticalPadding}/${tuning.contentPadding}px`;
+    const dock = parent4.createDiv({
+      cls: "wop-preview-dock",
+      attr: { "aria-label": "\u6587\u7AE0\u6392\u7248\u5FEB\u901F\u8C03\u6574" }
+    });
+    const panel = dock.createDiv({ cls: "wop-preview-dock-panel" });
+    this.renderStepper(panel, "\u5B57\u53F7", `${tuning.fontSize}px`, "type", () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        fontSize: clamp2(current.fontSize - 1, 12, 22)
+      });
+    }, () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        fontSize: clamp2(current.fontSize + 1, 12, 22)
+      });
+    });
+    this.renderStepper(panel, "Padding", padding, "square-dashed", () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      const value2 = clamp2(Math.round((current.verticalPadding + current.contentPadding) / 2) - 2, 0, 32);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        verticalPadding: value2,
+        contentPadding: value2
+      });
+    }, () => {
+      const current = this.effectiveLayoutTuning(template.id);
+      const value2 = clamp2(Math.round((current.verticalPadding + current.contentPadding) / 2) + 2, 0, 32);
+      return this.host.setLayoutTuning(template.id, {
+        ...current,
+        verticalPadding: value2,
+        contentPadding: value2
+      });
+    });
+  }
+  renderStepper(parent4, label, value2, icon2, decrement, increment) {
+    const group2 = parent4.createDiv({ cls: "wop-preview-stepper" });
+    const name50 = group2.createDiv({ cls: "wop-preview-stepper-label" });
+    (0, import_obsidian5.setIcon)(name50.createSpan(), icon2);
+    name50.createSpan({ text: label });
+    const controls = group2.createDiv({ cls: "wop-preview-stepper-controls" });
+    const minus = controls.createEl("button", {
+      text: "\u2212",
+      attr: { "aria-label": `\u51CF\u5C0F${label}`, title: `\u51CF\u5C0F${label}` }
+    });
+    minus.addEventListener("click", () => void decrement());
+    controls.createEl("output", { text: value2, attr: { "aria-label": `${label} ${value2}` } });
+    const plus2 = controls.createEl("button", {
+      text: "+",
+      attr: { "aria-label": `\u589E\u5927${label}`, title: `\u589E\u5927${label}` }
+    });
+    plus2.addEventListener("click", () => void increment());
+  }
+  effectiveLayoutTuning(templateId) {
+    const tuning = this.host.getLayoutTuning(templateId);
+    return structuredClone(tuning ?? DEFAULT_MOBILE_LAYOUT_TUNING);
   }
   renderMetaItem(parent4, icon2, text5, grow = false) {
     const item = parent4.createDiv({ cls: `wop-meta-item${grow ? " is-grow" : ""}`, attr: { title: text5 } });
@@ -223282,15 +223848,23 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
         return [];
       }
     });
+    const knownTemplateIds = new Set([...ALL_TEMPLATES, ...customTemplates].map((template) => template.id));
+    const favoriteTemplateIds = Array.isArray(loaded?.favoriteTemplateIds) ? [...new Set(loaded.favoriteTemplateIds.filter((id39) => typeof id39 === "string" && knownTemplateIds.has(id39)))] : [];
+    const sourceLayoutTemplateIds = Array.isArray(loaded?.sourceLayoutTemplateIds) ? [...new Set(loaded.sourceLayoutTemplateIds.filter((id39) => typeof id39 === "string" && knownTemplateIds.has(id39)))] : [];
+    const previewDevice = loaded?.previewDevice === "phone" || loaded?.previewDevice === "wechat" || loaded?.previewDevice === "desktop" ? loaded.previewDevice : DEFAULT_SETTINGS.previewDevice;
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...loaded ?? {},
       version: 2,
       activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
+      previewDevice,
       accounts: loaded?.accounts ?? [],
       connectionDiagnostics: loaded?.connectionDiagnostics ?? {},
       modules: modules2,
       customTemplates,
+      favoriteTemplateIds,
+      layoutByTemplate: normalizeLayoutMap(loaded?.layoutByTemplate),
+      sourceLayoutTemplateIds,
       lastDraftByFile: loaded?.lastDraftByFile ?? {}
     };
   }
@@ -223334,7 +223908,7 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
     app.setting.open();
     app.setting.openTabById(this.manifest.id);
   }
-  async renderActiveArticle() {
+  async renderActiveArticle(includePreview = true) {
     const file = this.app.workspace.getActiveFile();
     if (!(file instanceof import_obsidian6.TFile) || file.extension !== "md") throw new Error("\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7 Markdown \u7B14\u8BB0\u3002");
     const markdown = await this.app.vault.cachedRead(file);
@@ -223345,16 +223919,39 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
       defaultAuthor: this.settings.defaultAuthor,
       template,
       modules: this.settings.modules,
+      layoutTuning: this.getLayoutTuning(template.id),
       resolvePreviewImage: (source) => this.resolvePreviewImage(source, file.path)
     });
     if (!article.meta.cover) article.meta.cover = this.settings.defaultCoverPath;
+    if (includePreview) {
+      try {
+        article.previewHtml = await this.wechat.preparePreviewContent(article.html);
+      } catch (error3) {
+        article.warnings.push(error3 instanceof Error ? `\u65E0\u6CD5\u751F\u6210\u4E0E\u8349\u7A3F\u7BB1\u4E00\u81F4\u7684\u9884\u89C8\uFF1A${error3.message}` : "\u65E0\u6CD5\u751F\u6210\u4E0E\u8349\u7A3F\u7BB1\u4E00\u81F4\u7684\u9884\u89C8\u3002");
+      }
+    }
     return { file, article };
   }
   getActiveTemplate() {
     const all = [...this.settings.customTemplates, ...ALL_TEMPLATES];
     return all.find((template) => template.id === this.settings.activeTemplateId) ?? all[0];
   }
-  async publishCurrent(articleOverride) {
+  getLayoutTuning(templateId) {
+    if (this.settings.sourceLayoutTemplateIds.includes(templateId)) return null;
+    return this.settings.layoutByTemplate[templateId];
+  }
+  async setLayoutTuning(templateId, tuning) {
+    const normalized = normalizeLayoutTuning(tuning);
+    if (normalized) {
+      this.settings.layoutByTemplate[templateId] = normalized;
+      this.settings.sourceLayoutTemplateIds = this.settings.sourceLayoutTemplateIds.filter((id39) => id39 !== templateId);
+    } else {
+      delete this.settings.layoutByTemplate[templateId];
+      if (!this.settings.sourceLayoutTemplateIds.includes(templateId)) this.settings.sourceLayoutTemplateIds.push(templateId);
+    }
+    await this.saveSettings();
+  }
+  async publishCurrent() {
     let account;
     try {
       const file = this.app.workspace.getActiveFile();
@@ -223364,7 +223961,7 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
         this.openSettings();
         throw new Error("\u8BF7\u5148\u914D\u7F6E\u516C\u4F17\u53F7\u8D26\u53F7\u3002");
       }
-      const article = articleOverride ?? (await this.renderActiveArticle()).article;
+      const article = (await this.renderActiveArticle(false)).article;
       const existingMediaId = this.settings.lastDraftByFile[file.path];
       const confirmed = await ConfirmPublishModal.ask(this.app, article.meta.title, existingMediaId ? "update" : "add");
       if (!confirmed) return;
@@ -223467,7 +224064,7 @@ dompurify/dist/purify.es.mjs:
 
 mermaid/dist/chunks/mermaid.core/chunk-ZIRB5QZD.mjs:
   (*! Bundled license information:
-
+  
   js-yaml/dist/js-yaml.mjs:
     (*! js-yaml 4.1.1 https://github.com/nodeca/js-yaml @license MIT *)
   *)
@@ -223491,7 +224088,7 @@ cytoscape/dist/cytoscape.esm.mjs:
   *)
   (*!
   Event object based on jQuery events, MIT license
-
+  
   https://jquery.org/license/
   https://tldrlegal.com/license/mit-license
   https://github.com/jquery/jquery/blob/master/src/event.js
@@ -223501,7 +224098,7 @@ cytoscape/dist/cytoscape.esm.mjs:
 
 @mermaid-js/parser/dist/chunks/mermaid-parser.core/chunk-KEIR6QF5.mjs:
   (*! Bundled license information:
-
+  
   lodash-es/lodash.js:
     (**
      * @license
@@ -223523,10 +224120,10 @@ mermaid/dist/mermaid.core.mjs:
 svg-pathdata/lib/SVGPathData.module.js:
   (*! *****************************************************************************
   Copyright (c) Microsoft Corporation.
-
+  
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted.
-
+  
   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
   REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,

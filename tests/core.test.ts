@@ -168,17 +168,27 @@ describe("微信白名单诊断", () => {
 });
 
 describe("账号密钥存储", () => {
-  it("配置中只保存 Obsidian SecretStorage 引用", () => {
+  it("配置中只保存 Obsidian SecretStorage 引用，重启后新实例仍可读取", () => {
     const secrets = new Map<string, string>();
-    const vault = new CredentialVault(() => ({
+    const getSecretStorage = () => ({
       setSecret: (id: string, secret: string) => { secrets.set(id, secret); },
       getSecret: (id: string) => secrets.get(id) ?? null
-    } as never));
+    } as never);
+    const vault = new CredentialVault(getSecretStorage);
     const reference = vault.store("account-demo", "  test-secret  ");
     expect(reference).toBe("obsidian-secret:wechat-obsidian-publisher-account-demo");
     expect(reference).not.toContain("test-secret");
-    expect(vault.read(reference)).toBe("test-secret");
-    vault.clear(reference);
-    expect(() => vault.read(reference)).toThrow("系统密钥存储中找不到 AppSecret");
+    expect(new CredentialVault(getSecretStorage).read(reference)).toBe("test-secret");
+    new CredentialVault(getSecretStorage).clear(reference);
+    expect(() => new CredentialVault(getSecretStorage).read(reference)).toThrow("系统密钥存储中找不到 AppSecret");
+  });
+
+  it("密钥存储未落盘时不返回引用", () => {
+    const vault = new CredentialVault(() => ({
+      setSecret: () => undefined,
+      getSecret: () => null
+    } as never));
+
+    expect(() => vault.store("account-demo", "test-secret")).toThrow("系统密钥存储未能确认 AppSecret 已保存");
   });
 });

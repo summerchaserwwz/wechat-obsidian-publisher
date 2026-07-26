@@ -2,12 +2,13 @@ import { chmod } from "node:fs/promises";
 import { join } from "node:path";
 import { FileSystemAdapter, Notice, Plugin, TFile, normalizePath, requestUrl } from "obsidian";
 import { DEFAULT_MODULES, DEFAULT_SETTINGS, VIEW_TYPE_PUBLISHER } from "./defaults";
+import { normalizeLayoutMap, normalizeLayoutTuning } from "./core/layout-tuning";
 import { RenderEngine } from "./core/renderer";
 import { ALL_TEMPLATES, validateTemplate } from "./core/templates";
 import { CredentialVault } from "./publish/credential-vault";
 import { WechatApiError, WechatClient, extractRejectedIp } from "./publish/wechat-client";
 import { PublisherSettingTab } from "./settings-tab";
-import type { ContentModule, ImageAsset, ModuleKind, PluginSettings, PublisherTemplate, RenderedArticle, WechatAccount } from "./types";
+import type { ArticleLayoutTuning, ContentModule, ImageAsset, ModuleKind, PluginSettings, PublisherTemplate, RenderedArticle, WechatAccount } from "./types";
 import { ConfirmPublishModal } from "./ui/modals";
 import { PublisherView } from "./ui/publisher-view";
 
@@ -60,15 +61,31 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
     const customTemplates = (loaded?.customTemplates ?? []).flatMap((template) => {
       try { return [validateTemplate(template)]; } catch { return []; }
     });
+    const knownTemplateIds = new Set([...ALL_TEMPLATES, ...customTemplates].map((template) => template.id));
+    const favoriteTemplateIds = Array.isArray(loaded?.favoriteTemplateIds)
+      ? [...new Set(loaded.favoriteTemplateIds.filter((id): id is string => typeof id === "string" && knownTemplateIds.has(id)))]
+      : [];
+    const sourceLayoutTemplateIds = Array.isArray(loaded?.sourceLayoutTemplateIds)
+      ? [...new Set(loaded.sourceLayoutTemplateIds.filter((id): id is string => typeof id === "string" && knownTemplateIds.has(id)))]
+      : [];
+    const previewDevice = loaded?.previewDevice === "phone"
+      || loaded?.previewDevice === "wechat"
+      || loaded?.previewDevice === "desktop"
+      ? loaded.previewDevice
+      : DEFAULT_SETTINGS.previewDevice;
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...(loaded ?? {}),
       version: 2,
       activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
+      previewDevice,
       accounts: loaded?.accounts ?? [],
       connectionDiagnostics: loaded?.connectionDiagnostics ?? {},
       modules,
       customTemplates,
+      favoriteTemplateIds,
+      layoutByTemplate: normalizeLayoutMap(loaded?.layoutByTemplate),
+      sourceLayoutTemplateIds,
       lastDraftByFile: loaded?.lastDraftByFile ?? {}
     };
   }
@@ -119,7 +136,7 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
     app.setting.openTabById(this.manifest.id);
   }
 
-  async renderActiveArticle(): Promise<{ file: TFile; article: RenderedArticle }> {
+  async renderActiveArticle(includePreview = true): Promise<{ file: TFile; article: RenderedArticle }> {
     const file = this.app.workspace.getActiveFile();
     if (!(file instanceof TFile) || file.extension !== "md") throw new Error("请先打开一篇 Markdown 笔记。");
     const markdown = await this.app.vault.cachedRead(file);
@@ -130,9 +147,19 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
       defaultAuthor: this.settings.defaultAuthor,
       template,
       modules: this.settings.modules,
+      layoutTuning: this.getLayoutTuning(template.id),
       resolvePreviewImage: (source) => this.resolvePreviewImage(source, file.path)
     });
     if (!article.meta.cover) article.meta.cover = this.settings.defaultCoverPath;
+    if (includePreview) {
+      try {
+        article.previewHtml = await this.wechat.preparePreviewContent(article.html);
+      } catch (error) {
+        article.warnings.push(error instanceof Error
+          ? `无法生成与草稿箱一致的预览：${error.message}`
+          : "无法生成与草稿箱一致的预览。");
+      }
+    }
     return { file, article };
   }
 
@@ -141,7 +168,24 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
     return all.find((template) => template.id === this.settings.activeTemplateId) ?? all[0];
   }
 
-  async publishCurrent(articleOverride?: RenderedArticle): Promise<void> {
+  getLayoutTuning(templateId: string): ArticleLayoutTuning | null | undefined {
+    if (this.settings.sourceLayoutTemplateIds.includes(templateId)) return null;
+    return this.settings.layoutByTemplate[templateId];
+  }
+
+  async setLayoutTuning(templateId: string, tuning: ArticleLayoutTuning | null): Promise<void> {
+    const normalized = normalizeLayoutTuning(tuning);
+    if (normalized) {
+      this.settings.layoutByTemplate[templateId] = normalized;
+      this.settings.sourceLayoutTemplateIds = this.settings.sourceLayoutTemplateIds.filter((id) => id !== templateId);
+    } else {
+      delete this.settings.layoutByTemplate[templateId];
+      if (!this.settings.sourceLayoutTemplateIds.includes(templateId)) this.settings.sourceLayoutTemplateIds.push(templateId);
+    }
+    await this.saveSettings();
+  }
+
+  async publishCurrent(): Promise<void> {
     let account: WechatAccount | undefined;
     try {
       const file = this.app.workspace.getActiveFile();
@@ -151,7 +195,13 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
         this.openSettings();
         throw new Error("请先配置公众号账号。");
       }
-      const article = articleOverride ?? (await this.renderActiveArticle()).article;
+      // Always render immediately before confirming. A preview can be a few
+      // milliseconds behind a file edit, but the submitted draft must never
+      // use a captured, stale article instance.
+      // Publishing needs fresh source HTML, but the confirmation does not
+      // consume the iframe preview. Avoid rasterizing Mermaid once here and
+      // again during the actual materialization/upload step.
+      const article = (await this.renderActiveArticle(false)).article;
       const existingMediaId = this.settings.lastDraftByFile[file.path];
       const confirmed = await ConfirmPublishModal.ask(this.app, article.meta.title, existingMediaId ? "update" : "add");
       if (!confirmed) return;

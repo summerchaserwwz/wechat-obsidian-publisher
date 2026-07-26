@@ -94,17 +94,171 @@ async function uploadAsset(
   return parseResponse(response, action);
 }
 
-function stripEditorAttributes(html: string): string {
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = html;
+export interface WechatContentMaterializer {
+  rasterizeMermaid?: (svg: SVGSVGElement, index: number) => Promise<ImageAsset>;
+  replaceMermaid?: (asset: ImageAsset, index: number) => Promise<string>;
+  replaceImage?: (source: string) => Promise<string>;
+}
+
+export interface WechatVisualParity {
+  matches: boolean;
+  expected: string;
+  actual: string;
+}
+
+// The upload API is network-bound. Three parallel requests shorten multi-image
+// articles without creating an unbounded burst that can trigger rate limits.
+const BODY_IMAGE_UPLOAD_CONCURRENCY = 3;
+
+const HIGHLIGHT_STYLES: Record<string, Record<string, string>> = {
+  "hljs-doctag": { color: "#ff7b72" },
+  "hljs-keyword": { color: "#ff7b72" },
+  "hljs-template-tag": { color: "#ff7b72" },
+  "hljs-template-variable": { color: "#ff7b72" },
+  "hljs-type": { color: "#ff7b72" },
+  "hljs-variable": { color: "#79c0ff" },
+  "language_": { color: "#ff7b72" },
+  "hljs-title": { color: "#d2a8ff" },
+  "hljs-attr": { color: "#79c0ff" },
+  "hljs-attribute": { color: "#79c0ff" },
+  "hljs-literal": { color: "#79c0ff" },
+  "hljs-meta": { color: "#79c0ff" },
+  "hljs-number": { color: "#79c0ff" },
+  "hljs-operator": { color: "#79c0ff" },
+  "hljs-selector-attr": { color: "#79c0ff" },
+  "hljs-selector-class": { color: "#79c0ff" },
+  "hljs-selector-id": { color: "#79c0ff" },
+  "hljs-regexp": { color: "#a5d6ff" },
+  "hljs-string": { color: "#a5d6ff" },
+  "hljs-built_in": { color: "#ffa657" },
+  "hljs-symbol": { color: "#ffa657" },
+  "hljs-comment": { color: "#8b949e" },
+  "hljs-code": { color: "#8b949e" },
+  "hljs-formula": { color: "#8b949e" },
+  "hljs-name": { color: "#7ee787" },
+  "hljs-quote": { color: "#7ee787" },
+  "hljs-selector-tag": { color: "#7ee787" },
+  "hljs-selector-pseudo": { color: "#7ee787" },
+  "hljs-subst": { color: "#c9d1d9" },
+  "hljs-section": { color: "#1f6feb", "font-weight": "bold" },
+  "hljs-bullet": { color: "#f2cc60" },
+  "hljs-emphasis": { color: "#c9d1d9", "font-style": "italic" },
+  "hljs-strong": { color: "#c9d1d9", "font-weight": "bold" },
+  "hljs-addition": { color: "#aff5b4", "background-color": "#033a16" },
+  "hljs-deletion": { color: "#ffdcd7", "background-color": "#67060c" }
+};
+
+function setStyleIfMissing(element: HTMLElement, property: string, value: string): void {
+  if (!element.style.getPropertyValue(property)) element.style.setProperty(property, value);
+}
+
+function inlineHighlightStyles(wrapper: HTMLElement): void {
+  wrapper.querySelectorAll<HTMLElement>("code.hljs").forEach((code) => {
+    // These are the previously preview-only GitHub Dark rules. Inline them so
+    // a code sample keeps the same colours in the WeChat article HTML.
+    setStyleIfMissing(code, "display", "block");
+    setStyleIfMissing(code, "overflow-x", "auto");
+    setStyleIfMissing(code, "padding", "1em");
+    setStyleIfMissing(code, "color", "#c9d1d9");
+    setStyleIfMissing(code, "background", "transparent");
+  });
+  wrapper.querySelectorAll<HTMLElement>(".hljs").forEach((element) => {
+    for (const className of element.classList) {
+      const declarations = HIGHLIGHT_STYLES[className];
+      if (!declarations) continue;
+      for (const [property, value] of Object.entries(declarations)) setStyleIfMissing(element, property, value);
+    }
+  });
+}
+
+function inlineWechatBaseline(wrapper: HTMLElement): void {
+  const article = wrapper.querySelector<HTMLElement>(".wop-article");
+  if (article) {
+    setStyleIfMissing(article, "width", "100%");
+    setStyleIfMissing(article, "overflow-wrap", "anywhere");
+  }
+  wrapper.querySelectorAll<HTMLElement>("p").forEach((paragraph) => {
+    setStyleIfMissing(paragraph, "margin", "1em 0");
+  });
+  wrapper.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
+    setStyleIfMissing(link, "color", "#576b95");
+    setStyleIfMissing(link, "text-decoration", "none");
+  });
+  wrapper.querySelectorAll<HTMLElement>("blockquote").forEach((quote) => {
+    setStyleIfMissing(quote, "margin", "1.2em 0");
+  });
+  wrapper.querySelectorAll<HTMLElement>("pre").forEach((pre) => {
+    setStyleIfMissing(pre, "margin", "1em 0");
+    setStyleIfMissing(pre, "overflow-x", "auto");
+  });
+  wrapper.querySelectorAll<HTMLTableElement>("table").forEach((table) => {
+    setStyleIfMissing(table, "max-width", "100%");
+  });
+  wrapper.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
+    setStyleIfMissing(image, "max-width", "100%");
+    setStyleIfMissing(image, "height", "auto");
+  });
+  wrapper.querySelectorAll<SVGSVGElement>("svg").forEach((svg) => {
+    if (!svg.style.getPropertyValue("max-width")) svg.style.setProperty("max-width", "100%");
+    if (!svg.style.getPropertyValue("height")) svg.style.setProperty("height", "auto");
+  });
+}
+
+function stripPublisherAttributes(wrapper: HTMLElement): void {
   wrapper.querySelectorAll<HTMLElement>("*").forEach((element) => {
     for (const attribute of [...element.attributes]) {
-      if (attribute.name.startsWith("data-wop") || attribute.name === "contenteditable") {
+      if (attribute.name.startsWith("data-wop") || attribute.name === "data-source" || attribute.name === "contenteditable") {
         element.removeAttribute(attribute.name);
       }
     }
   });
-  return wrapper.innerHTML;
+}
+
+function styleSignature(element: HTMLElement): string {
+  const declarations: string[] = [];
+  for (let index = 0; index < element.style.length; index += 1) {
+    const property = element.style.item(index);
+    const value = element.style.getPropertyValue(property).trim();
+    const priority = element.style.getPropertyPriority(property);
+    declarations.push(`${property}:${value}${priority ? "!important" : ""}`);
+  }
+  return declarations.sort().join(";");
+}
+
+function visualHtmlSignature(html: string): string {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html;
+  wrapper.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    const attributes = [...element.attributes]
+      .filter((attribute) => {
+        const name = attribute.name.toLowerCase();
+        return name !== "style"
+          && name !== "class"
+          && name !== "id"
+          && name !== "src"
+          && name !== "srcset"
+          && name !== "contenteditable"
+          && !name.startsWith("data-")
+          && !name.startsWith("aria-");
+      })
+      .map((attribute) => [attribute.name, attribute.value] as const)
+      .sort(([left], [right]) => left.localeCompare(right));
+    const style = styleSignature(element);
+    for (const attribute of [...element.attributes]) element.removeAttribute(attribute.name);
+    for (const [name, value] of attributes) element.setAttribute(name, value);
+    if (style) element.setAttribute("style", style);
+  });
+  return wrapper.innerHTML.replace(/\r\n/g, "\n").trim();
+}
+
+export function compareWechatVisualHtml(expected: string, actual: string): WechatVisualParity {
+  const expectedSignature = visualHtmlSignature(expected);
+  const actualSignature = visualHtmlSignature(actual);
+  return {
+    matches: expectedSignature === actualSignature,
+    expected: expectedSignature,
+    actual: actualSignature
+  };
 }
 
 export function serializeSvgForCanvas(svg: SVGSVGElement): string {
@@ -171,6 +325,106 @@ async function svgToPngAsset(svg: SVGSVGElement, index: number): Promise<ImageAs
   };
 }
 
+function imageDataUrl(asset: ImageAsset): string {
+  const bytes = new Uint8Array(asset.bytes);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+  return `data:${asset.mimeType};base64,${btoa(binary)}`;
+}
+
+function createWechatImage(source: string, alt = "图表"): HTMLImageElement {
+  const image = document.createElement("img");
+  image.src = source;
+  image.alt = alt;
+  image.style.maxWidth = "100%";
+  image.style.height = "auto";
+  image.style.display = "block";
+  image.style.margin = "1.5em auto";
+  return image;
+}
+
+/**
+ * Resolve each distinct body-image source once, while limiting active uploads.
+ *
+ * A note may reuse the same local image several times. WeChat only needs one
+ * uploaded URL in that case, and replacing the DOM afterwards keeps document
+ * order exactly as authored. Mermaid deliberately stays on its serial path:
+ * canvas rasterisation is CPU-bound and benefits less from concurrent work.
+ */
+async function materializeBodyImages(
+  images: HTMLImageElement[],
+  replaceImage: (source: string) => Promise<string>
+): Promise<Map<string, Promise<string>>> {
+  const uniqueSources: string[] = [];
+  const seenSources = new Set<string>();
+  for (const image of images) {
+    const source = image.dataset.source;
+    if (!source || seenSources.has(source)) continue;
+    seenSources.add(source);
+    uniqueSources.push(source);
+  }
+
+  const replacements = new Map<string, Promise<string>>();
+  let nextIndex = 0;
+  const worker = async (): Promise<void> => {
+    while (nextIndex < uniqueSources.length) {
+      const source = uniqueSources[nextIndex];
+      nextIndex += 1;
+      // Wrap the callback so a synchronous resolver failure follows the same
+      // Promise rejection path as an upload failure.
+      const replacement = Promise.resolve().then(() => replaceImage(source));
+      replacements.set(source, replacement);
+      await replacement;
+    }
+  };
+
+  const workerCount = Math.min(BODY_IMAGE_UPLOAD_CONCURRENCY, uniqueSources.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
+  return replacements;
+}
+
+export async function prepareWechatHtml(html: string, materializer: WechatContentMaterializer = {}): Promise<string> {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html;
+
+  const mermaidBlocks = [...wrapper.querySelectorAll<HTMLElement>("[data-wop-mermaid]")];
+  for (const [index, block] of mermaidBlocks.entries()) {
+    const svg = block.querySelector<SVGSVGElement>("svg");
+    if (!svg || !materializer.replaceMermaid) continue;
+    const asset = await (materializer.rasterizeMermaid ?? svgToPngAsset)(svg, index);
+    block.replaceWith(createWechatImage(await materializer.replaceMermaid(asset, index)));
+  }
+
+  const bodyImages = [...wrapper.querySelectorAll<HTMLImageElement>("img[data-source]")];
+  if (materializer.replaceImage) {
+    const replacements = await materializeBodyImages(bodyImages, materializer.replaceImage);
+    for (const image of bodyImages) {
+      const source = image.dataset.source;
+      const replacement = source ? replacements.get(source) : undefined;
+      if (replacement) image.src = await replacement;
+    }
+  }
+
+  inlineWechatBaseline(wrapper);
+  inlineHighlightStyles(wrapper);
+  stripPublisherAttributes(wrapper);
+  return wrapper.innerHTML;
+}
+
+/**
+ * Creates the exact export-safe DOM used by the preview surface. Mermaid is
+ * rendered to the same PNG bytes that the publishing flow uploads; only the
+ * final remote image URL is different.
+ */
+export async function prepareWechatPreviewHtml(html: string): Promise<string> {
+  return prepareWechatHtml(html, {
+    replaceMermaid: async (asset) => imageDataUrl(asset)
+  });
+}
+
 export class WechatClient {
   private async accessToken(appId: string, secret: string): Promise<string> {
     const query = new URLSearchParams({ grant_type: "client_credential", appid: appId, secret });
@@ -193,33 +447,14 @@ export class WechatClient {
   }
 
   private async prepareContent(input: PublishInput, token: string): Promise<string> {
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = input.article.html;
+    return prepareWechatHtml(input.article.html, {
+      replaceMermaid: async (asset) => this.uploadBodyImage(token, asset),
+      replaceImage: async (source) => this.uploadBodyImage(token, await input.resolveImage(source))
+    });
+  }
 
-    const mermaidBlocks = [...wrapper.querySelectorAll<HTMLElement>("[data-wop-mermaid]")];
-    for (const [index, block] of mermaidBlocks.entries()) {
-      const svg = block.querySelector<SVGSVGElement>("svg");
-      if (!svg) continue;
-      const asset = await svgToPngAsset(svg, index);
-      const url = await this.uploadBodyImage(token, asset);
-      const image = document.createElement("img");
-      image.src = url;
-      image.alt = "图表";
-      image.style.maxWidth = "100%";
-      image.style.height = "auto";
-      image.style.display = "block";
-      image.style.margin = "1.5em auto";
-      block.replaceWith(image);
-    }
-
-    for (const image of [...wrapper.querySelectorAll<HTMLImageElement>("img[data-source]")]) {
-      const source = image.dataset.source;
-      if (!source) continue;
-      const asset = await input.resolveImage(source);
-      image.src = await this.uploadBodyImage(token, asset);
-      image.removeAttribute("data-source");
-    }
-    return stripEditorAttributes(wrapper.innerHTML);
+  async preparePreviewContent(html: string): Promise<string> {
+    return prepareWechatPreviewHtml(html);
   }
 
   async testConnection(appId: string, secret: string): Promise<void> {
@@ -270,6 +505,10 @@ export class WechatClient {
     const saved = verified.news_item?.[0];
     if (!saved?.content || saved.title !== article.title) {
       throw new Error("草稿已提交，但回读内容与当前文章不一致，请到微信后台检查。");
+    }
+    const parity = compareWechatVisualHtml(content, saved.content);
+    if (!parity.matches) {
+      throw new Error("草稿已提交，但微信回读的结构或内联样式与预览不一致，请检查草稿后再继续发布。");
     }
     return {
       mediaId,

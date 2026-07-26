@@ -128,8 +128,13 @@ export class PublisherSettingTab extends PluginSettingTab {
     const mark = identity.createDiv({ cls: "wop-account-mark" });
     setIcon(mark, "badge-check");
     const copy = identity.createDiv();
+    const hasSecret = this.host.credentials.isAvailable(account.encryptedSecret);
     copy.createEl("strong", { text: account.name });
     copy.createEl("span", { text: account.appId.replace(/^(.{4}).*(.{4})$/, "$1••••$2") });
+    copy.createEl("span", {
+      text: hasSecret ? "密钥已安全保存" : "密钥需要重新导入",
+      cls: hasSecret ? "wop-account-secret-status is-ready" : "wop-account-secret-status is-missing"
+    });
     if (this.host.settings.defaultAccountId === account.id) header.createEl("span", { text: "默认账号", cls: "wop-status-badge" });
     new Setting(card)
       .setName("设为默认")

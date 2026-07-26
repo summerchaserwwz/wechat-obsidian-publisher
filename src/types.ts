@@ -1,5 +1,5 @@
 export type PublisherTab = "preview" | "modules" | "templates" | "publish";
-export type PreviewDevice = "phone" | "desktop";
+export type PreviewDevice = "phone" | "wechat" | "desktop";
 export type ModulePlacement = "before" | "before-first-table" | "after-first-table" | "after";
 export type ModuleKind =
   | "intro"
@@ -32,6 +32,15 @@ export interface ContentModule {
 export type TemplateSource = "md2-catalog" | "source-theme" | "curated" | "custom";
 export type TemplateAlignment = "left" | "source";
 export type TemplateStructureAdapter = "none" | "publication" | "wenyan";
+
+export interface ArticleLayoutTuning {
+  fontSize: number;
+  lineHeight: number;
+  paragraphSpacing: number;
+  headingSpacing: number;
+  verticalPadding: number;
+  contentPadding: number;
+}
 
 export interface TemplateTokens {
   variant: string;
@@ -99,6 +108,12 @@ export interface PublishReceipt {
 
 export interface RenderedArticle {
   html: string;
+  /**
+   * The same export-safe markup rendered by the preview surface. It differs
+   * from `html` only where a publish-only format must be materialized, such
+   * as Mermaid SVG being rasterized for WeChat.
+   */
+  previewHtml?: string;
   meta: ArticleMeta;
   imageSources: string[];
   warnings: string[];
@@ -116,6 +131,11 @@ export interface PluginSettings {
   connectionDiagnostics: Record<string, WechatConnectionDiagnostic>;
   modules: ContentModule[];
   customTemplates: PublisherTemplate[];
+  /** Built-in or user templates pinned to the top of the picker. */
+  favoriteTemplateIds: string[];
+  layoutByTemplate: Record<string, ArticleLayoutTuning>;
+  /** Templates explicitly restored to their upstream spacing and typography. */
+  sourceLayoutTemplateIds: string[];
   lastDraftByFile: Record<string, string>;
 }
 

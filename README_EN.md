@@ -1,56 +1,48 @@
 # WeChat Obsidian Publisher
 
-[简体中文](README.md) | [English](README_EN.md)
+[简体中文](README.md)
 
-Preview, compose, style, and publish WeChat Official Account drafts without leaving Obsidian.
+Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.6` redesigns the template workbench and mobile reading controls while keeping the workbench preview on the same HTML materialization path used for a WeChat draft.
 
-![Publisher workbench](docs/screenshots/preview-workbench-v021.jpeg)
+![v0.2.6 template workbench](docs/screenshots/template-workbench-v026.jpeg)
 
-![Workbench demo](docs/demo/workbench-v021.gif)
+![v0.2.6 WeChat article preview](docs/screenshots/wechat-preview-v026.jpeg)
 
-[Watch the MP4 demo](docs/demo/workbench-v021.mp4)
+## Highlights
 
-<details>
-<summary>View the template, module, and visual editor panels</summary>
+- Preview the active Markdown note in a dedicated side workbench with phone, WeChat article, or desktop framing.
+- Choose from 129 built-in templates, including the MD2 catalog, all 12 original Wenyan themes, and traceable open-source themes. Body copy, lists, quotes, and tables use a left-aligned reading baseline.
+- Search, filter, favorite, import, and export templates from a translucent left rail while the article stays visible. Favorites are pinned first.
+- Every template row keeps its name, source, primary palette swatches, and accent HEX instead of relying on an ambiguous color thumbnail.
+- Duplicate any built-in template into a user template, edit colors, typography, font size, and line height, or import and export full JSON.
+- Compose nine before-and-after content modules: intro, before table, after table, ending, recommendations, author bio, follow card, copyright notice, and custom content.
+- Add, edit, enable, delete, and reorder modules. Table modules are placed around the first Markdown table.
+- Render tables, highlighted code, KaTeX, Mermaid, local Obsidian images, and regular Markdown images.
+- Upload body images and a cover, then create or update a WeChat draft. Reused images upload once and body-image uploads use bounded concurrency.
+- Read the draft back through `draft/get`. The plugin does not report success if the title, structure, or inline styles differ from the preview.
 
-![Template panel](docs/screenshots/template-panel-v021.jpeg)
+## Phone Reading and Preview Parity
 
-![Content module panel](docs/screenshots/module-panel-v021.jpeg)
+Templates without an explicit layout setting use the **Phone Reading** preset: `16px` body text, `1.78` line height, `16px` paragraph spacing, `28px` heading space, and `10px` padding on all sides. Those values are written as inline WeChat HTML, not borrowed from Obsidian preview CSS, so the preview and the submitted draft share the same styling rules.
 
-![Visual template editor](docs/screenshots/template-editor-v021.jpeg)
+There is no separate layout modal. Adjust the current template directly on the preview:
 
-</details>
+- Use the upper-right controls for Source, Phone, Standard, or Relaxed reading presets
+- Switch the upper-right frame between Phone, WeChat, and Desktop
+- Decrease, inspect, or increase the body font size in the lower-right dock
+- Decrease, inspect, or increase all-side Padding in the lower-right dock
 
-## What it does
+**Source Theme** preserves the upstream layout. It is useful for source fidelity but can restore wider web-oriented margins.
 
-- Live-preview the active Markdown note in a dedicated side workbench, with desktop and mobile widths.
-- Ship 129 selectable templates: preserve the 100-entry md2wechat-publisher catalog and add 40 traceable source-original themes. Seventeen same-ID token approximations are replaced by their original CSS or style objects rather than duplicated.
-- Include all 12 Wenyan themes as original CSS, preserving Pie, Maize, Mint, Toutiao, inline SVG marks, and source heading structure while keeping body copy, lists, quotes, and tables left aligned.
-- Group the 40 source-original themes as Mopai, WeMD, NeuraPress, and Doocs. Dark or high-impact themes are marked for short-form use so they do not displace long-form defaults.
-- Keep the article visible while choosing a theme from a compact left-side rail.
-- Compose nine module types: intro, before first table, after first table, ending, recommendations, author bio, follow card, copyright notice, and custom content.
-- Add, edit, enable, delete, and reorder modules. Table modules are inserted around the first Markdown table.
-- Duplicate any built-in template into an editable user template.
-- Edit common colors, typography, font size, and line height visually, with advanced JSON available when needed.
-- Import a single template, an array, or a complete template bundle from JSON; export the active template or all user templates.
-- Render code blocks, KaTeX formulas, Mermaid diagrams, tables, and local Obsidian images.
-- Upload body images, upload a permanent cover asset, then create or update a WeChat draft.
-- Read the draft back through `draft/get` and only report success after the title and body pass verification.
-- Import an existing Wenyan publishing account and move the AppSecret into Obsidian SecretStorage immediately.
+Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
 
-## Architecture and Wenyan Core
+## Relationship to Wenyan Core
 
-This plugin has no runtime or build dependency on `@wenyan-md/core`. Its renderer follows a staged architecture inspired by Wenyan Core while implementing the pipeline independently:
-
-```text
-Markdown parsing → structural enrichment → theme token compilation → image rewriting → WeChat draft
-```
-
-“Wenyan Original” means the plugin vendors the original Wenyan Core theme CSS. It does not execute Wenyan Core at runtime. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution.
+The plugin does not depend on or run `@wenyan-md/core`. It independently implements Markdown parsing, structural enrichment, template compilation, image preparation, and WeChat draft publishing. "Wenyan Original" means that the corresponding source theme CSS is bundled to preserve details such as Pie heading decorations. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution.
 
 ## Installation
 
-The project is currently distributed through GitHub source and releases; it is not yet listed in the Obsidian Community plugin directory.
+The plugin is currently distributed through GitHub source or releases. It is not yet listed in the Obsidian Community plugin directory.
 
 ### Build from source
 
@@ -59,7 +51,7 @@ npm install
 npm run check
 ```
 
-Copy these files into `.obsidian/plugins/wechat-obsidian-publisher/` inside your vault:
+Copy these files to `.obsidian/plugins/wechat-obsidian-publisher/` inside your vault:
 
 ```text
 main.js
@@ -67,19 +59,19 @@ manifest.json
 styles.css
 ```
 
-Then enable `WeChat Obsidian Publisher` under Obsidian's Community plugins settings.
+Then enable **WeChat Obsidian Publisher** under Obsidian Community plugins.
 
-## Quick setup
+## Quick Start
 
-1. Open the plugin settings.
-2. If you already use `wechat-wenyan-publish`, choose **Secure import**.
-3. Otherwise, enter the Official Account AppID and AppSecret manually.
-4. Set a default author and cover, or override them per article in frontmatter.
-5. Select the send icon in the left ribbon to open the publisher workbench.
+1. Add an Official Account in plugin settings, or securely import it from `wechat-wenyan-publish`.
+2. Set a default author and cover. Individual notes can override both in frontmatter.
+3. Use the send icon in the left ribbon to open the publisher workbench.
+4. Pick a template from the rail. Use the upper-right reading and device controls, then tune font size and all-side Padding in the lower-right dock.
+5. On the **Check** tab, make sure the account, cover, images, and draft-parity preview pass before creating or updating a draft.
 
-The connection check only requests an access token. It does not create or modify a draft. If WeChat returns error `40164`, the settings page extracts the rejected public IPv4 and provides a copy button, the exact whitelist menu path, and a link to the WeChat Developer Platform. The same actionable card opens automatically when publishing is blocked by the whitelist.
+Connection testing only requests an access token. It never creates or changes a draft. When WeChat returns `40164`, the settings page extracts the rejected IPv4 and offers a copy action, the whitelist menu path, and a direct entry to the WeChat Developer Platform.
 
-## Article metadata
+## Article Metadata
 
 ```yaml
 ---
@@ -91,17 +83,19 @@ source_url: https://example.com/original
 ---
 ```
 
-If `cover` is omitted, the first body image is used. The first publish creates a draft; publishing the same note again updates the associated draft.
+When `cover` is omitted, the first body image is used. The first publish creates a draft. A later publish of the same note updates the associated draft.
 
-## Custom templates
+## User Templates
 
-Built-in templates are immutable. In the **Templates** panel, select the duplicate icon to create a user-owned copy and open the editor. Use the visual controls for common typography and color changes, then switch to advanced JSON for exact control.
+Built-in templates are immutable. Open **Templates**, choose **Duplicate and edit**, then edit the copied user template. The visual editor covers common font and color changes. Open advanced JSON for precise control.
+
+Imports accept one template, an array of templates, or an exported template bundle. Save and import filter selectors, CSS properties, and external resources that are unsuitable for WeChat inline HTML. User templates live in the current vault settings; favorites and template-specific layout settings stay with the template.
 
 ```json
 {
   "id": "custom-example",
   "name": "My template",
-  "description": "A custom publishing style",
+  "description": "A custom template for long-form reading",
   "source": "custom",
   "group": "User templates",
   "sourceLabel": "User template",
@@ -120,40 +114,19 @@ Built-in templates are immutable. In the **Templates** panel, select the duplica
     "strong": "#356348"
   },
   "styles": {
-    "body": {
-      "fontSize": "16px",
-      "lineHeight": "1.85"
-    },
-    "h2": {
-      "color": "#ffffff",
-      "backgroundColor": "#356348"
-    }
+    "body": { "fontSize": "16px", "lineHeight": "1.75" },
+    "h2": { "color": "#ffffff", "backgroundColor": "#356348" }
   }
 }
 ```
 
-On save and import, the plugin filters selectors, CSS properties, and external resources that are unsuitable for WeChat inline HTML. User templates live in the current vault's plugin settings and can be exported as portable JSON.
+## Safety and Limits
 
-## Content modules
-
-Modules can be inserted before the body, before the first table, after the first table, or after the body. Every module is written in Markdown and rendered through the active theme, so headings, lists, links, quotes, and images remain visually consistent.
-
-Upgrades preserve existing modules, enabled states, and user templates while adding newly introduced built-in module definitions.
-
-## Publishing safety
-
-- The AppSecret is never committed to the repository or included in notifications and error logs.
-- The plugin stores the AppSecret through Obsidian `SecretStorage`; `data.json` only keeps an `obsidian-secret:` reference and is restricted to `0600` permissions.
-- Every real draft submission requires a confirmation dialog.
-- The plugin calls draft APIs only. It never calls a mass-send endpoint.
-- A draft is not reported as successful until `draft/get` read-back verification passes.
-
-## Known limitations
-
-- Desktop Obsidian only.
-- The plugin creates or updates drafts; final review and mass sending remain in the WeChat admin console.
-- Native WeChat components such as videos, polls, and Mini Program cards still need to be added in the official editor.
-- Whether `SecretStorage` receives system-level encryption depends on the availability of the current operating system keychain. The plugin reports the actual status.
+- AppSecrets are stored through Obsidian `SecretStorage`. `data.json` retains only a reference and uses `0600` permissions. The value is read back after storage to confirm persistence.
+- AppSecrets are never written to the repository, notifications, or error logs.
+- Every real draft submission asks for confirmation.
+- The plugin only calls draft APIs. It never calls a mass-send endpoint.
+- Desktop Obsidian only. Native WeChat features such as video, polls, and Mini Program cards still need to be added in the WeChat admin editor.
 
 ## Development
 
@@ -161,6 +134,7 @@ Upgrades preserve existing modules, enabled states, and user templates while add
 npm run dev
 npm run test
 npm run build
+npm run check
 ```
 
-Licensed under the MIT License.
+License: [MIT](LICENSE).

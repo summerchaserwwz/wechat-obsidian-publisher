@@ -34,7 +34,11 @@ export class CredentialVault {
     const normalizedSecret = secret.trim();
     if (!normalizedSecret) throw new Error("AppSecret 不能为空。");
     const secretId = normalizeSecretId(accountId);
-    this.getSecretStorage().setSecret(secretId, normalizedSecret);
+    const storage = this.getSecretStorage();
+    storage.setSecret(secretId, normalizedSecret);
+    if (storage.getSecret(secretId) !== normalizedSecret) {
+      throw new Error("系统密钥存储未能确认 AppSecret 已保存，请检查 Obsidian 的系统密钥存储后重试。");
+    }
     return `${SECRET_REFERENCE_PREFIX}${secretId}`;
   }
 
@@ -47,6 +51,14 @@ export class CredentialVault {
     const secret = this.getSecretStorage().getSecret(secretId);
     if (!secret) throw new Error("系统密钥存储中找不到 AppSecret，请重新导入或更新。");
     return secret;
+  }
+
+  isAvailable(secretReference: string): boolean {
+    try {
+      return Boolean(this.read(secretReference));
+    } catch {
+      return false;
+    }
   }
 
   clear(secretReference: string): void {

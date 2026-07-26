@@ -2,8 +2,9 @@ import hljs from "highlight.js/lib/common";
 import katex from "katex";
 import { Marked } from "marked";
 import mermaid from "mermaid";
-import type { ContentModule, PublisherTemplate, RenderedArticle } from "../types";
+import type { ArticleLayoutTuning, ContentModule, PublisherTemplate, RenderedArticle } from "../types";
 import { parseDocument } from "./frontmatter";
+import { applyLayoutTuning, DEFAULT_MOBILE_LAYOUT_TUNING } from "./layout-tuning";
 import { composeMarkdown } from "./modules";
 import { applyTemplateStyles } from "./template-style-engine";
 
@@ -13,6 +14,7 @@ export interface RenderInput {
   defaultAuthor: string;
   template: PublisherTemplate;
   modules: ContentModule[];
+  layoutTuning?: ArticleLayoutTuning | null;
   resolvePreviewImage?: (source: string) => string | null;
 }
 
@@ -59,6 +61,7 @@ function enhanceStructure(root: HTMLElement, resolvePreviewImage?: (source: stri
       code.innerHTML = language && hljs.getLanguage(language)
         ? hljs.highlight(text, { language }).value
         : hljs.highlightAuto(text).value;
+      code.classList.add("hljs");
     } catch {
       code.textContent = text;
     }
@@ -129,6 +132,10 @@ export class RenderEngine {
     const imageSources = enhanceStructure(root, input.resolvePreviewImage);
     await renderMermaid(root, warnings);
     applyTemplate(root, input.template);
+    // `undefined` means the plugin default: compact, phone-safe output.
+    // `null` is an explicit user choice to retain the upstream source layout.
+    const layoutTuning = input.layoutTuning === undefined ? DEFAULT_MOBILE_LAYOUT_TUNING : input.layoutTuning;
+    if (layoutTuning) applyLayoutTuning(root, layoutTuning);
     return { html: root.outerHTML, meta: parsed.meta, imageSources, warnings };
   }
 }
