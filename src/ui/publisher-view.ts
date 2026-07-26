@@ -415,37 +415,23 @@ export class PublisherView extends ItemView {
     const row = parent.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
     row.setAttribute("role", "button");
     row.tabIndex = 0;
-    row.style.setProperty("--wop-template-accent", template.tokens.accent || template.accent);
-    row.style.setProperty("--wop-template-tint", template.tokens.tint || template.canvas);
-    row.style.setProperty("--wop-template-heading", template.tokens.heading);
-    row.style.setProperty("--wop-template-body", template.tokens.body);
-    const sample = row.createDiv({ cls: "wop-template-sample", attr: { "aria-hidden": "true" } });
-    sample.createDiv({ cls: "wop-template-sample-title" });
-    sample.createDiv({ cls: "wop-template-sample-line is-short" });
-    sample.createDiv({ cls: "wop-template-sample-line" });
-    const info = row.createDiv({ cls: "wop-template-strip-copy" });
-    info.createEl("strong", { text: template.name });
-    const details = info.createDiv({ cls: "wop-template-strip-details" });
-    details.createEl("span", {
-      cls: "wop-template-source",
-      text: template.source === "custom" ? "用户模板" : template.group
-    });
-    const palette = details.createDiv({
+    const accent = template.tokens.accent || template.accent;
+    const tint = template.tokens.tint || template.canvas;
+    const palette = row.createDiv({
       cls: "wop-template-palette",
-      attr: { "aria-label": `主色 ${template.tokens.accent || template.accent}` }
+      attr: { "aria-label": `主配色 ${accent}、${tint}、${template.tokens.body}` }
     });
     for (const [name, color] of [
-      ["主色", template.tokens.accent || template.accent],
-      ["浅色", template.tokens.tint || template.canvas],
+      ["主色", accent],
+      ["浅色", tint],
       ["正文", template.tokens.body]
     ] as const) {
       const swatch = palette.createSpan({ attr: { title: `${name} ${color}` } });
       swatch.style.backgroundColor = color;
     }
-    details.createEl("code", {
-      text: (template.tokens.accent || template.accent).toUpperCase()
-    });
-    if (template.upstream) row.title = `来源：${template.upstream}`;
+    const info = row.createDiv({ cls: "wop-template-strip-copy" });
+    info.createEl("strong", { text: template.name });
+    row.title = `${template.name}\n来源：${template.upstream || (template.source === "custom" ? "用户模板" : template.group)}\n主色：${accent.toUpperCase()}`;
     const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
@@ -457,13 +443,13 @@ export class PublisherView extends ItemView {
         void selectTemplate();
       }
     });
-    const favoriteButton = iconButton(row, "star", favorite ? `取消收藏${template.name}` : `收藏${template.name}`, async () => {
+    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
+    const favoriteButton = iconButton(actions, "star", favorite ? `取消收藏${template.name}` : `收藏${template.name}`, async () => {
       await this.toggleFavorite(template.id);
     });
     favoriteButton.addClass("wop-template-favorite");
     favoriteButton.toggleClass("is-favorite", favorite);
     favoriteButton.addEventListener("click", (event) => event.stopPropagation());
-    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "复制为用户模板", () => {
       const cloned = cloneTemplate(template);
       new TemplateEditorModal(this.app, cloned, (saved) => void this.saveCustomTemplate(saved)).open();

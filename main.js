@@ -223467,37 +223467,25 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const row = parent4.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
     row.setAttribute("role", "button");
     row.tabIndex = 0;
-    row.style.setProperty("--wop-template-accent", template.tokens.accent || template.accent);
-    row.style.setProperty("--wop-template-tint", template.tokens.tint || template.canvas);
-    row.style.setProperty("--wop-template-heading", template.tokens.heading);
-    row.style.setProperty("--wop-template-body", template.tokens.body);
-    const sample = row.createDiv({ cls: "wop-template-sample", attr: { "aria-hidden": "true" } });
-    sample.createDiv({ cls: "wop-template-sample-title" });
-    sample.createDiv({ cls: "wop-template-sample-line is-short" });
-    sample.createDiv({ cls: "wop-template-sample-line" });
-    const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
-    info2.createEl("strong", { text: template.name });
-    const details = info2.createDiv({ cls: "wop-template-strip-details" });
-    details.createEl("span", {
-      cls: "wop-template-source",
-      text: template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group
-    });
-    const palette2 = details.createDiv({
+    const accent2 = template.tokens.accent || template.accent;
+    const tint = template.tokens.tint || template.canvas;
+    const palette2 = row.createDiv({
       cls: "wop-template-palette",
-      attr: { "aria-label": `\u4E3B\u8272 ${template.tokens.accent || template.accent}` }
+      attr: { "aria-label": `\u4E3B\u914D\u8272 ${accent2}\u3001${tint}\u3001${template.tokens.body}` }
     });
     for (const [name50, color2] of [
-      ["\u4E3B\u8272", template.tokens.accent || template.accent],
-      ["\u6D45\u8272", template.tokens.tint || template.canvas],
+      ["\u4E3B\u8272", accent2],
+      ["\u6D45\u8272", tint],
       ["\u6B63\u6587", template.tokens.body]
     ]) {
       const swatch = palette2.createSpan({ attr: { title: `${name50} ${color2}` } });
       swatch.style.backgroundColor = color2;
     }
-    details.createEl("code", {
-      text: (template.tokens.accent || template.accent).toUpperCase()
-    });
-    if (template.upstream) row.title = `\u6765\u6E90\uFF1A${template.upstream}`;
+    const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
+    info2.createEl("strong", { text: template.name });
+    row.title = `${template.name}
+\u6765\u6E90\uFF1A${template.upstream || (template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group)}
+\u4E3B\u8272\uFF1A${accent2.toUpperCase()}`;
     const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
@@ -223509,13 +223497,13 @@ var PublisherView = class extends import_obsidian5.ItemView {
         void selectTemplate();
       }
     });
-    const favoriteButton = iconButton(row, "star", favorite ? `\u53D6\u6D88\u6536\u85CF${template.name}` : `\u6536\u85CF${template.name}`, async () => {
+    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
+    const favoriteButton = iconButton(actions, "star", favorite ? `\u53D6\u6D88\u6536\u85CF${template.name}` : `\u6536\u85CF${template.name}`, async () => {
       await this.toggleFavorite(template.id);
     });
     favoriteButton.addClass("wop-template-favorite");
     favoriteButton.toggleClass("is-favorite", favorite);
     favoriteButton.addEventListener("click", (event3) => event3.stopPropagation());
-    const actions = row.createDiv({ cls: "wop-template-strip-actions" });
     const duplicate = iconButton(actions, "copy-plus", "\u590D\u5236\u4E3A\u7528\u6237\u6A21\u677F", () => {
       const cloned = cloneTemplate(template);
       new TemplateEditorModal(this.app, cloned, (saved) => void this.saveCustomTemplate(saved)).open();

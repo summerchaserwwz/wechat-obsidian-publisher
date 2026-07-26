@@ -2,18 +2,18 @@
 
 [简体中文](README.md)
 
-Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.6` redesigns the template workbench and mobile reading controls while keeping the workbench preview on the same HTML materialization path used for a WeChat draft.
+Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.7` reduces the template library to a compact palette-and-name rail, moves font and Padding controls into reserved preview space so they never cover the article, and normalizes control typography across the workbench.
 
-![v0.2.6 template workbench](docs/screenshots/template-workbench-v026.jpeg)
+![v0.2.7 compact template workbench](docs/screenshots/template-workbench-v027.jpeg)
 
-![v0.2.6 WeChat article preview](docs/screenshots/wechat-preview-v026.jpeg)
+![v0.2.7 phone article preview](docs/screenshots/mobile-preview-v027.jpeg)
 
 ## Highlights
 
 - Preview the active Markdown note in a dedicated side workbench with phone, WeChat article, or desktop framing.
 - Choose from 129 built-in templates, including the MD2 catalog, all 12 original Wenyan themes, and traceable open-source themes. Body copy, lists, quotes, and tables use a left-aligned reading baseline.
 - Search, filter, favorite, import, and export templates from a translucent left rail while the article stays visible. Favorites are pinned first.
-- Every template row keeps its name, source, primary palette swatches, and accent HEX instead of relying on an ambiguous color thumbnail.
+- Every template row shows only its name and three real palette swatches. Source attribution and the accent HEX remain available in the hover tooltip, without a fake article thumbnail.
 - Duplicate any built-in template into a user template, edit colors, typography, font size, and line height, or import and export full JSON.
 - Compose nine before-and-after content modules: intro, before table, after table, ending, recommendations, author bio, follow card, copyright notice, and custom content.
 - Add, edit, enable, delete, and reorder modules. Table modules are placed around the first Markdown table.
@@ -29,12 +29,12 @@ There is no separate layout modal. Adjust the current template directly on the p
 
 - Use the upper-right controls for Source, Phone, Standard, or Relaxed reading presets
 - Switch the upper-right frame between Phone, WeChat, and Desktop
-- Decrease, inspect, or increase the body font size in the lower-right dock
-- Decrease, inspect, or increase all-side Padding in the lower-right dock
+- Decrease, inspect, or increase the body font size in the lower-right control rail
+- Decrease, inspect, or increase all-side Padding in the lower-right control rail
 
 **Source Theme** preserves the upstream layout. It is useful for source fidelity but can restore wider web-oriented margins.
 
-Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
+The font and Padding controls use reserved space beside the preview, so opening the template library cannot make them cover the phone frame or article. Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
 
 ## Relationship to Wenyan Core
 
