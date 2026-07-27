@@ -5,6 +5,7 @@ import mermaid from "mermaid";
 import type { ArticleLayoutTuning, ContentModule, PublisherTemplate, RenderedArticle } from "../types";
 import { parseDocument } from "./frontmatter";
 import { applyLayoutTuning, DEFAULT_MOBILE_LAYOUT_TUNING } from "./layout-tuning";
+import { applyCodeBlockProfile } from "./code-block-profile";
 import { composeMarkdown } from "./modules";
 import { applyTemplateStyles } from "./template-style-engine";
 
@@ -136,6 +137,10 @@ export class RenderEngine {
     // `null` is an explicit user choice to retain the upstream source layout.
     const layoutTuning = input.layoutTuning === undefined ? DEFAULT_MOBILE_LAYOUT_TUNING : input.layoutTuning;
     if (layoutTuning) applyLayoutTuning(root, layoutTuning);
+    // Materialize code chrome after source CSS and layout tuning. This keeps
+    // contrast stable even when an imported theme supplied a light code panel
+    // with dark-theme syntax colours.
+    applyCodeBlockProfile(root, input.template.codeBlockProfile);
     return { html: root.outerHTML, meta: parsed.meta, imageSources, warnings };
   }
 }

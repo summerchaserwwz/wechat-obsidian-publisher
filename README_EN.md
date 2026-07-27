@@ -2,19 +2,19 @@
 
 [简体中文](README.md)
 
-Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.9` tightens phone reading density with `15px` left-aligned body text and `4px` horizontal padding. Templates now use a text-only rail, controls live in the top bar, and the preview stays white without floating overlays.
+Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.10` preserves the template-list position after selection and turns code blocks into real, exportable macOS-style windows. Phone reading keeps the `15px` left-aligned body text and `4px` horizontal padding by default.
 
-![v0.2.9 compact template workbench](docs/screenshots/template-workbench-v029.jpeg)
+![Compact template workbench](docs/screenshots/template-workbench-v029.jpeg)
 
-![v0.2.9 phone article preview](docs/screenshots/mobile-preview-v029.jpeg)
+![Phone article preview](docs/screenshots/mobile-preview-v029.jpeg)
 
 ## Highlights
 
 - Preview the active Markdown note in a dedicated side workbench with phone, WeChat article, or desktop framing.
-- Choose from 129 built-in templates, including the MD2 catalog, all 12 original Wenyan themes, and traceable open-source themes. Body copy, lists, quotes, and tables use a left-aligned reading baseline.
+- Choose from 130 built-in templates, including the new **Mac Code Notes**, the MD2 catalog, all 12 original Wenyan themes, and traceable open-source themes. Body copy, lists, quotes, and tables use a left-aligned reading baseline.
 - Search, filter, favorite, import, and export templates from a translucent left rail while the article stays visible. Favorites are pinned first.
-- Every template row shows only its name and three real palette swatches. Source attribution and the accent HEX remain available in the hover tooltip, without a fake article thumbnail.
-- Duplicate any built-in template into a user template, edit colors, typography, font size, and line height, or import and export full JSON.
+- Template rows remain text-first with a favorite action. Selecting, favoriting, or opening and closing the library keeps your current list position.
+- Duplicate any built-in template into a user template, edit colors, typography, font size, line height, and code-block appearance, or import and export full JSON.
 - Compose nine before-and-after content modules: intro, before table, after table, ending, recommendations, author bio, follow card, copyright notice, and custom content.
 - Add, edit, enable, delete, and reorder modules. Table modules are placed around the first Markdown table.
 - Render tables, highlighted code, KaTeX, Mermaid, local Obsidian images, and regular Markdown images.
@@ -35,6 +35,15 @@ There is no separate layout modal. Adjust the current template directly on the p
 **Source Theme** preserves the upstream layout. It is useful for source fidelity but can restore wider web-oriented margins.
 
 The font and spacing controls live in the top bar, so opening the template library cannot make them cover the phone frame or article. Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
+
+## macOS Code Blocks
+
+Every template defaults to the **macOS Dark** code profile. It does not rely on preview-only CSS: the frame, three window dots, language label, background, and syntax colors are materialized as final inline HTML, so preview and WeChat draft use the same result.
+
+- The code window applies only to fenced code blocks. Inline code stays inline.
+- Choose **Mac Code Notes** for a clean left-aligned technical article. Use **Duplicate and edit** to make it your own template.
+- The user-template editor offers macOS Dark, macOS Light, and Plain Safe presets, with switches for the title bar and language label.
+- Advanced JSON exposes `codeBlockProfile` for precise control of background, foreground, border, window dots, and syntax colours.
 
 ## Relationship to Wenyan Core
 
@@ -87,7 +96,7 @@ When `cover` is omitted, the first body image is used. The first publish creates
 
 ## User Templates
 
-Built-in templates are immutable. Open **Templates**, choose **Duplicate and edit**, then edit the copied user template. The visual editor covers common font and color changes. Open advanced JSON for precise control.
+Built-in templates are immutable. Open **Templates**, choose **Duplicate and edit**, then edit the copied user template. The visual editor covers common font, colour, and code-block changes. Its preview includes a heading, body, quote, and a real code block. Open advanced JSON for precise control.
 
 Imports accept one template, an array of templates, or an exported template bundle. Save and import filter selectors, CSS properties, and external resources that are unsuitable for WeChat inline HTML. User templates live in the current vault settings; favorites and template-specific layout settings stay with the template.
 
@@ -116,6 +125,25 @@ Imports accept one template, an array of templates, or an exported template bund
   "styles": {
     "body": { "fontSize": "16px", "lineHeight": "1.75" },
     "h2": { "color": "#ffffff", "backgroundColor": "#356348" }
+  },
+  "codeBlockProfile": {
+    "preset": "macos-dark",
+    "showChrome": true,
+    "showLanguage": true,
+    "background": "#1e1e1e",
+    "headerBackground": "#2b3038",
+    "foreground": "#e6edf3",
+    "muted": "#9aa4b2",
+    "border": "#3b4350",
+    "dotRed": "#ff5f57",
+    "dotYellow": "#febc2e",
+    "dotGreen": "#28c840",
+    "keyword": "#ff7b72",
+    "string": "#a5d6ff",
+    "function": "#d2a8ff",
+    "number": "#79c0ff",
+    "comment": "#8b949e",
+    "tag": "#7ee787"
   }
 }
 ```

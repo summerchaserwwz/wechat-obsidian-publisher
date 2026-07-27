@@ -1,5 +1,6 @@
 import type { PublisherTemplate, TemplateTokens } from "../types";
 import { MDB_KNOWLEDGE_BASE_CSS, WEMD_MODERN_EDITORIAL_CSS, WENYAN_PIE_CSS } from "./source-theme-css";
+import { CODE_BLOCK_PRESETS } from "./code-block-profile";
 
 type StyleMap = PublisherTemplate["styles"];
 
@@ -54,6 +55,39 @@ const pieChrome: StyleMap = {
 };
 
 export const CURATED_LEFT_TEMPLATES: PublisherTemplate[] = [
+  {
+    id: "curated-mac-code-notes",
+    name: "Mac 代码手记",
+    description: "白底左读的技术长文模板，代码块使用微信兼容的 macOS 风格窗口。",
+    source: "curated",
+    group: "阅读精选",
+    sourceLabel: "WeChat Obsidian Publisher",
+    license: "MIT",
+    tags: ["阅读精选", "技术写作", "macOS", "代码", "左对齐"],
+    accent: "#0a66c2",
+    canvas: "#f4f7fa",
+    tokens: tokens("#0a66c2", "#d8e8f8", "#f4f7fa", "#1d2939", "#344054"),
+    alignment: "left",
+    structureAdapter: "none",
+    codeBlockProfile: { ...CODE_BLOCK_PRESETS["macos-dark"] },
+    styles: withBase({
+      body: { color: "#344054", lineHeight: "1.78", padding: "0 4px" },
+      h1: { color: "#101828", fontWeight: "780", borderBottom: "2px solid #0a66c2", paddingBottom: "0.48em" },
+      h2: { color: "#101828", borderLeft: "4px solid #0a66c2", paddingLeft: "0.68em" },
+      h3: { color: "#1d2939", borderBottom: "1px solid #d8e8f8", paddingBottom: "0.34em" },
+      h4: { color: "#344054" },
+      blockquote: { color: "#475467", backgroundColor: "#f5f9ff", borderLeft: "4px solid #0a66c2", borderRadius: "0 7px 7px 0" },
+      a: { color: "#0a66c2", borderBottom: "1px solid #9bc7ef", textDecoration: "none" },
+      strong: { color: "#101828", fontWeight: "750" },
+      "p code, li code": { padding: "0.16em 0.38em", borderRadius: "4px", color: "#b42318", backgroundColor: "#f2f4f7", fontSize: "0.88em" },
+      pre: { color: "#e6edf3", backgroundColor: "#1e1e1e", lineHeight: "1.65" },
+      hr: { width: "68px", margin: "2em 0", border: "none", borderTop: "2px solid #0a66c2" },
+      table: { border: "1px solid #d8e8f8" },
+      "th, td": { padding: "9px 10px", border: "1px solid #d8e8f8" },
+      th: { color: "#1d2939", backgroundColor: "#f5f9ff", fontWeight: "700" },
+      img: { borderRadius: "8px" }
+    })
+  },
   {
     id: "curated-pie-original",
     name: "Pie 原版",

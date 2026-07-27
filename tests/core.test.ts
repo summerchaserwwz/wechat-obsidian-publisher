@@ -51,9 +51,10 @@ describe("主题目录", () => {
   });
 
   it("来源原版和阅读精选都在模板库中可追溯", () => {
-    expect(ALL_TEMPLATES).toHaveLength(129);
+    expect(ALL_TEMPLATES).toHaveLength(130);
     expect(ALL_TEMPLATE_GROUPS[0]).toBe("阅读精选");
     expect(ALL_TEMPLATES.filter((template) => template.group === "阅读精选").map((template) => template.id)).toEqual(expect.arrayContaining([
+      "curated-mac-code-notes",
       "curated-pie-original",
       "curated-pie-left",
       "curated-modern-editorial-left",

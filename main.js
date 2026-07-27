@@ -200539,6 +200539,270 @@ function parseDocument(markdown, fallbackTitle, defaultAuthor) {
   };
 }
 
+// src/core/code-block-profile.ts
+var MONO = "'SFMono-Regular', SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace";
+var HIGHLIGHT_CLASS_ROLES = {
+  "hljs-doctag": "keyword",
+  "hljs-keyword": "keyword",
+  "hljs-template-tag": "keyword",
+  "hljs-template-variable": "keyword",
+  "hljs-type": "keyword",
+  "language_": "keyword",
+  "hljs-title": "function",
+  "hljs-title.function_": "function",
+  "hljs-variable": "number",
+  "hljs-attr": "number",
+  "hljs-attribute": "number",
+  "hljs-literal": "number",
+  "hljs-meta": "number",
+  "hljs-number": "number",
+  "hljs-operator": "number",
+  "hljs-selector-attr": "number",
+  "hljs-selector-class": "number",
+  "hljs-selector-id": "number",
+  "hljs-regexp": "string",
+  "hljs-string": "string",
+  "hljs-built_in": "string",
+  "hljs-symbol": "string",
+  "hljs-comment": "comment",
+  "hljs-code": "comment",
+  "hljs-formula": "comment",
+  "hljs-name": "tag",
+  "hljs-quote": "tag",
+  "hljs-selector-tag": "tag",
+  "hljs-selector-pseudo": "tag",
+  "hljs-subst": "emphasis",
+  "hljs-emphasis": "emphasis",
+  "hljs-strong": "emphasis",
+  "hljs-addition": "addition",
+  "hljs-deletion": "deletion"
+};
+var CODE_BLOCK_PRESETS = {
+  "macos-dark": {
+    preset: "macos-dark",
+    showChrome: true,
+    showLanguage: true,
+    background: "#1e1e1e",
+    headerBackground: "#2b3038",
+    foreground: "#e6edf3",
+    muted: "#9aa4b2",
+    border: "#3b4350",
+    dotRed: "#ff5f57",
+    dotYellow: "#febc2e",
+    dotGreen: "#28c840",
+    keyword: "#ff7b72",
+    string: "#a5d6ff",
+    function: "#d2a8ff",
+    number: "#79c0ff",
+    comment: "#8b949e",
+    tag: "#7ee787"
+  },
+  "macos-light": {
+    preset: "macos-light",
+    showChrome: true,
+    showLanguage: true,
+    background: "#f6f8fa",
+    headerBackground: "#eef1f4",
+    foreground: "#1f2937",
+    muted: "#6b7280",
+    border: "#d7dde5",
+    dotRed: "#ff5f57",
+    dotYellow: "#febc2e",
+    dotGreen: "#28c840",
+    keyword: "#b42318",
+    string: "#0f766e",
+    function: "#6d28d9",
+    number: "#1d4ed8",
+    comment: "#6b7280",
+    tag: "#0f766e"
+  },
+  plain: {
+    preset: "plain",
+    showChrome: false,
+    showLanguage: false,
+    background: "#f5f7fa",
+    headerBackground: "#f5f7fa",
+    foreground: "#202938",
+    muted: "#667085",
+    border: "#dde3ea",
+    dotRed: "#ff5f57",
+    dotYellow: "#febc2e",
+    dotGreen: "#28c840",
+    keyword: "#b42318",
+    string: "#087443",
+    function: "#5b21b6",
+    number: "#175cd3",
+    comment: "#667085",
+    tag: "#087443"
+  }
+};
+var DEFAULT_CODE_BLOCK_PROFILE = CODE_BLOCK_PRESETS["macos-dark"];
+var COLOR_PROFILE_KEYS = [
+  "background",
+  "headerBackground",
+  "foreground",
+  "muted",
+  "border",
+  "dotRed",
+  "dotYellow",
+  "dotGreen",
+  "keyword",
+  "string",
+  "function",
+  "number",
+  "comment",
+  "tag"
+];
+function safeColor(value2, fallback) {
+  if (typeof value2 !== "string") return fallback;
+  const color2 = value2.trim();
+  return /^(?:#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\)|hsla?\([\d\s.,%]+\))$/i.test(color2) ? color2 : fallback;
+}
+function resolveCodeBlockProfile(value2) {
+  const preset = value2?.preset === "macos-light" || value2?.preset === "plain" || value2?.preset === "macos-dark" ? value2.preset : "macos-dark";
+  const base = CODE_BLOCK_PRESETS[preset];
+  const profile = {
+    ...base,
+    showChrome: typeof value2?.showChrome === "boolean" ? value2.showChrome : base.showChrome,
+    showLanguage: typeof value2?.showLanguage === "boolean" ? value2.showLanguage : base.showLanguage
+  };
+  for (const key of COLOR_PROFILE_KEYS) profile[key] = safeColor(value2?.[key], base[key]);
+  return profile;
+}
+function important(element3, property4, value2) {
+  element3.style.setProperty(property4, value2, "important");
+}
+function languageLabel(code2) {
+  const language = [...code2.classList].find((className) => className.startsWith("language-"))?.slice("language-".length).toLowerCase();
+  if (!language) return "";
+  const labels = {
+    ts: "TypeScript",
+    tsx: "TSX",
+    js: "JavaScript",
+    jsx: "JSX",
+    json: "JSON",
+    html: "HTML",
+    css: "CSS",
+    scss: "SCSS",
+    bash: "Bash",
+    shell: "Shell",
+    sh: "Shell",
+    zsh: "Zsh",
+    python: "Python",
+    py: "Python",
+    java: "Java",
+    go: "Go",
+    rust: "Rust",
+    sql: "SQL",
+    yaml: "YAML",
+    yml: "YAML",
+    markdown: "Markdown",
+    md: "Markdown"
+  };
+  return labels[language] ?? language.toUpperCase();
+}
+function createDot(document2, color2) {
+  const dot2 = document2.createElement("span");
+  important(dot2, "display", "inline-block");
+  important(dot2, "width", "8px");
+  important(dot2, "height", "8px");
+  important(dot2, "margin-right", "5px");
+  important(dot2, "border-radius", "999px");
+  important(dot2, "background-color", color2);
+  important(dot2, "vertical-align", "middle");
+  return dot2;
+}
+function applyHighlightProfile(code2, profile) {
+  const colors2 = {
+    keyword: profile.keyword,
+    string: profile.string,
+    function: profile.function,
+    number: profile.number,
+    comment: profile.comment,
+    tag: profile.tag,
+    emphasis: profile.foreground,
+    addition: profile.foreground,
+    deletion: profile.foreground
+  };
+  code2.querySelectorAll("[class]").forEach((element3) => {
+    const role = [...element3.classList].map((className) => HIGHLIGHT_CLASS_ROLES[className]).find((value2) => Boolean(value2));
+    if (!role) return;
+    important(element3, "color", colors2[role]);
+    if (role === "addition") important(element3, "background-color", "#033a16");
+    if (role === "deletion") important(element3, "background-color", "#67060c");
+  });
+}
+function applyCodeBlockProfile(root4, value2) {
+  const profile = resolveCodeBlockProfile(value2);
+  root4.querySelectorAll("pre > code").forEach((code2) => {
+    const pre = code2.parentElement;
+    if (!(pre instanceof HTMLElement)) return;
+    const existingWindow = pre.parentElement?.matches("[data-wop-code-window]");
+    if (existingWindow) return;
+    const frame2 = root4.ownerDocument.createElement("section");
+    frame2.className = "wop-code-window";
+    frame2.dataset.wopCodeWindow = "true";
+    important(frame2, "box-sizing", "border-box");
+    important(frame2, "width", "100%");
+    important(frame2, "margin", "1em 0");
+    important(frame2, "overflow", "hidden");
+    important(frame2, "border", `1px solid ${profile.border}`);
+    important(frame2, "border-radius", profile.showChrome ? "10px" : "7px");
+    important(frame2, "background-color", profile.background);
+    pre.replaceWith(frame2);
+    if (profile.showChrome) {
+      const toolbar = root4.ownerDocument.createElement("section");
+      toolbar.dataset.wopCodeToolbar = "true";
+      important(toolbar, "box-sizing", "border-box");
+      important(toolbar, "display", "block");
+      important(toolbar, "min-height", "28px");
+      important(toolbar, "padding", "8px 11px");
+      important(toolbar, "border-bottom", `1px solid ${profile.border}`);
+      important(toolbar, "background-color", profile.headerBackground);
+      toolbar.append(createDot(root4.ownerDocument, profile.dotRed), createDot(root4.ownerDocument, profile.dotYellow), createDot(root4.ownerDocument, profile.dotGreen));
+      const language = profile.showLanguage ? languageLabel(code2) : "";
+      if (language) {
+        const label = root4.ownerDocument.createElement("span");
+        label.dataset.wopCodeLanguage = "true";
+        label.textContent = language;
+        important(label, "display", "inline-block");
+        important(label, "margin-left", "5px");
+        important(label, "color", profile.muted);
+        important(label, "font-family", MONO);
+        important(label, "font-size", "10px");
+        important(label, "line-height", "1");
+        important(label, "vertical-align", "middle");
+        toolbar.appendChild(label);
+      }
+      frame2.appendChild(toolbar);
+    }
+    frame2.appendChild(pre);
+    important(pre, "box-sizing", "border-box");
+    important(pre, "width", "100%");
+    important(pre, "margin", "0");
+    important(pre, "padding", "13px 15px 15px");
+    important(pre, "overflow-x", "auto");
+    important(pre, "background", profile.background);
+    important(pre, "color", profile.foreground);
+    important(pre, "font-family", MONO);
+    important(pre, "font-size", "13px");
+    important(pre, "line-height", "1.65");
+    important(pre, "white-space", "pre");
+    important(pre, "word-break", "normal");
+    important(pre, "text-align", "left");
+    important(code2, "display", "block");
+    important(code2, "min-width", "max-content");
+    important(code2, "padding", "0");
+    important(code2, "background", "transparent");
+    important(code2, "color", profile.foreground);
+    important(code2, "font-family", MONO);
+    important(code2, "font-size", "inherit");
+    important(code2, "line-height", "inherit");
+    important(code2, "white-space", "pre");
+    applyHighlightProfile(code2, profile);
+  });
+}
+
 // src/core/modules.ts
 function composeMarkdown(body, modules2) {
   const before = modules2.filter((module2) => module2.enabled && module2.placement === "before");
@@ -208412,7 +208676,7 @@ function parse19() {
   const customProperty = isCustomProperty(property4);
   const parseValue = customProperty ? this.parseCustomProperty : this.parseValue;
   const consumeRaw6 = customProperty ? consumeCustomPropertyRaw : consumeValueRaw;
-  let important = false;
+  let important2 = false;
   let value2;
   this.skipSC();
   this.eat(Colon);
@@ -208438,7 +208702,7 @@ function parse19() {
     }
   }
   if (this.isDelim(EXCLAMATIONMARK3)) {
-    important = getImportant.call(this);
+    important2 = getImportant.call(this);
     this.skipSC();
   }
   if (this.eof === false && this.tokenType !== Semicolon && this.isBalanceEdge(startToken) === false) {
@@ -208447,7 +208711,7 @@ function parse19() {
   return {
     type: "Declaration",
     loc: this.getLocation(start3, this.tokenStart),
-    important,
+    important: important2,
     property: property4,
     value: value2
   };
@@ -208491,8 +208755,8 @@ function readProperty2() {
 function getImportant() {
   this.eat(Delim);
   this.skipSC();
-  const important = this.consume(Ident);
-  return important === "important" ? true : important;
+  const important2 = this.consume(Ident);
+  return important2 === "important" ? true : important2;
 }
 
 // node_modules/css-tree/lib/syntax/node/DeclarationList.js
@@ -211275,6 +211539,7 @@ var RenderEngine = class {
     applyTemplate(root4, input.template);
     const layoutTuning = input.layoutTuning === void 0 ? DEFAULT_MOBILE_LAYOUT_TUNING : input.layoutTuning;
     if (layoutTuning) applyLayoutTuning(root4, layoutTuning);
+    applyCodeBlockProfile(root4, input.template.codeBlockProfile);
     return { html: root4.outerHTML, meta: parsed.meta, imageSources, warnings: warnings3 };
   }
 };
@@ -215635,7 +215900,7 @@ var MDB_KNOWLEDGE_BASE_CSS = `
 
 // src/core/curated-left-templates.ts
 var SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif";
-var MONO = "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
+var MONO2 = "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace";
 function tokens3(accent2, accentSoft, tint, heading, body) {
   return { variant: "curated", accent: accent2, accentSoft, tint, heading, body, link: accent2, strong: heading };
 }
@@ -215667,7 +215932,7 @@ var leftReadingBase = {
   table: { width: "100%", margin: "1.4em 0", borderCollapse: "collapse", fontSize: "14px" },
   "th, td": { textAlign: "left" },
   pre: { margin: "1.25em 0", overflowX: "auto" },
-  code: { fontFamily: MONO }
+  code: { fontFamily: MONO2 }
 };
 function withBase(overrides) {
   const selectors = /* @__PURE__ */ new Set([...Object.keys(leftReadingBase), ...Object.keys(overrides)]);
@@ -215680,6 +215945,39 @@ var pieChrome = {
   body: { ...leftReadingBase.body, color: "#262626", padding: "0 8px" }
 };
 var CURATED_LEFT_TEMPLATES = [
+  {
+    id: "curated-mac-code-notes",
+    name: "Mac \u4EE3\u7801\u624B\u8BB0",
+    description: "\u767D\u5E95\u5DE6\u8BFB\u7684\u6280\u672F\u957F\u6587\u6A21\u677F\uFF0C\u4EE3\u7801\u5757\u4F7F\u7528\u5FAE\u4FE1\u517C\u5BB9\u7684 macOS \u98CE\u683C\u7A97\u53E3\u3002",
+    source: "curated",
+    group: "\u9605\u8BFB\u7CBE\u9009",
+    sourceLabel: "WeChat Obsidian Publisher",
+    license: "MIT",
+    tags: ["\u9605\u8BFB\u7CBE\u9009", "\u6280\u672F\u5199\u4F5C", "macOS", "\u4EE3\u7801", "\u5DE6\u5BF9\u9F50"],
+    accent: "#0a66c2",
+    canvas: "#f4f7fa",
+    tokens: tokens3("#0a66c2", "#d8e8f8", "#f4f7fa", "#1d2939", "#344054"),
+    alignment: "left",
+    structureAdapter: "none",
+    codeBlockProfile: { ...CODE_BLOCK_PRESETS["macos-dark"] },
+    styles: withBase({
+      body: { color: "#344054", lineHeight: "1.78", padding: "0 4px" },
+      h1: { color: "#101828", fontWeight: "780", borderBottom: "2px solid #0a66c2", paddingBottom: "0.48em" },
+      h2: { color: "#101828", borderLeft: "4px solid #0a66c2", paddingLeft: "0.68em" },
+      h3: { color: "#1d2939", borderBottom: "1px solid #d8e8f8", paddingBottom: "0.34em" },
+      h4: { color: "#344054" },
+      blockquote: { color: "#475467", backgroundColor: "#f5f9ff", borderLeft: "4px solid #0a66c2", borderRadius: "0 7px 7px 0" },
+      a: { color: "#0a66c2", borderBottom: "1px solid #9bc7ef", textDecoration: "none" },
+      strong: { color: "#101828", fontWeight: "750" },
+      "p code, li code": { padding: "0.16em 0.38em", borderRadius: "4px", color: "#b42318", backgroundColor: "#f2f4f7", fontSize: "0.88em" },
+      pre: { color: "#e6edf3", backgroundColor: "#1e1e1e", lineHeight: "1.65" },
+      hr: { width: "68px", margin: "2em 0", border: "none", borderTop: "2px solid #0a66c2" },
+      table: { border: "1px solid #d8e8f8" },
+      "th, td": { padding: "9px 10px", border: "1px solid #d8e8f8" },
+      th: { color: "#1d2939", backgroundColor: "#f5f9ff", fontWeight: "700" },
+      img: { borderRadius: "8px" }
+    })
+  },
   {
     id: "curated-pie-original",
     name: "Pie \u539F\u7248",
@@ -216469,7 +216767,7 @@ var SAFE_SELECTOR = /^(body|[a-z][a-z0-9]*(?:\s+[a-z][a-z0-9]*)?(?:,\s*[a-z][a-z
 function text4(value2, fallback, maxLength = 160) {
   return typeof value2 === "string" && value2.trim() ? value2.trim().slice(0, maxLength) : fallback;
 }
-function safeColor(value2, fallback) {
+function safeColor2(value2, fallback) {
   if (typeof value2 !== "string") return fallback;
   const trimmed = value2.trim();
   return /^(#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\)|hsla?\([\d\s.,%]+\)|[a-z]+)$/i.test(trimmed) ? trimmed : fallback;
@@ -216483,12 +216781,12 @@ function sanitizeTokens(value2, accent2, canvas) {
     color: typeof tokens4.color === "string" ? tokens4.color.slice(0, 48) : void 0,
     shape: typeof tokens4.shape === "string" ? tokens4.shape.slice(0, 48) : void 0,
     accent: accent2,
-    accentSoft: safeColor(tokens4.accentSoft, accent2),
-    tint: safeColor(tokens4.tint, canvas),
-    heading: safeColor(tokens4.heading, "#1f2933"),
-    body: safeColor(tokens4.body, "#2d3338"),
-    link: safeColor(tokens4.link, accent2),
-    strong: safeColor(tokens4.strong, accent2),
+    accentSoft: safeColor2(tokens4.accentSoft, accent2),
+    tint: safeColor2(tokens4.tint, canvas),
+    heading: safeColor2(tokens4.heading, "#1f2933"),
+    body: safeColor2(tokens4.body, "#2d3338"),
+    link: safeColor2(tokens4.link, accent2),
+    strong: safeColor2(tokens4.strong, accent2),
     surface: typeof tokens4.surface === "string" ? tokens4.surface.slice(0, 80) : void 0,
     gradient: typeof tokens4.gradient === "string" ? tokens4.gradient.slice(0, 180) : void 0,
     glow: typeof tokens4.glow === "string" ? tokens4.glow.slice(0, 180) : void 0
@@ -216532,8 +216830,8 @@ function validateTemplate(candidate) {
   if (!value2.id || !value2.name || !value2.accent || !value2.canvas || !value2.styles) {
     throw new Error("\u6A21\u677F\u7F3A\u5C11 id\u3001name\u3001accent\u3001canvas \u6216 styles\u3002");
   }
-  const accent2 = safeColor(value2.accent, "#356348");
-  const canvas = safeColor(value2.canvas, "#f3f0e9");
+  const accent2 = safeColor2(value2.accent, "#356348");
+  const canvas = safeColor2(value2.canvas, "#f3f0e9");
   const rawCss = sanitizeRawCss(value2.rawCss);
   const sanitizedStyles = {};
   for (const [selector2, declarations] of Object.entries(value2.styles)) {
@@ -216562,7 +216860,8 @@ function validateTemplate(candidate) {
     styles: sanitizedStyles,
     rawCss,
     alignment: value2.alignment === "source" ? "source" : "left",
-    structureAdapter: value2.structureAdapter === "publication" || value2.structureAdapter === "wenyan" ? value2.structureAdapter : "none"
+    structureAdapter: value2.structureAdapter === "publication" || value2.structureAdapter === "wenyan" ? value2.structureAdapter : "none",
+    codeBlockProfile: resolveCodeBlockProfile(value2.codeBlockProfile)
   };
 }
 function parseTemplateBundle(json3) {
@@ -222933,6 +223232,23 @@ var TemplateEditorModal = class extends import_obsidian4.Modal {
       this.renderMiniPreview();
       this.syncAdvancedJson();
     }));
+    form.createEl("h3", { text: "\u4EE3\u7801\u5757" });
+    new import_obsidian4.Setting(form).setName("\u4EE3\u7801\u5757\u5916\u89C2").setDesc("Mac \u7A97\u53E3\u4F1A\u628A\u4E09\u8272\u6309\u94AE\u3001\u8BED\u8A00\u540D\u548C\u9AD8\u5BF9\u6BD4\u5EA6\u8BED\u6CD5\u989C\u8272\u4E00\u8D77\u5199\u5165\u5FAE\u4FE1\u8349\u7A3F\u3002").addDropdown((dropdown) => dropdown.addOption("macos-dark", "macOS \u6DF1\u8272").addOption("macos-light", "macOS \u6D45\u8272").addOption("plain", "\u6734\u7D20\u5B89\u5168").setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).preset).onChange((value2) => {
+      const preset = value2 === "macos-light" || value2 === "plain" ? value2 : "macos-dark";
+      this.draft.codeBlockProfile = { ...CODE_BLOCK_PRESETS[preset] };
+      this.renderMiniPreview();
+      this.syncAdvancedJson();
+    }));
+    new import_obsidian4.Setting(form).setName("\u663E\u793A\u7A97\u53E3\u680F").setDesc("\u5173\u95ED\u540E\u4ECD\u4FDD\u7559\u9AD8\u5BF9\u6BD4\u5EA6\u4EE3\u7801\u5757\uFF0C\u53EA\u9690\u85CF macOS \u9876\u680F\u3002").addToggle((toggle) => toggle.setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).showChrome).onChange((value2) => {
+      this.draft.codeBlockProfile = { ...resolveCodeBlockProfile(this.draft.codeBlockProfile), showChrome: value2 };
+      this.renderMiniPreview();
+      this.syncAdvancedJson();
+    }));
+    new import_obsidian4.Setting(form).setName("\u663E\u793A\u8BED\u8A00\u540D\u79F0").setDesc("\u4F8B\u5982 TypeScript\u3001Python\u3002\u53EA\u5728\u7A97\u53E3\u680F\u5F00\u542F\u65F6\u663E\u793A\u3002").addToggle((toggle) => toggle.setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).showLanguage).onChange((value2) => {
+      this.draft.codeBlockProfile = { ...resolveCodeBlockProfile(this.draft.codeBlockProfile), showLanguage: value2 };
+      this.renderMiniPreview();
+      this.syncAdvancedJson();
+    }));
     const advanced = this.contentEl.createEl("details", { cls: "wop-advanced-editor" });
     advanced.createEl("summary", { text: "\u9AD8\u7EA7\uFF1A\u7F16\u8F91\u5B8C\u6574\u6A21\u677F JSON" });
     advanced.createEl("p", { text: "\u9002\u5408\u4FEE\u6539\u8FB9\u6846\u3001\u95F4\u8DDD\u548C\u5355\u4E2A Markdown \u5143\u7D20\u3002\u4FDD\u5B58\u65F6\u4F1A\u81EA\u52A8\u6821\u9A8C\u5FAE\u4FE1\u517C\u5BB9\u6837\u5F0F\u3002" });
@@ -223030,6 +223346,12 @@ var TemplateEditorModal = class extends import_obsidian4.Modal {
     const quote = paper.createEl("blockquote");
     quote.createEl("p", { text: "\u6A21\u677F\u53EA\u8D1F\u8D23\u8868\u8FBE\uFF0C\u4E0D\u5E94\u8BE5\u6253\u65AD\u5199\u4F5C\u3002" });
     Object.assign(quote.style, this.draft.styles.blockquote ?? {});
+    const pre = paper.createEl("pre");
+    Object.assign(pre.style, this.draft.styles.pre ?? {});
+    const code2 = pre.createEl("code", { text: "const publish = await draft.save();" });
+    code2.addClass("hljs", "language-ts");
+    Object.assign(code2.style, this.draft.styles.code ?? {});
+    applyCodeBlockProfile(paper, this.draft.codeBlockProfile);
   }
 };
 var ConfirmPublishModal = class _ConfirmPublishModal extends import_obsidian4.Modal {
@@ -223118,6 +223440,31 @@ function mountWechatPreview(parent4, html2) {
   return frame2;
 }
 
+// src/ui/template-scroll-anchor.ts
+function captureTemplateScrollAnchor(results) {
+  const resultsRect = results.getBoundingClientRect();
+  const visibleLine = resultsRect.top + Math.min(28, Math.max(1, results.clientHeight) / 2);
+  const rows2 = [...results.querySelectorAll("[data-template-id]")];
+  const row = rows2.find((candidate) => {
+    const rect3 = candidate.getBoundingClientRect();
+    return rect3.bottom > visibleLine && (resultsRect.height === 0 || rect3.top < resultsRect.bottom);
+  }) ?? rows2[0];
+  return {
+    scrollTop: results.scrollTop,
+    templateId: row?.dataset.templateId ?? null,
+    offset: row ? row.getBoundingClientRect().top - resultsRect.top : 0
+  };
+}
+function restoreTemplateScrollAnchor(results, anchor2) {
+  const row = anchor2.templateId ? [...results.querySelectorAll("[data-template-id]")].find((candidate) => candidate.dataset.templateId === anchor2.templateId) : void 0;
+  if (!row) {
+    results.scrollTop = anchor2.scrollTop;
+    return;
+  }
+  const contentOffset = results.scrollTop + row.getBoundingClientRect().top - results.getBoundingClientRect().top;
+  results.scrollTop = Math.max(0, contentOffset - anchor2.offset);
+}
+
 // src/ui/publisher-view.ts
 function iconButton(parent4, icon2, label, action) {
   const button = parent4.createEl("button", { cls: "wop-icon-button", attr: { "aria-label": label } });
@@ -223147,6 +223494,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
   templateQuery = "";
   templateGroup = "\u5168\u90E8";
   templateLibraryOpen = null;
+  templateScrollAnchor = null;
   getViewType() {
     return VIEW_TYPE_PUBLISHER;
   }
@@ -223161,6 +223509,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     await this.refresh();
   }
   async refresh() {
+    this.captureTemplateScrollAnchor();
     const generation = ++this.generation;
     this.contentEl.empty();
     const loading = this.contentEl.createDiv({ cls: "wop-loading" });
@@ -223413,7 +223762,9 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const updateResults = () => {
       this.templateQuery = search.value.trim();
       this.templateGroup = groupSelect.value;
+      this.templateScrollAnchor = null;
       this.renderTemplateResults(results);
+      results.scrollTop = 0;
     };
     search.addEventListener("input", updateResults);
     groupSelect.addEventListener("change", updateResults);
@@ -223426,6 +223777,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderMetaItem(previewSummary, "file-text", path4, true);
     const previewActions = meta3.createDiv({ cls: "wop-preview-actions" });
     const railToggle = iconButton(previewActions, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "\u6536\u8D77\u6A21\u677F\u5E93" : "\u5C55\u5F00\u6A21\u677F\u5E93", () => {
+      this.captureTemplateScrollAnchor();
       this.templateLibraryOpen = !this.templateLibraryOpen;
       this.renderWorkspace(path4, article.meta.title, article);
     });
@@ -223439,6 +223791,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderLayoutPresetControls(previewActions, template);
     this.renderDeviceControls(previewActions);
     this.renderPreviewStage(preview, template, article);
+    this.restoreTemplateScrollAnchor();
   }
   renderTemplateResults(parent4) {
     parent4.empty();
@@ -223475,6 +223828,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const active = template.id === this.host.settings.activeTemplateId;
     const favorite = this.host.settings.favoriteTemplateIds.includes(template.id);
     const row = parent4.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
+    row.dataset.templateId = template.id;
     row.setAttribute("role", "button");
     row.tabIndex = 0;
     const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
@@ -223710,6 +224064,29 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const paper = viewport2.createDiv({ cls: "wop-paper" });
     this.mountArticlePreview(paper, article);
     if (device !== "desktop") frame2.createDiv({ cls: "wop-device-home-indicator", attr: { "aria-hidden": "true" } });
+  }
+  /**
+   * A template change persists settings and causes the whole workbench to be
+   * rebuilt. Keep the visible row anchored so selection and favourites never
+   * throw a long library back to the top.
+   */
+  captureTemplateScrollAnchor() {
+    if (this.host.settings.activeTab !== "templates") return;
+    const results = this.contentEl.querySelector(".wop-template-results");
+    if (!results) return;
+    this.templateScrollAnchor = captureTemplateScrollAnchor(results);
+  }
+  restoreTemplateScrollAnchor() {
+    const anchor2 = this.templateScrollAnchor;
+    this.templateScrollAnchor = null;
+    if (!anchor2 || this.host.settings.activeTab !== "templates") return;
+    const generation = this.generation;
+    window.requestAnimationFrame(() => {
+      if (generation !== this.generation || this.host.settings.activeTab !== "templates") return;
+      const results = this.contentEl.querySelector(".wop-template-results");
+      if (!results) return;
+      restoreTemplateScrollAnchor(results, anchor2);
+    });
   }
   renderQuickLayoutControls(parent4, template) {
     const tuning = this.effectiveLayoutTuning(template.id);

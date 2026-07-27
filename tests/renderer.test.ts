@@ -68,6 +68,37 @@ describe("内置主题真实渲染", () => {
     expect(compareWechatVisualHtml(expected, changed).matches).toBe(false);
   });
 
+  it("代码块会物化为可编辑模板可复用的 macOS 窗口，并在预览和草稿中保持一致", async () => {
+    const engine = new RenderEngine();
+    const template = ALL_TEMPLATES.find((item) => item.id === "curated-pie-original")!;
+    const rendered = await engine.render({
+      markdown: "```ts\nconst publish = await draft.save();\n```",
+      fallbackTitle: "代码窗口",
+      defaultAuthor: "Test",
+      template,
+      modules: []
+    });
+    const preview = await prepareWechatPreviewHtml(rendered.html);
+    const draft = await prepareWechatHtml(rendered.html);
+    const root = document.createElement("div");
+    root.innerHTML = preview;
+    const frame = root.querySelector<HTMLElement>(".wop-code-window");
+    const pre = frame?.querySelector<HTMLElement>("pre");
+    const code = frame?.querySelector<HTMLElement>("pre code.hljs");
+    const keyword = frame?.querySelector<HTMLElement>(".hljs-keyword");
+
+    expect(ALL_TEMPLATES.some((item) => item.id === "curated-mac-code-notes")).toBe(true);
+    expect(frame).toBeTruthy();
+    expect(frame?.querySelectorAll("section > span")).toHaveLength(4);
+    expect(pre?.style.getPropertyValue("background")).toBe("#1e1e1e");
+    expect(code?.style.getPropertyValue("color")).toBe("#e6edf3");
+    expect(code?.style.getPropertyPriority("color")).toBe("important");
+    expect(keyword?.style.getPropertyValue("color")).toBe("#ff7b72");
+    expect(keyword?.style.getPropertyPriority("color")).toBe("important");
+    expect(preview).not.toContain("data-wop");
+    expect(compareWechatVisualHtml(preview, draft).matches).toBe(true);
+  });
+
   it("图表和正文图片在预览与草稿中保持同构", async () => {
     const source = `
 <section class="wop-article" data-wop-theme-group="test">

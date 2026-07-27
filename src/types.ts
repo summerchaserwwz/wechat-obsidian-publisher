@@ -32,6 +32,27 @@ export interface ContentModule {
 export type TemplateSource = "md2-catalog" | "source-theme" | "curated" | "custom";
 export type TemplateAlignment = "left" | "source";
 export type TemplateStructureAdapter = "none" | "publication" | "wenyan";
+export type CodeBlockPreset = "macos-dark" | "macos-light" | "plain";
+
+export interface CodeBlockProfile {
+  preset: CodeBlockPreset;
+  showChrome: boolean;
+  showLanguage: boolean;
+  background: string;
+  headerBackground: string;
+  foreground: string;
+  muted: string;
+  border: string;
+  dotRed: string;
+  dotYellow: string;
+  dotGreen: string;
+  keyword: string;
+  string: string;
+  function: string;
+  number: string;
+  comment: string;
+  tag: string;
+}
 
 export interface ArticleLayoutTuning {
   fontSize: number;
@@ -82,6 +103,8 @@ export interface PublisherTemplate {
   rawCss?: string;
   alignment?: TemplateAlignment;
   structureAdapter?: TemplateStructureAdapter;
+  /** Defaults to a WeChat-safe macOS window, even for imported source themes. */
+  codeBlockProfile?: CodeBlockProfile;
 }
 
 export interface WechatAccount {

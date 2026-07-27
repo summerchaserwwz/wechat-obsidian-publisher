@@ -27,6 +27,11 @@ import {
 } from "../core/templates";
 import { ModuleEditorModal, TemplateEditorModal } from "./modals";
 import { mountWechatPreview } from "./wechat-preview";
+import {
+  captureTemplateScrollAnchor as captureTemplateListAnchor,
+  restoreTemplateScrollAnchor as restoreTemplateListAnchor,
+  type TemplateScrollAnchor
+} from "./template-scroll-anchor";
 
 function iconButton(parent: HTMLElement, icon: string, label: string, action: (event: MouseEvent) => void | Promise<void>): HTMLButtonElement {
   const button = parent.createEl("button", { cls: "wop-icon-button", attr: { "aria-label": label } });
@@ -55,6 +60,7 @@ export class PublisherView extends ItemView {
   private templateQuery = "";
   private templateGroup = "全部";
   private templateLibraryOpen: boolean | null = null;
+  private templateScrollAnchor: TemplateScrollAnchor | null = null;
 
   constructor(leaf: WorkspaceLeaf, private readonly host: WechatObsidianPublisherPlugin) {
     super(leaf);
@@ -78,6 +84,7 @@ export class PublisherView extends ItemView {
   }
 
   async refresh(): Promise<void> {
+    this.captureTemplateScrollAnchor();
     const generation = ++this.generation;
     this.contentEl.empty();
     const loading = this.contentEl.createDiv({ cls: "wop-loading" });
@@ -345,7 +352,9 @@ export class PublisherView extends ItemView {
     const updateResults = () => {
       this.templateQuery = search.value.trim();
       this.templateGroup = groupSelect.value;
+      this.templateScrollAnchor = null;
       this.renderTemplateResults(results);
+      results.scrollTop = 0;
     };
     search.addEventListener("input", updateResults);
     groupSelect.addEventListener("change", updateResults);
@@ -359,6 +368,7 @@ export class PublisherView extends ItemView {
     this.renderMetaItem(previewSummary, "file-text", path, true);
     const previewActions = meta.createDiv({ cls: "wop-preview-actions" });
     const railToggle = iconButton(previewActions, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "收起模板库" : "展开模板库", () => {
+      this.captureTemplateScrollAnchor();
       this.templateLibraryOpen = !this.templateLibraryOpen;
       this.renderWorkspace(path, article.meta.title, article);
     });
@@ -372,6 +382,7 @@ export class PublisherView extends ItemView {
     this.renderLayoutPresetControls(previewActions, template);
     this.renderDeviceControls(previewActions);
     this.renderPreviewStage(preview, template, article);
+    this.restoreTemplateScrollAnchor();
 
   }
 
@@ -411,6 +422,7 @@ export class PublisherView extends ItemView {
     const active = template.id === this.host.settings.activeTemplateId;
     const favorite = this.host.settings.favoriteTemplateIds.includes(template.id);
     const row = parent.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
+    row.dataset.templateId = template.id;
     row.setAttribute("role", "button");
     row.tabIndex = 0;
     const info = row.createDiv({ cls: "wop-template-strip-copy" });
@@ -662,6 +674,31 @@ export class PublisherView extends ItemView {
     const paper = viewport.createDiv({ cls: "wop-paper" });
     this.mountArticlePreview(paper, article);
     if (device !== "desktop") frame.createDiv({ cls: "wop-device-home-indicator", attr: { "aria-hidden": "true" } });
+  }
+
+  /**
+   * A template change persists settings and causes the whole workbench to be
+   * rebuilt. Keep the visible row anchored so selection and favourites never
+   * throw a long library back to the top.
+   */
+  private captureTemplateScrollAnchor(): void {
+    if (this.host.settings.activeTab !== "templates") return;
+    const results = this.contentEl.querySelector<HTMLElement>(".wop-template-results");
+    if (!results) return;
+    this.templateScrollAnchor = captureTemplateListAnchor(results);
+  }
+
+  private restoreTemplateScrollAnchor(): void {
+    const anchor = this.templateScrollAnchor;
+    this.templateScrollAnchor = null;
+    if (!anchor || this.host.settings.activeTab !== "templates") return;
+    const generation = this.generation;
+    window.requestAnimationFrame(() => {
+      if (generation !== this.generation || this.host.settings.activeTab !== "templates") return;
+      const results = this.contentEl.querySelector<HTMLElement>(".wop-template-results");
+      if (!results) return;
+      restoreTemplateListAnchor(results, anchor);
+    });
   }
 
   private renderQuickLayoutControls(parent: HTMLElement, template: PublisherTemplate): void {

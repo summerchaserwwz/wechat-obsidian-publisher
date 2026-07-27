@@ -3,6 +3,7 @@ import { EXTERNAL_SOURCE_TEMPLATE_GROUPS, EXTERNAL_SOURCE_TEMPLATES } from "./ex
 import { MD2_THEME_DEFINITIONS } from "./md2-theme-catalog";
 import { CURATED_LEFT_TEMPLATES, CURATED_TEMPLATE_GROUPS } from "./curated-left-templates";
 import { compileTheme } from "./theme-compiler";
+import { resolveCodeBlockProfile } from "./code-block-profile";
 
 const catalogTemplates = MD2_THEME_DEFINITIONS.map(compileTheme);
 const sourceThemeIds = new Set(EXTERNAL_SOURCE_TEMPLATES.map((template) => template.id));
@@ -137,7 +138,8 @@ export function validateTemplate(candidate: unknown): PublisherTemplate {
     alignment: value.alignment === "source" ? "source" : "left",
     structureAdapter: value.structureAdapter === "publication" || value.structureAdapter === "wenyan"
       ? value.structureAdapter
-      : "none"
+      : "none",
+    codeBlockProfile: resolveCodeBlockProfile(value.codeBlockProfile)
   };
 }
 

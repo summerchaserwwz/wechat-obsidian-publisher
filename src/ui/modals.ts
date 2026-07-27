@@ -1,5 +1,6 @@
 import { App, Modal, Notice, Setting, setIcon } from "obsidian";
 import type { ContentModule, PublisherTemplate } from "../types";
+import { applyCodeBlockProfile, CODE_BLOCK_PRESETS, resolveCodeBlockProfile } from "../core/code-block-profile";
 import { validateTemplate } from "../core/templates";
 
 export class ModuleEditorModal extends Modal {
@@ -172,6 +173,42 @@ export class TemplateEditorModal extends Modal {
           this.syncAdvancedJson();
         }));
 
+    form.createEl("h3", { text: "代码块" });
+    new Setting(form)
+      .setName("代码块外观")
+      .setDesc("Mac 窗口会把三色按钮、语言名和高对比度语法颜色一起写入微信草稿。")
+      .addDropdown((dropdown) => dropdown
+        .addOption("macos-dark", "macOS 深色")
+        .addOption("macos-light", "macOS 浅色")
+        .addOption("plain", "朴素安全")
+        .setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).preset)
+        .onChange((value) => {
+          const preset = value === "macos-light" || value === "plain" ? value : "macos-dark";
+          this.draft.codeBlockProfile = { ...CODE_BLOCK_PRESETS[preset] };
+          this.renderMiniPreview();
+          this.syncAdvancedJson();
+        }));
+    new Setting(form)
+      .setName("显示窗口栏")
+      .setDesc("关闭后仍保留高对比度代码块，只隐藏 macOS 顶栏。")
+      .addToggle((toggle) => toggle
+        .setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).showChrome)
+        .onChange((value) => {
+          this.draft.codeBlockProfile = { ...resolveCodeBlockProfile(this.draft.codeBlockProfile), showChrome: value };
+          this.renderMiniPreview();
+          this.syncAdvancedJson();
+        }));
+    new Setting(form)
+      .setName("显示语言名称")
+      .setDesc("例如 TypeScript、Python。只在窗口栏开启时显示。")
+      .addToggle((toggle) => toggle
+        .setValue(resolveCodeBlockProfile(this.draft.codeBlockProfile).showLanguage)
+        .onChange((value) => {
+          this.draft.codeBlockProfile = { ...resolveCodeBlockProfile(this.draft.codeBlockProfile), showLanguage: value };
+          this.renderMiniPreview();
+          this.syncAdvancedJson();
+        }));
+
     const advanced = this.contentEl.createEl("details", { cls: "wop-advanced-editor" });
     advanced.createEl("summary", { text: "高级：编辑完整模板 JSON" });
     advanced.createEl("p", { text: "适合修改边框、间距和单个 Markdown 元素。保存时会自动校验微信兼容样式。" });
@@ -281,6 +318,12 @@ export class TemplateEditorModal extends Modal {
     const quote = paper.createEl("blockquote");
     quote.createEl("p", { text: "模板只负责表达，不应该打断写作。" });
     Object.assign(quote.style, this.draft.styles.blockquote ?? {});
+    const pre = paper.createEl("pre");
+    Object.assign(pre.style, this.draft.styles.pre ?? {});
+    const code = pre.createEl("code", { text: "const publish = await draft.save();" });
+    code.addClass("hljs", "language-ts");
+    Object.assign(code.style, this.draft.styles.code ?? {});
+    applyCodeBlockProfile(paper, this.draft.codeBlockProfile);
   }
 }
 
