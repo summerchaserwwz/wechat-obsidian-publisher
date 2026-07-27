@@ -198557,7 +198557,7 @@ var DEFAULT_MODULES = [
   }
 ];
 var DEFAULT_SETTINGS = {
-  version: 2,
+  version: 3,
   activeTemplateId: "curated-modern-editorial-left",
   previewDevice: "wechat",
   activeTab: "preview",
@@ -198578,7 +198578,7 @@ var DEFAULT_SETTINGS = {
 var LAYOUT_PRESETS = {
   mobile: {
     name: "\u624B\u673A\u9605\u8BFB",
-    tuning: { fontSize: 16, lineHeight: 1.78, paragraphSpacing: 16, headingSpacing: 28, verticalPadding: 10, contentPadding: 10 }
+    tuning: { fontSize: 15, lineHeight: 1.72, paragraphSpacing: 10, headingSpacing: 20, verticalPadding: 0, contentPadding: 4 }
   },
   balanced: {
     name: "\u5FAE\u4FE1\u6807\u51C6",
@@ -198652,7 +198652,18 @@ function applyLayoutTuning(root4, tuning) {
     setLayoutStyle(item, "margin", `0 0 ${listItemSpacing}px`);
   });
   const headingBottom = Math.max(8, Math.round(tuning.headingSpacing * 0.45));
+  const headingSizes = [
+    tuning.fontSize + 8,
+    tuning.fontSize + 5,
+    tuning.fontSize + 3,
+    tuning.fontSize + 2,
+    tuning.fontSize + 1,
+    tuning.fontSize
+  ];
   root4.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading) => {
+    const level = Number(heading.tagName.slice(1));
+    setLayoutStyle(heading, "font-size", `${headingSizes[level - 1]}px`);
+    setLayoutStyle(heading, "line-height", level === 1 ? "1.35" : "1.45");
     setLayoutStyle(heading, "margin", `${tuning.headingSpacing}px 0 ${headingBottom}px`);
   });
   root4.querySelectorAll(":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6").forEach((heading) => {
@@ -223258,6 +223269,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderMetaItem(summary, "images", `${article.imageSources.length} \u5F20\u56FE\u7247`);
     this.renderMetaItem(summary, "file-text", path4, true);
     const actions = meta3.createDiv({ cls: "wop-preview-actions" });
+    this.renderQuickLayoutControls(actions, template);
     this.renderLayoutPresetControls(actions, template);
     this.renderDeviceControls(actions);
     const copy5 = iconButton(actions, "copy", "\u590D\u5236\u516C\u4F17\u53F7 HTML", async () => {
@@ -223358,14 +223370,6 @@ var PublisherView = class extends import_obsidian5.ItemView {
     panel.toggleClass("is-library-open", this.templateLibraryOpen);
     const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
     const drawer = panel.createDiv({ cls: "wop-template-drawer" });
-    const rail = drawer.createDiv({ cls: "wop-template-rail" });
-    const railToggle = iconButton(rail, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "\u6536\u8D77\u6A21\u677F\u5E93" : "\u5C55\u5F00\u6A21\u677F\u5E93", () => {
-      this.templateLibraryOpen = !this.templateLibraryOpen;
-      this.renderWorkspace(path4, article.meta.title, article);
-    });
-    railToggle.addClass("wop-library-toggle");
-    const railLabel = rail.createSpan({ text: "\u6A21\u677F" });
-    railLabel.setAttribute("aria-hidden", "true");
     const drawerBody = drawer.createDiv({ cls: "wop-template-drawer-body" });
     const header = drawerBody.createDiv({ cls: "wop-template-drawer-header" });
     const copy5 = header.createDiv();
@@ -223421,11 +223425,17 @@ var PublisherView = class extends import_obsidian5.ItemView {
     this.renderMetaItem(previewSummary, "images", `${article.imageSources.length} \u5F20\u56FE\u7247`);
     this.renderMetaItem(previewSummary, "file-text", path4, true);
     const previewActions = meta3.createDiv({ cls: "wop-preview-actions" });
-    const editTemplate = textButton(previewActions, template.source === "custom" ? "\u7F16\u8F91" : "\u590D\u5236\u5E76\u7F16\u8F91", () => {
+    const railToggle = iconButton(previewActions, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "\u6536\u8D77\u6A21\u677F\u5E93" : "\u5C55\u5F00\u6A21\u677F\u5E93", () => {
+      this.templateLibraryOpen = !this.templateLibraryOpen;
+      this.renderWorkspace(path4, article.meta.title, article);
+    });
+    railToggle.addClass("wop-library-toggle");
+    const editTemplate = iconButton(previewActions, "pencil", template.source === "custom" ? "\u7F16\u8F91\u5F53\u524D\u6A21\u677F" : "\u590D\u5236\u4E3A\u7528\u6237\u6A21\u677F\u5E76\u7F16\u8F91", () => {
       const target = template.source === "custom" ? template : cloneTemplate(template);
       new TemplateEditorModal(this.app, target, (saved) => void this.saveCustomTemplate(saved, template.source === "custom" ? template.id : void 0)).open();
-    }, false, "pencil");
+    });
     editTemplate.addClass("wop-button-quiet");
+    this.renderQuickLayoutControls(previewActions, template);
     this.renderLayoutPresetControls(previewActions, template);
     this.renderDeviceControls(previewActions);
     this.renderPreviewStage(preview, template, article);
@@ -223467,25 +223477,10 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const row = parent4.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
     row.setAttribute("role", "button");
     row.tabIndex = 0;
-    const accent2 = template.tokens.accent || template.accent;
-    const tint = template.tokens.tint || template.canvas;
-    const palette2 = row.createDiv({
-      cls: "wop-template-palette",
-      attr: { "aria-label": `\u4E3B\u914D\u8272 ${accent2}\u3001${tint}\u3001${template.tokens.body}` }
-    });
-    for (const [name50, color2] of [
-      ["\u4E3B\u8272", accent2],
-      ["\u6D45\u8272", tint],
-      ["\u6B63\u6587", template.tokens.body]
-    ]) {
-      const swatch = palette2.createSpan({ attr: { title: `${name50} ${color2}` } });
-      swatch.style.backgroundColor = color2;
-    }
     const info2 = row.createDiv({ cls: "wop-template-strip-copy" });
     info2.createEl("strong", { text: template.name });
     row.title = `${template.name}
-\u6765\u6E90\uFF1A${template.upstream || (template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group)}
-\u4E3B\u8272\uFF1A${accent2.toUpperCase()}`;
+\u6765\u6E90\uFF1A${template.upstream || (template.source === "custom" ? "\u7528\u6237\u6A21\u677F" : template.group)}`;
     const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
@@ -223688,8 +223683,6 @@ var PublisherView = class extends import_obsidian5.ItemView {
       cls: "wop-preview-stage",
       attr: { "data-device": device }
     });
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    this.renderQuickLayoutControls(stage, template);
     const frame2 = stage.createDiv({ cls: `wop-device-frame is-${device}` });
     const chrome = frame2.createDiv({ cls: "wop-device-chrome" });
     if (device === "desktop") {
@@ -223722,11 +223715,10 @@ var PublisherView = class extends import_obsidian5.ItemView {
     const tuning = this.effectiveLayoutTuning(template.id);
     const padding = tuning.verticalPadding === tuning.contentPadding ? `${tuning.contentPadding}px` : `${tuning.verticalPadding}/${tuning.contentPadding}px`;
     const dock = parent4.createDiv({
-      cls: "wop-preview-dock",
+      cls: "wop-inline-layout-controls",
       attr: { "aria-label": "\u6587\u7AE0\u6392\u7248\u5FEB\u901F\u8C03\u6574" }
     });
-    const panel = dock.createDiv({ cls: "wop-preview-dock-panel" });
-    this.renderStepper(panel, "\u5B57\u53F7", `${tuning.fontSize}px`, "type", () => {
+    this.renderStepper(dock, "\u5B57\u53F7", `${tuning.fontSize}px`, "type", () => {
       const current = this.effectiveLayoutTuning(template.id);
       return this.host.setLayoutTuning(template.id, {
         ...current,
@@ -223739,7 +223731,7 @@ var PublisherView = class extends import_obsidian5.ItemView {
         fontSize: clamp2(current.fontSize + 1, 12, 22)
       });
     });
-    this.renderStepper(panel, "Padding", padding, "square-dashed", () => {
+    this.renderStepper(dock, "\u8FB9\u8DDD", padding, "square-dashed", () => {
       const current = this.effectiveLayoutTuning(template.id);
       const value2 = clamp2(Math.round((current.verticalPadding + current.contentPadding) / 2) - 2, 0, 32);
       return this.host.setLayoutTuning(template.id, {
@@ -223838,12 +223830,12 @@ var WechatObsidianPublisherPlugin = class extends import_obsidian6.Plugin {
     });
     const knownTemplateIds = new Set([...ALL_TEMPLATES, ...customTemplates].map((template) => template.id));
     const favoriteTemplateIds = Array.isArray(loaded?.favoriteTemplateIds) ? [...new Set(loaded.favoriteTemplateIds.filter((id39) => typeof id39 === "string" && knownTemplateIds.has(id39)))] : [];
-    const sourceLayoutTemplateIds = Array.isArray(loaded?.sourceLayoutTemplateIds) ? [...new Set(loaded.sourceLayoutTemplateIds.filter((id39) => typeof id39 === "string" && knownTemplateIds.has(id39)))] : [];
+    const sourceLayoutTemplateIds = (loaded?.version ?? 0) >= 3 && Array.isArray(loaded?.sourceLayoutTemplateIds) ? [...new Set(loaded.sourceLayoutTemplateIds.filter((id39) => typeof id39 === "string" && knownTemplateIds.has(id39)))] : [];
     const previewDevice = loaded?.previewDevice === "phone" || loaded?.previewDevice === "wechat" || loaded?.previewDevice === "desktop" ? loaded.previewDevice : DEFAULT_SETTINGS.previewDevice;
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...loaded ?? {},
-      version: 2,
+      version: 3,
       activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
       previewDevice,
       accounts: loaded?.accounts ?? [],

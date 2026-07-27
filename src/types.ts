@@ -120,7 +120,7 @@ export interface RenderedArticle {
 }
 
 export interface PluginSettings {
-  version: 2;
+  version: 3;
   activeTemplateId: string;
   previewDevice: PreviewDevice;
   activeTab: PublisherTab;

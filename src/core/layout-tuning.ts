@@ -5,7 +5,7 @@ export type LayoutPresetId = "mobile" | "balanced" | "relaxed";
 export const LAYOUT_PRESETS: Record<LayoutPresetId, { name: string; tuning: ArticleLayoutTuning }> = {
   mobile: {
     name: "手机阅读",
-    tuning: { fontSize: 16, lineHeight: 1.78, paragraphSpacing: 16, headingSpacing: 28, verticalPadding: 10, contentPadding: 10 }
+    tuning: { fontSize: 15, lineHeight: 1.72, paragraphSpacing: 10, headingSpacing: 20, verticalPadding: 0, contentPadding: 4 }
   },
   balanced: {
     name: "微信标准",
@@ -102,7 +102,18 @@ export function applyLayoutTuning(root: HTMLElement, tuning: ArticleLayoutTuning
   });
 
   const headingBottom = Math.max(8, Math.round(tuning.headingSpacing * 0.45));
+  const headingSizes = [
+    tuning.fontSize + 8,
+    tuning.fontSize + 5,
+    tuning.fontSize + 3,
+    tuning.fontSize + 2,
+    tuning.fontSize + 1,
+    tuning.fontSize
+  ];
   root.querySelectorAll<HTMLElement>("h1, h2, h3, h4, h5, h6").forEach((heading) => {
+    const level = Number(heading.tagName.slice(1));
+    setLayoutStyle(heading, "font-size", `${headingSizes[level - 1]}px`);
+    setLayoutStyle(heading, "line-height", level === 1 ? "1.35" : "1.45");
     setLayoutStyle(heading, "margin", `${tuning.headingSpacing}px 0 ${headingBottom}px`);
   });
   root.querySelectorAll<HTMLElement>(":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6").forEach((heading) => {

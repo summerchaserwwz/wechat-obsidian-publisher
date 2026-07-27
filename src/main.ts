@@ -65,7 +65,10 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
     const favoriteTemplateIds = Array.isArray(loaded?.favoriteTemplateIds)
       ? [...new Set(loaded.favoriteTemplateIds.filter((id): id is string => typeof id === "string" && knownTemplateIds.has(id)))]
       : [];
-    const sourceLayoutTemplateIds = Array.isArray(loaded?.sourceLayoutTemplateIds)
+    // v2 could persist "原版" while comparing themes, making later templates
+    // silently keep their wide web spacing. Reset that legacy choice once;
+    // users can still explicitly opt back into 原版 after the migration.
+    const sourceLayoutTemplateIds = (loaded?.version ?? 0) >= 3 && Array.isArray(loaded?.sourceLayoutTemplateIds)
       ? [...new Set(loaded.sourceLayoutTemplateIds.filter((id): id is string => typeof id === "string" && knownTemplateIds.has(id)))]
       : [];
     const previewDevice = loaded?.previewDevice === "phone"
@@ -76,7 +79,7 @@ export default class WechatObsidianPublisherPlugin extends Plugin {
     this.settings = {
       ...structuredClone(DEFAULT_SETTINGS),
       ...(loaded ?? {}),
-      version: 2,
+      version: 3,
       activeTemplateId: loaded?.activeTemplateId === "md2-forest" ? "mdnice-forest" : loaded?.activeTemplateId ?? DEFAULT_SETTINGS.activeTemplateId,
       previewDevice,
       accounts: loaded?.accounts ?? [],

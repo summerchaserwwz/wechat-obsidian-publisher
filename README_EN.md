@@ -2,11 +2,11 @@
 
 [简体中文](README.md)
 
-Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.7` reduces the template library to a compact palette-and-name rail, moves font and Padding controls into reserved preview space so they never cover the article, and normalizes control typography across the workbench.
+Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.9` tightens phone reading density with `15px` left-aligned body text and `4px` horizontal padding. Templates now use a text-only rail, controls live in the top bar, and the preview stays white without floating overlays.
 
-![v0.2.7 compact template workbench](docs/screenshots/template-workbench-v027.jpeg)
+![v0.2.9 compact template workbench](docs/screenshots/template-workbench-v029.jpeg)
 
-![v0.2.7 phone article preview](docs/screenshots/mobile-preview-v027.jpeg)
+![v0.2.9 phone article preview](docs/screenshots/mobile-preview-v029.jpeg)
 
 ## Highlights
 
@@ -23,18 +23,18 @@ Format, preview, and publish WeChat Official Account drafts without leaving Obsi
 
 ## Phone Reading and Preview Parity
 
-Templates without an explicit layout setting use the **Phone Reading** preset: `16px` body text, `1.78` line height, `16px` paragraph spacing, `28px` heading space, and `10px` padding on all sides. Those values are written as inline WeChat HTML, not borrowed from Obsidian preview CSS, so the preview and the submitted draft share the same styling rules.
+Templates without an explicit layout setting use the **Phone Reading** preset: `15px` body text, `1.72` line height, `10px` paragraph spacing, `20px` heading space, `0px` vertical padding, and `4px` horizontal padding. Those values are written as inline WeChat HTML, not borrowed from Obsidian preview CSS, so the preview and the submitted draft share the same styling rules.
 
 There is no separate layout modal. Adjust the current template directly on the preview:
 
 - Use the upper-right controls for Source, Phone, Standard, or Relaxed reading presets
 - Switch the upper-right frame between Phone, WeChat, and Desktop
-- Decrease, inspect, or increase the body font size in the lower-right control rail
-- Decrease, inspect, or increase all-side Padding in the lower-right control rail
+- Decrease, inspect, or increase the body font size in the top control bar
+- Decrease, inspect, or increase article padding in the top control bar
 
 **Source Theme** preserves the upstream layout. It is useful for source fidelity but can restore wider web-oriented margins.
 
-The font and Padding controls use reserved space beside the preview, so opening the template library cannot make them cover the phone frame or article. Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
+The font and spacing controls live in the top bar, so opening the template library cannot make them cover the phone frame or article. Device chrome only simulates the reading context and is never included in the submitted article. The frame contains the same fully prepared HTML that is sent to WeChat. After draft creation, the plugin also reads the result back through `draft/get` and compares the title, structure, and inline styles.
 
 ## Relationship to Wenyan Core
 
@@ -66,7 +66,7 @@ Then enable **WeChat Obsidian Publisher** under Obsidian Community plugins.
 1. Add an Official Account in plugin settings, or securely import it from `wechat-wenyan-publish`.
 2. Set a default author and cover. Individual notes can override both in frontmatter.
 3. Use the send icon in the left ribbon to open the publisher workbench.
-4. Pick a template from the rail. Use the upper-right reading and device controls, then tune font size and all-side Padding in the lower-right dock.
+4. Pick a template from the rail. Use the upper-right controls to tune font size, article padding, reading mode, and device frame.
 5. On the **Check** tab, make sure the account, cover, images, and draft-parity preview pass before creating or updating a draft.
 
 Connection testing only requests an access token. It never creates or changes a draft. When WeChat returns `40164`, the settings page extracts the rejected IPv4 and offers a copy action, the whitelist menu path, and a direct entry to the WeChat Developer Platform.

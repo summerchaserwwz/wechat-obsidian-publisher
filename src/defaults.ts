@@ -78,7 +78,7 @@ export const DEFAULT_MODULES: ContentModule[] = [
 ];
 
 export const DEFAULT_SETTINGS: PluginSettings = {
-  version: 2,
+  version: 3,
   activeTemplateId: "curated-modern-editorial-left",
   previewDevice: "wechat",
   activeTab: "preview",

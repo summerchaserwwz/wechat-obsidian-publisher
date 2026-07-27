@@ -340,12 +340,15 @@ flowchart LR
     root.innerHTML = preview;
     const article = root.querySelector<HTMLElement>(".wop-article");
     const paragraph = root.querySelector<HTMLElement>("p");
+    const heading = root.querySelector<HTMLElement>("h1");
 
-    expect(article?.style.getPropertyValue("padding")).toBe("10px");
+    expect(article?.style.getPropertyValue("padding")).toBe("0px 4px");
     expect(article?.style.getPropertyPriority("padding")).toBe("important");
-    expect(paragraph?.style.getPropertyValue("font-size")).toBe("16px");
-    expect(paragraph?.style.getPropertyValue("line-height")).toBe("1.78");
-    expect(paragraph?.style.getPropertyValue("margin")).toBe("0px 0px 16px");
+    expect(paragraph?.style.getPropertyValue("font-size")).toBe("15px");
+    expect(paragraph?.style.getPropertyValue("line-height")).toBe("1.72");
+    expect(paragraph?.style.getPropertyValue("margin")).toBe("0px 0px 10px");
+    expect(heading?.style.getPropertyValue("font-size")).toBe("23px");
+    expect(heading?.style.getPropertyValue("line-height")).toBe("1.35");
     expect(compareWechatVisualHtml(preview, draft).matches).toBe(true);
   });
 

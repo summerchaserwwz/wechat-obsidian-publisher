@@ -195,6 +195,7 @@ export class PublisherView extends ItemView {
     this.renderMetaItem(summary, "images", `${article.imageSources.length} 张图片`);
     this.renderMetaItem(summary, "file-text", path, true);
     const actions = meta.createDiv({ cls: "wop-preview-actions" });
+    this.renderQuickLayoutControls(actions, template);
     this.renderLayoutPresetControls(actions, template);
     this.renderDeviceControls(actions);
     const copy = iconButton(actions, "copy", "复制公众号 HTML", async () => {
@@ -300,15 +301,6 @@ export class PublisherView extends ItemView {
     panel.toggleClass("is-library-open", this.templateLibraryOpen);
     const template = findTemplate(this.host.settings.activeTemplateId, this.host.settings.customTemplates);
     const drawer = panel.createDiv({ cls: "wop-template-drawer" });
-    const rail = drawer.createDiv({ cls: "wop-template-rail" });
-    const railToggle = iconButton(rail, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "收起模板库" : "展开模板库", () => {
-      this.templateLibraryOpen = !this.templateLibraryOpen;
-      this.renderWorkspace(path, article.meta.title, article);
-    });
-    railToggle.addClass("wop-library-toggle");
-    const railLabel = rail.createSpan({ text: "模板" });
-    railLabel.setAttribute("aria-hidden", "true");
-
     const drawerBody = drawer.createDiv({ cls: "wop-template-drawer-body" });
     const header = drawerBody.createDiv({ cls: "wop-template-drawer-header" });
     const copy = header.createDiv();
@@ -366,11 +358,17 @@ export class PublisherView extends ItemView {
     this.renderMetaItem(previewSummary, "images", `${article.imageSources.length} 张图片`);
     this.renderMetaItem(previewSummary, "file-text", path, true);
     const previewActions = meta.createDiv({ cls: "wop-preview-actions" });
-    const editTemplate = textButton(previewActions, template.source === "custom" ? "编辑" : "复制并编辑", () => {
+    const railToggle = iconButton(previewActions, this.templateLibraryOpen ? "panel-left-close" : "panel-left-open", this.templateLibraryOpen ? "收起模板库" : "展开模板库", () => {
+      this.templateLibraryOpen = !this.templateLibraryOpen;
+      this.renderWorkspace(path, article.meta.title, article);
+    });
+    railToggle.addClass("wop-library-toggle");
+    const editTemplate = iconButton(previewActions, "pencil", template.source === "custom" ? "编辑当前模板" : "复制为用户模板并编辑", () => {
       const target = template.source === "custom" ? template : cloneTemplate(template);
       new TemplateEditorModal(this.app, target, (saved) => void this.saveCustomTemplate(saved, template.source === "custom" ? template.id : undefined)).open();
-    }, false, "pencil");
+    });
     editTemplate.addClass("wop-button-quiet");
+    this.renderQuickLayoutControls(previewActions, template);
     this.renderLayoutPresetControls(previewActions, template);
     this.renderDeviceControls(previewActions);
     this.renderPreviewStage(preview, template, article);
@@ -415,23 +413,9 @@ export class PublisherView extends ItemView {
     const row = parent.createDiv({ cls: `wop-template-strip${active ? " is-active" : ""}` });
     row.setAttribute("role", "button");
     row.tabIndex = 0;
-    const accent = template.tokens.accent || template.accent;
-    const tint = template.tokens.tint || template.canvas;
-    const palette = row.createDiv({
-      cls: "wop-template-palette",
-      attr: { "aria-label": `主配色 ${accent}、${tint}、${template.tokens.body}` }
-    });
-    for (const [name, color] of [
-      ["主色", accent],
-      ["浅色", tint],
-      ["正文", template.tokens.body]
-    ] as const) {
-      const swatch = palette.createSpan({ attr: { title: `${name} ${color}` } });
-      swatch.style.backgroundColor = color;
-    }
     const info = row.createDiv({ cls: "wop-template-strip-copy" });
     info.createEl("strong", { text: template.name });
-    row.title = `${template.name}\n来源：${template.upstream || (template.source === "custom" ? "用户模板" : template.group)}\n主色：${accent.toUpperCase()}`;
+    row.title = `${template.name}\n来源：${template.upstream || (template.source === "custom" ? "用户模板" : template.group)}`;
     const selectTemplate = async () => {
       this.host.settings.activeTemplateId = template.id;
       await this.host.saveSettings();
@@ -650,9 +634,6 @@ export class PublisherView extends ItemView {
       cls: "wop-preview-stage",
       attr: { "data-device": device }
     });
-    stage.style.setProperty("--wop-template-canvas", template.canvas);
-    this.renderQuickLayoutControls(stage, template);
-
     const frame = stage.createDiv({ cls: `wop-device-frame is-${device}` });
     const chrome = frame.createDiv({ cls: "wop-device-chrome" });
     if (device === "desktop") {
@@ -689,11 +670,10 @@ export class PublisherView extends ItemView {
       ? `${tuning.contentPadding}px`
       : `${tuning.verticalPadding}/${tuning.contentPadding}px`;
     const dock = parent.createDiv({
-      cls: "wop-preview-dock",
+      cls: "wop-inline-layout-controls",
       attr: { "aria-label": "文章排版快速调整" }
     });
-    const panel = dock.createDiv({ cls: "wop-preview-dock-panel" });
-    this.renderStepper(panel, "字号", `${tuning.fontSize}px`, "type", () => {
+    this.renderStepper(dock, "字号", `${tuning.fontSize}px`, "type", () => {
       const current = this.effectiveLayoutTuning(template.id);
       return this.host.setLayoutTuning(template.id, {
         ...current,
@@ -706,7 +686,7 @@ export class PublisherView extends ItemView {
         fontSize: clamp(current.fontSize + 1, 12, 22)
       });
     });
-    this.renderStepper(panel, "Padding", padding, "square-dashed", () => {
+    this.renderStepper(dock, "边距", padding, "square-dashed", () => {
       const current = this.effectiveLayoutTuning(template.id);
       const value = clamp(Math.round((current.verticalPadding + current.contentPadding) / 2) - 2, 0, 32);
       return this.host.setLayoutTuning(template.id, {

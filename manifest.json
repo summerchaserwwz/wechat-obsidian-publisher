@@ -1,7 +1,7 @@
 {
   "id": "wechat-obsidian-publisher",
   "name": "WeChat Obsidian Publisher",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "minAppVersion": "1.11.4",
   "description": "在 Obsidian 中高保真预览公众号排版、组合前后模块、自定义模板并发布到微信草稿箱。",
   "author": "summerchaserwwz",

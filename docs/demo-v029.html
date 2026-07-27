@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WeChat Obsidian Publisher 0.2.9</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #0d0f14; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, input, select { border: 0; }
+    .demo-app { width: 100%; height: 100%; padding: 18px; }
+    .demo-shell { height: 100%; overflow: hidden; border: 1px solid rgba(179,190,214,.18); border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,.38); }
+    .demo-icon { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; color: #a9b9ee; background: rgba(145,165,229,.13); font-size: 15px; }
+    .demo-toolbar-actions { display: flex; gap: 7px; }
+    .demo-select, .demo-button { height: 30px; padding: 0 12px; border: 1px solid rgba(179,190,214,.16); border-radius: 7px; background: #1d2028; color: #eef1f6; font-size: 11px; }
+    .demo-tabs { display: flex; gap: 4px; }
+    .demo-tabs button { height: 32px; padding: 0 13px; border-radius: 6px; background: transparent; color: #929bab; }
+    .demo-tabs .is-active { background: rgba(145,165,229,.15); color: #b9c7f2; }
+    .demo-panel { min-height: 0; flex: 1; }
+    .demo-drawer-title { display: flex; align-items: baseline; gap: 6px; }
+    .demo-search { width: 100%; height: 29px; padding: 0 9px; border: 1px solid rgba(179,190,214,.16); border-radius: 6px; background: #1d2028; color: #eef1f6; }
+    .demo-template-list { display: flex; flex-direction: column; padding: 3px 6px 12px; }
+    .demo-template { min-height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 10px; border-radius: 6px; color: #d8dce5; font-size: 11px; }
+    .demo-template.is-active { border: 1px solid rgba(145,165,229,.28); background: rgba(145,165,229,.13); color: #fff; }
+    .demo-star { color: #697284; }
+    .demo-template.is-active .demo-star { color: #aebdf0; }
+    .demo-meta-actions { display: flex; align-items: center; gap: 4px; }
+    .demo-icon-button { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 6px; background: #20232c; color: #b7bfce; }
+    .demo-stepper { height: 27px; display: flex; align-items: center; border-radius: 6px; overflow: hidden; background: #20232c; }
+    .demo-stepper span { padding: 0 7px; color: #eef1f6; font-size: 10px; }
+    .demo-stepper button { width: 24px; height: 27px; background: transparent; color: #aeb6c5; }
+    .demo-segmented { display: flex; padding: 2px; border-radius: 6px; background: #111319; }
+    .demo-segmented button { height: 23px; padding: 0 8px; border-radius: 4px; background: transparent; color: #929bab; font-size: 10px; }
+    .demo-segmented .is-active { background: #242832; color: #f1f3f8; }
+    .demo-stage { height: calc(100% - 39px); overflow: hidden; padding: 22px; background: #fff; }
+    .demo-device { width: min(100%, 850px); height: 100%; margin: 0 auto; overflow: hidden; border: 1px solid #d7dbe2; border-radius: 11px; background: #fff; box-shadow: 0 18px 50px rgba(15,18,24,.13); }
+    .demo-chrome { height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: #171a20; color: #c8ced8; font-size: 11px; }
+    .demo-dots { display: flex; gap: 5px; }
+    .demo-dots i { width: 7px; height: 7px; border-radius: 50%; background: #626975; }
+    .demo-paper { width: min(100%, 660px); height: calc(100% - 35px); margin: 0 auto; overflow: hidden; padding: 24px 8px 50px; background: #fff; color: #202124; }
+    .demo-paper h1 { margin: 0 0 14px; font-size: 23px; line-height: 1.35; text-align: left; }
+    .demo-paper h2 { margin: 22px 0 9px; font-size: 20px; line-height: 1.45; }
+    .demo-paper p { margin: 0 0 10px; font-size: 15px; line-height: 1.72; text-align: left; }
+    .demo-cover { min-height: 240px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: center; margin: 0 0 14px; padding: 26px; border-radius: 8px; background: linear-gradient(135deg,#f3f1ff,#f8fbff 52%,#eefaf6); }
+    .demo-cover-copy strong { display: block; max-width: 300px; font-size: 25px; line-height: 1.22; }
+    .demo-cover-copy span { display: block; margin-top: 10px; color: #687084; font-size: 11px; }
+    .demo-cover-map { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .demo-cover-map i { min-height: 62px; display: grid; place-items: center; border: 1px solid rgba(95,109,164,.13); border-radius: 9px; background: rgba(255,255,255,.82); color: #7a88bd; font-style: normal; font-size: 11px; box-shadow: 0 8px 20px rgba(62,72,110,.08); }
+    .demo-kicker { display: inline-block; margin-bottom: 9px; padding: 3px 8px; border-radius: 999px; background: #eef1ff; color: #6575bf; font-size: 10px; }
+    .phone-demo .wop-template-workbench { display: block; }
+    .phone-demo .wop-template-drawer { display: none; }
+    .phone-demo .wop-template-live-preview { height: 100%; }
+    .phone-demo .demo-device { width: 390px; border: 8px solid #0c0e13; border-radius: 32px; background: #0c0e13; }
+    .phone-demo .demo-chrome { height: 34px; justify-content: space-between; border-radius: 20px 20px 0 0; }
+    .phone-demo .demo-paper { width: 100%; height: calc(100% - 34px); padding: 18px 4px 50px; }
+    .phone-demo .demo-cover { min-height: 185px; grid-template-columns: 1fr; padding: 18px; }
+    .phone-demo .demo-cover-map { display: none; }
+    .phone-demo .demo-cover-copy strong { font-size: 21px; }
+  </style>
+</head>
+<body>
+  <main class="demo-app">
+    <section class="wop-view demo-shell">
+      <header class="wop-toolbar">
+        <div class="wop-document-identity">
+          <div class="demo-icon">▤</div>
+          <div class="wop-document-title-group">
+            <strong>Claude 删掉 80% 系统提示词，模型能力提升后什么更重要？</strong>
+            <span>Claude_上下文工程深度解读_配图包/深度洞察版.md</span>
+          </div>
+        </div>
+        <div class="demo-toolbar-actions">
+          <button class="demo-select">✓ Wenyan 账号</button>
+          <button class="demo-select">◉ Pie 原版</button>
+          <button class="demo-button">↻</button>
+          <button class="demo-button">检查</button>
+        </div>
+      </header>
+      <nav class="wop-tabs demo-tabs">
+        <button>预览</button><button>模块</button><button class="is-active">模板</button><button>检查</button>
+      </nav>
+      <div class="wop-panel demo-panel wop-template-workbench is-library-open">
+        <aside class="wop-template-drawer">
+          <div class="wop-template-drawer-body">
+            <div class="wop-template-drawer-header">
+              <div class="demo-drawer-title"><strong>模板库</strong><span>129 内置</span></div>
+              <div><button class="demo-icon-button" title="导入">↑</button><button class="demo-icon-button" title="导出">↓</button></div>
+            </div>
+            <div class="wop-template-filters">
+              <input class="demo-search" value="" placeholder="搜索模板">
+              <select class="demo-search"><option>全部来源</option></select>
+            </div>
+            <div class="wop-template-results">
+              <div class="wop-template-summary"><span>129 个模板 · 收藏优先</span></div>
+              <div class="demo-template-list">
+                <div class="demo-template is-active"><strong>Pie 原版</strong><span class="demo-star">★</span></div>
+                <div class="demo-template"><strong>Pie 左读</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>编辑部手记</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>知识库</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>GitHub 文档</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>清简</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>墨排 · 极简留白</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>WeMD · 编辑部手记</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>墨排 · 新中式</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>WeMD · 留白画册</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>墨排 · 杂志画报</strong><span class="demo-star">☆</span></div>
+                <div class="demo-template"><strong>WeMD · 东方笺谱</strong><span class="demo-star">☆</span></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+        <section class="wop-template-live-preview">
+          <div class="wop-preview-meta">
+            <div class="wop-preview-summary">
+              <div class="wop-meta-item"><span>◉</span><span>Pie 原版</span></div>
+              <div class="wop-meta-item"><span>▧</span><span>6 张图片</span></div>
+            </div>
+            <div class="demo-meta-actions">
+              <button class="demo-icon-button" title="收起模板库">◁</button>
+              <button class="demo-icon-button" title="复制为用户模板并编辑">✎</button>
+              <div class="demo-stepper"><button>−</button><span>15px</span><button>＋</button></div>
+              <div class="demo-stepper"><button>−</button><span>4px</span><button>＋</button></div>
+              <div class="demo-segmented"><button>原版</button><button class="is-active">手机</button><button>标准</button><button>舒展</button></div>
+              <div class="demo-segmented"><button>手机</button><button>微信</button><button class="is-active">桌面</button></div>
+            </div>
+          </div>
+          <div class="demo-stage">
+            <div class="demo-device">
+              <div class="demo-chrome"><span class="demo-dots"><i></i><i></i><i></i></span><span>▣</span><span>公众号预览</span></div>
+              <article class="demo-paper">
+                <span class="demo-kicker">上下文工程</span>
+                <h1>Claude 删掉 80% 系统提示词，真正变化的是什么？</h1>
+                <div class="demo-cover">
+                  <div class="demo-cover-copy"><strong>删掉 80% 系统提示词之后</strong><span>系统提示词 · CLAUDE.md · Skills · Agent Harness</span></div>
+                  <div class="demo-cover-map"><i>Prompt</i><i>CLAUDE.md</i><i>Skills</i><i>Tools</i></div>
+                </div>
+                <p>Anthropic 团队最近提到，在为 Claude Opus 5 调整 Claude Code 时，他们删掉了系统提示词中 80% 以上的内容，但没有看到可测量的性能损失。</p>
+                <p>真正发生变化的，是过去长期塞进系统提示词、CLAUDE.md、Skill 和插件说明里的内容，已经不再适合以常驻上下文的形式存在。</p>
+                <h2>不是提示词失效，而是角色变了</h2>
+                <p>提示词负责交代意图，系统负责提供边界，模型负责完成判断。手机阅读预设把正文控制在 15px，左右只保留 4px 内边距。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script>if (new URLSearchParams(location.search).has("phone")) document.body.classList.add("phone-demo");</script>
+</body>
+</html>
