@@ -1,12 +1,27 @@
 # WeChat Obsidian Publisher
 
-[简体中文](README.md)
+[简体中文](README.md) · [GitHub](https://github.com/summerchaserwwz/wechat-obsidian-publisher) · [Issues](https://github.com/summerchaserwwz/wechat-obsidian-publisher/issues)
 
-Format, preview, and publish WeChat Official Account drafts without leaving Obsidian. Version `0.2.10` preserves the template-list position after selection and turns code blocks into real, exportable macOS-style windows. Phone reading keeps the `15px` left-aligned body text and `4px` horizontal padding by default.
+> Turn Markdown into controlled, round-trippable, reusable WeChat draft HTML.
+>
+> Write in Obsidian, tune the article on the same canvas, validate the final HTML, and send that exact prepared output to the draft box.
 
-![Compact template workbench](docs/screenshots/template-workbench-v029.jpeg)
+![v0.2.10 template workbench with macOS code window](docs/screenshots/workbench-v0210.png)
 
-![Phone article preview](docs/screenshots/mobile-preview-v029.jpeg)
+![v0.2.10 phone reading preview](docs/screenshots/mobile-preview-v0210.png)
+
+## Why this release is worth the update
+
+| Workflow | What changed |
+| --- | --- |
+| Template switching | Selecting, favoriting, opening, or closing the library restores the visible template anchor instead of jumping to the top. |
+| Code blocks | macOS Dark, macOS Light, and Plain Safe profiles materialize the chrome, traffic-light dots, language label, and syntax colours in final HTML. |
+| Phone reading | Defaults are `15px` body text, `1.72` line height, `10px` paragraph spacing, and `4px` horizontal padding. Preview and WeChat drafts share the same prepared HTML. |
+| Template authoring | Duplicate any built-in template into an editable user template, tune modules and code blocks, and import or export JSON. |
+
+This is not preview-only CSS. The plugin compiles Markdown into WeChat-safe inline HTML first, renders the preview from that prepared document, and submits the same document to WeChat. After publishing, it reads the draft back through `draft/get` and checks parity.
+
+[Open the v0.2.10 local demo](docs/demo-v0210.html) · [Read the release notes](docs/release-notes/v0.2.10.md)
 
 ## Highlights
 

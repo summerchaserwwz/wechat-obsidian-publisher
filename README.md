@@ -1,12 +1,27 @@
 # WeChat Obsidian Publisher
 
-[English](README_EN.md)
+[English](README_EN.md) · [GitHub](https://github.com/summerchaserwwz/wechat-obsidian-publisher) · [问题反馈](https://github.com/summerchaserwwz/wechat-obsidian-publisher/issues)
 
-在 Obsidian 里完成微信公众号文章的排版、预览和草稿发布。`0.2.10` 修复了模板点击后跳回列表顶部的问题，并把代码块升级为真实、可导出的 macOS 风格窗口。手机阅读默认保持 `15px` 左对齐正文和 `4px` 横向留白。
+> 把 Markdown 变成可控、可回读、可复用的微信草稿 HTML。
+>
+> 在 Obsidian 里写作，在同一块画布里排版、预览、校验，再把真正提交给微信的 HTML 放进草稿箱。
 
-![紧凑模板工作台](docs/screenshots/template-workbench-v029.jpeg)
+![v0.2.10 模板工作台与 macOS 代码窗口](docs/screenshots/workbench-v0210.png)
 
-![手机文章预览](docs/screenshots/mobile-preview-v029.jpeg)
+![v0.2.10 手机阅读预览](docs/screenshots/mobile-preview-v0210.png)
+
+## 这版值得更新的地方
+
+| 工作流 | 现在的体验 |
+| --- | --- |
+| 模板切换 | 点击、收藏、展开和收起模板库后，列表按当前可见模板恢复，不再跳回开头。 |
+| 代码块 | 内置 macOS 深色、macOS 浅色和朴素安全三套代码块，窗口栏、三色按钮、语言标签和语法色都写入最终 HTML。 |
+| 手机阅读 | 默认正文 `15px`、行高 `1.72`、段距 `10px`、左右 `4px`，预览与微信草稿使用同一份准备后的 HTML。 |
+| 模板定制 | 内置模板一键复制成用户模板，可改颜色、排版、模块和代码块，并通过 JSON 导入导出。 |
+
+这不是把一套 CSS 套在预览上。插件会先把 Markdown 编译成微信可接受的内联 HTML，再用这份 HTML 同时渲染预览和创建草稿，发布前还会通过 `draft/get` 回读校验。
+
+[打开 v0.2.10 本地演示页](docs/demo-v0210.html) · [查看完整发布说明](docs/release-notes/v0.2.10.md)
 
 ## 能做什么
 
